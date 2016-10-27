@@ -5,7 +5,7 @@
 
 {% if location %}
     {% block extra_head %}
-         <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
+         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
     {% endblock %}
 {% endif %}
 
@@ -131,7 +131,7 @@
 
 {% if location %}
     {% block extra_js %}
-        <script src="https://npmcdn.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 var center_x = {{ location.x }};
