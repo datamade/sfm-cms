@@ -77,6 +77,7 @@ INSTALLED_APPS = (
     'geosite',
     'emplacement',
     'violation',
+    'pages'
 )
 
 INSTALLED_APPS += EXTRA_APPS

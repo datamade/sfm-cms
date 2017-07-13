@@ -2,8 +2,9 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
-from django.contrib import admin
 from django.contrib.auth.views import logout_then_login
+
+from pages.admin import admin_site
 from sfm_pc.views import Dashboard, osm_autocomplete, division_autocomplete, \
     search, SetConfidence, EntityMergeView, Countries
 
@@ -36,7 +37,7 @@ urlpatterns = i18n_patterns(
     url(r'^merge/$', EntityMergeView.as_view(), name='merge'),
 
     # Admin panel
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin_site.urls)),
 
     # Ajax calls
     url(r'^ajax/', include('ajax.urls')),
@@ -48,6 +49,8 @@ urlpatterns = i18n_patterns(
 urlpatterns += (
     # API endpoints
     url(r'^api/', include('api.urls')),
+    # Static pages
+    url(r'^pages/', include('pages.urls'))
 )
 
 if settings.DEBUG:
