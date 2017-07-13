@@ -45,7 +45,7 @@
                 <li class="{{ person_tab }}"><a href="{% url 'search' %}?entity_type=Person"><i class="fa fa-fw fa-user"></i> Personnel</a></li>
                 <li class="{{ organization_tab }}"><a href="{% url 'search' %}?entity_type=Organization"><i class="fa fa-fw fa-users"></i> Units</a></li>
                 <li class="{{ violation_tab }}"><a href="{% url 'search' %}?entity_type=Violation"><i class="fa fa-fw fa-exclamation-triangle"></i> Incidents</a></li>
-                <li class="{{ help_tab }}"><a href="#"><i class="fa fa-fw fa-question-circle"></i> Help</a></li>
+                <li class="{{ help_tab }}"><a href="{% url 'help' %}"><i class="fa fa-fw fa-question-circle"></i> Help</a></li>
                 <li><a href="{% url 'logout' %}"><i class="fa fa-fw fa-arrow-right"></i> Logout</a></li>
             </ul>
         </div>

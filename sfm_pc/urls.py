@@ -44,13 +44,13 @@ urlpatterns = i18n_patterns(
     url(r'^accounts/', include('allauth.urls')),
     url(r'^logout/$', logout_then_login, {'login_url': '/accounts/login'}, name="logout"),
 
+    # Static pages
+    url(r'^pages/', include('pages.urls'))
 )
 
 urlpatterns += (
     # API endpoints
     url(r'^api/', include('api.urls')),
-    # Static pages
-    url(r'^pages/', include('pages.urls'))
 )
 
 if settings.DEBUG:

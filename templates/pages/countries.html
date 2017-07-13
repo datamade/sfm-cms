@@ -5,33 +5,49 @@
 
 <div class="row">
     <div class="col-sm-12">
+        <h2><i class="fa fa-globe"></i> Countries</h2>
+        <hr/> 
+    </div>
+</div>
+
+{% for country in countries %}
+<div class="row">
+    <div class="col-sm-12">
         <div class="panel panel-default" style="min-height:150px">
             <div class="panel-heading">
-                <h3><strong>Egypt</strong></h3>
+                <h3><strong>{{ country.name }}</strong></h3>
             </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-12 col-sm-4">
-                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{% static 'images/egypt.png' %}"></img>
+                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{{ country.image.url }}"></img>
                     </div>
                     <div class="col-xs-12 col-sm-8">
                         <div class="row">
                             <div class="col-xs-12 col-sm-4">
                                 <h4><strong><i class="fa fa-fw fa-search"></i> Browse data</strong></h4>
-                                <a href="#"><p>Browse <strong>580</strong> persons</p></a>
-                                <a href="#"><p>Browse <strong>2300</strong> units</p></a>
+                                <a href="{% url 'search' %}?entity_type=Person"><p>Browse <strong>{{ country.num_persons }}</strong> persons</p></a>
+                                <a href="{% url 'search' %}?entity_type=Organization"><<p>Browse <strong>{{ country.num_units }}</strong> units</p></a>
                             </div>
                             <div class="col-xs-12 col-sm-8">
-                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> Back in time</strong></h4>
-                                <a href="#"><p>The Arab Spring</p></a>
-                                <a href="#"><p>Presidential election 2014</p></a>
-                                <a href="#"><p>Mubarrak presidency</p></a>
+                            {% if country.first_link or country.second_link or country.third_link %}
+                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> Browse historical events</strong></h4>
+                                {% if country.first_link %}
+                                    <a href="{{ country.first_link.href }}"><p>{{ country.first_link.title }}</p></a>
+                                {% endif %}
+                                {% if country.second_link %}
+                                    <a href="{{ country.second_link.href }}"><p>{{ country.second_link.title }}</p></a>
+                                {% endif %}
+                                {% if country.third_link %}
+                                    <a href="{{ country.third_link.href }}"><p>{{ country.third_link.title }}</p></a>
+                                {% endif %}
+                            {% endif %}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
                                 <h4><strong><i class="fa fa-fw fa-info-circle"></i> Background</strong></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rutrum suscipit pretium. Ut ultricies lacinia libero, quis pellentesque lacus scelerisque sed. Sed orci purus, vehicula quis sapien a, feugiat eleifend dui. Sed ac felis nec mauris luctus posuere eget ac mauris.</p>
+                                <p>{{ country.background|safe|truncatewords:"50"|linebreaks }}</p>
                                 <a href="#"><p>Read full background <i class="fa fa-fw fa-arrow-right"></i></p></a>
                             </div>
                         </div>
@@ -41,118 +57,6 @@
         </div>
     </div>
 </div>
+{% endfor %}
 
-<div class="row">
-    <div class="col-sm-12">
-        <div class="panel panel-default" style="min-height:150px">
-            <div class="panel-heading">
-                <h3><strong>Kenya</strong></h3>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-4">
-                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{% static 'images/kenya.png' %}"></img>
-                    </div>
-                    <div class="col-xs-12 col-sm-8">
-                        <div class="row">
-                            <div class="col-xs-4">
-                                <h4><strong><i class="fa fa-fw fa-search"></i> Browse data</strong></h4>
-                                <a href="#"><p>Browse <strong>800</strong> persons</p></a>
-                                <a href="#"><p>Browse <strong>1300</strong> units</p></a>
-                            </div>
-                            <div class="col-xs-8">
-                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> Back in time</strong></h4>
-                                <a href="#"><p>Election 2008</p></a>
-                                <a href="#"><p>Al-Shabab counter terror</p></a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <h4><strong><i class="fa fa-fw fa-info-circle"></i> Background</strong></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rutrum suscipit pretium. Ut ultricies lacinia libero, quis pellentesque lacus scelerisque sed. Sed orci purus, vehicula quis sapien a, feugiat eleifend dui. Sed ac felis nec mauris luctus posuere eget ac mauris.</p>
-                                <a href="#"><p>Read full background <i class="fa fa-fw fa-arrow-right"></i></p></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-12">
-        <div class="panel panel-default" style="min-height:150px">
-            <div class="panel-heading">
-                <h3><strong>Mexico</strong></h3>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-4">
-                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{% static 'images/mexico.png' %}"></img>
-                    </div>
-                    <div class="col-xs-12 col-sm-8">
-                        <div class="row">
-                            <div class="col-xs-4">
-                                <h4><strong><i class="fa fa-fw fa-search"></i> Browse data</strong></h4>
-                                <a href="#"><p>Browse <strong>574</strong> persons</p></a>
-                                <a href="#"><p>Browse <strong>1500</strong> units</p></a>
-                            </div>
-                            <div class="col-xs-8">
-                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> Back in time</strong></h4>
-                                <a href="#"><p>Caledron administration</p></a>
-                                <a href="#"><p>Drug war</p></a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <h4><strong><i class="fa fa-fw fa-info-circle"></i> Background</strong></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rutrum suscipit pretium. Ut ultricies lacinia libero, quis pellentesque lacus scelerisque sed. Sed orci purus, vehicula quis sapien a, feugiat eleifend dui. Sed ac felis nec mauris luctus posuere eget ac mauris.</p>
-                                <a href="#"><p>Read full background <i class="fa fa-fw fa-arrow-right"></i></p></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-12">
-        <div class="panel panel-default" style="min-height:150px">
-            <div class="panel-heading">
-                <h3><strong>Nigeria</strong></h3>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-4">
-                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{% static 'images/nigeria.png' %}"></img>
-                    </div>
-                    <div class="col-xs-12 col-sm-8">
-                        <div class="row">
-                            <div class="col-xs-4">
-                                <h4><strong><i class="fa fa-fw fa-search"></i> Browse data</strong></h4>
-                                <a href="#"><p>Browse <strong>584</strong> persons</p></a>
-                                <a href="#"><p>Browse <strong>2331</strong> units</p></a>
-                            </div>
-                            <div class="col-xs-8">
-                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> Back in time</strong></h4>
-                                <a href="#"><p>Boko Haram counter-insurgency</p></a>
-                                <a href="#"><p>Operation Pulo Shield</p></a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <h4><strong><i class="fa fa-fw fa-info-circle"></i> Background</strong></h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rutrum suscipit pretium. Ut ultricies lacinia libero, quis pellentesque lacus scelerisque sed. Sed orci purus, vehicula quis sapien a, feugiat eleifend dui. Sed ac felis nec mauris luctus posuere eget ac mauris.</p>
-                                <a href="#"><p>Read full background <i class="fa fa-fw fa-arrow-right"></i></p></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
