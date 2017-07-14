@@ -1,14 +1,7 @@
-{% extends "base.html" %}
+{% extends "pages/base_page.html" %}
 {% load i18n %}
 {% load static %}
-{% block content %}
-
-<div class="row">
-    <div class="col-sm-12">
-        <h2><i class="fa fa-globe"></i> Countries</h2>
-        <hr/> 
-    </div>
-</div>
+{% block extra_content %}
 
 {% for country in countries %}
 <div class="row">

@@ -9,20 +9,27 @@ class About(models.Model):
         verbose_name_plural = 'About page'
 
     site = models.OneToOneField(Site)  # We only want there to be one
-
+    title = models.CharField(max_length=100,
+                             default='About')
+    text = models.TextField()
 
 class FAQ(models.Model):
     class Meta:
         verbose_name_plural = 'FAQ page'
 
     site = models.OneToOneField(Site)
-
+    title = models.CharField(max_length=100,
+                             default='Frequently Asked Questions')
+    text = models.TextField()
 
 class Countries(models.Model):
     class Meta:
         verbose_name_plural = 'Countries page'
 
     site = models.OneToOneField(Site)
+    title = models.CharField(max_length=100,
+                             default='Countries')
+    text = models.TextField()
 
 
 class Help(models.Model):
@@ -30,6 +37,9 @@ class Help(models.Model):
         verbose_name_plural = 'Help page'
 
     site = models.OneToOneField(Site)
+    title = models.CharField(max_length=100,
+                             default='Help')
+    text = models.TextField()
 
 
 class CountryLink(models.Model):

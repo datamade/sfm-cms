@@ -1,10 +1,10 @@
 from django.conf.urls import url
 
-from pages.views import About, FAQ, Help, Countries
+from pages.views import AboutPage, FAQPage, HelpPage, CountriesPage
 
 urlpatterns = [
-    url(r'^about/$', About.as_view(), name="about"),
-    url(r'^faq/$', FAQ.as_view(), name="faq"),
-    url(r'^help/$', Help.as_view(), name="help"),
-    url(r'^countries/$', Countries.as_view(), name="countries"),
+    url(r'^about/$', AboutPage.as_view(), name="about"),
+    url(r'^faq/$', FAQPage.as_view(), name="faq"),
+    url(r'^help/$', HelpPage.as_view(), name="help"),
+    url(r'^countries/$', CountriesPage.as_view(), name="countries"),
 ]

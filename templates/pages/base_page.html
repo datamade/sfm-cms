@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <h2><i class="fa fa-fw {{ fa-icon }}"></i> {{ page.title }}</h2>
+        <hr/>
+        {{ page.text }}
+    </div>
+</div>
+
+    {% block extra_content %}
+    {% endblock %}
+{% endblock %}
