@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.db import connection
 from django.utils.translation import get_language
 from django.core.urlresolvers import reverse_lazy
+from complex_fields.models import CONFIDENCE_LEVELS
 
 from source.models import Source
 from geosite.models import Geosite
@@ -26,6 +27,7 @@ class OrganizationDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['confidence_levels'] = CONFIDENCE_LEVELS
 
         context['person_members'] = []
         memberships = context['organization'].membershippersonorganization_set.all()
@@ -454,6 +456,7 @@ class OrganizationCreateGeography(BaseFormSetView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['confidence_levels'] = CONFIDENCE_LEVELS
 
         organizations = self.request.session['organizations']
 

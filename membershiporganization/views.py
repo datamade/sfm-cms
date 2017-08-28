@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
+from complex_fields.models import CONFIDENCE_LEVELS
 
 from sfm_pc.base_views import BaseFormSetView
 
@@ -31,6 +32,7 @@ class MembershipOrganizationCreate(BaseFormSetView):
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
+        context['confidence_levels'] = CONFIDENCE_LEVELS
 
         context['source'] = Source.objects.get(id=self.request.session['source_id'])
         context['organizations'] = self.request.session.get('organizations')

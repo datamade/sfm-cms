@@ -16,6 +16,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 
 from extra_views import FormSetView
+from complex_fields.models import CONFIDENCE_LEVELS
 
 from violation.models import Violation, Type, ViolationType, \
     ViolationPerpetrator, ViolationPerpetratorOrganization
@@ -71,7 +72,8 @@ class ViolationCreate(FormSetView):
    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+        context['confidence_levels'] = CONFIDENCE_LEVELS
+
         organizations = self.request.session.get('organizations')
         people = self.request.session.get('people')
         

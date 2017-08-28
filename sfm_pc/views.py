@@ -195,7 +195,7 @@ class SetConfidence(TemplateView):
         context['relations'] = OrderedDict(sorted(context['relations'].items(),
                                            key=lambda x: x[0]._meta.object_name))
 
-        context['confidence_choices'] = CONFIDENCE_LEVELS
+        context['confidence_levels'] = CONFIDENCE_LEVELS
 
         return context
 

@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
+from complex_fields.models import CONFIDENCE_LEVELS
 
 from source.models import Source
 from organization.models import Organization
@@ -35,6 +36,7 @@ class CompositionCreate(BaseFormSetView):
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)
+        context['confidence_levels'] = CONFIDENCE_LEVELS
 
         context['classifications'] = Classification.objects.all()
         context['relationship_types'] = self.form_class().fields['relationship_type'].choices

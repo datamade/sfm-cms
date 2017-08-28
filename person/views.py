@@ -17,6 +17,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import get_language
 
 from extra_views import FormSetView
+from complex_fields.models import CONFIDENCE_LEVELS
 
 from person.models import Person, PersonName, PersonAlias, Alias
 from person.forms import PersonForm
@@ -186,6 +187,7 @@ class PersonCreate(BaseFormSetView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['confidence_levels'] = CONFIDENCE_LEVELS
 
         context['organizations'] = self.request.session.get('organizations')
         context['source'] = Source.objects.get(id=self.request.session['source_id'])
@@ -194,7 +196,7 @@ class PersonCreate(BaseFormSetView):
         context['skip_url'] = reverse_lazy('create-geography')
 
         return context
-    
+
     def formset_invalid(self, formset):
         response = super().formset_invalid(formset)
 

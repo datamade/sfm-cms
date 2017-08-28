@@ -15,6 +15,7 @@ from django.db import DEFAULT_DB_ALIAS
 from django.core.urlresolvers import reverse_lazy
 
 from extra_views import FormSetView
+from complex_fields.models import CONFIDENCE_LEVELS
 
 from membershipperson.models import MembershipPerson, Role, Rank, Context
 from membershipperson.forms import MembershipPersonForm
@@ -31,7 +32,8 @@ class MembershipPersonCreate(BaseFormSetView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+        context['confidence_levels'] = CONFIDENCE_LEVELS
+
         context['organizations'] = self.request.session.get('organizations')
         context['people'] = self.request.session['people']
         context['source'] = Source.objects.get(id=self.request.session['source_id'])
