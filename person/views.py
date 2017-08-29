@@ -222,47 +222,52 @@ class PersonCreate(BaseFormSetView):
     def formset_valid(self, formset):
         response = super().formset_valid(formset)
         num_forms = int(formset.data['form-TOTAL_FORMS'][0])
-        
+
         self.people = []
         self.memberships = []
 
         self.source = Source.objects.get(id=self.request.session['source_id'])
-        
+
         for i in range(0,num_forms):
             first = True
 
             form_prefix = 'form-{0}-'.format(i)
-            
+
             form_keys = [k for k in formset.data.keys() \
                              if k.startswith(form_prefix)]
-            
+
             name_id_key = 'form-{0}-name'.format(i)
             name_text_key = 'form-{0}-name_text'.format(i)
             division_id_key = 'form-{}-division_id'.format(i)
-            
+
             name_id = formset.data[name_id_key]
             name_text = formset.data[name_text_key]
             division_id = formset.data[division_id_key]
 
+            name_confidence = int(formset.data.get(form_prefix +
+                                                   'name_confidence', 1))
+            division_confidence = int(formset.data.get(form_prefix +
+                                                       'division_confidence', 1))
+
             person_info = {
                 'Person_PersonName': {
                     'value': name_text,
-                    'confidence': 1,
+                    'confidence': name_confidence,
                     'sources': [self.source],
                 },
                 'Person_PersonDivisionId': {
                     'value': division_id,
-                    'confidence': 1,
+                    'confidence': division_confidence,
                     'sources': [self.source],
                 }
             }
-           
+
             if name_id == 'None':
                 return self.formset_invalid(formset)
 
             elif name_id == '-1':
-                
-                person = Person.create(person_info)      
+                person = Person.create(person_info)
+
             else:
                 person = Person.objects.get(id=name_id)
                 person_info['Person_PersonName']['sources'] = self.sourcesList(person, 'name')
@@ -270,35 +275,40 @@ class PersonCreate(BaseFormSetView):
 
             alias_id_key = 'form-{0}-alias'.format(i)
             alias_text_key = 'form-{0}-alias_text'.format(i)
-            
+            alias_confidence = int(formset.data.get(form_prefix +
+                                                    'alias_confidence', 1))
+
             aliases = formset.data.getlist(alias_text_key)
-            
+
             for alias in aliases:
-                
+
                 alias_obj, created = Alias.objects.get_or_create(value=alias)
 
                 pa_obj, created = PersonAlias.objects.get_or_create(object_ref=person,
                                                                     value=alias_obj,
-                                                                    lang=get_language())
-                
+                                                                    lang=get_language(),
+                                                                    confidence=alias_confidence)
+
                 pa_obj.sources.add(self.source)
                 pa_obj.save()
 
             self.people.append(person)
-            
+
             orgs_key = 'form-{0}-orgs'.format(i)
             orgs = formset.data.getlist(orgs_key)
+            orgs_confidence = int(formset.data.get(form_prefix +
+                                                   'orgs_confidence', 1))
 
             for org in orgs:
                 mem_data = {
                     'MembershipPerson_MembershipPersonMember': {
                         'value': person,
-                        'confidence': 1,
+                        'confidence': orgs_confidence,
                         'sources': [self.source],
                     },
-                    'MembershipPerson_MembershipPersonOrganization': { 
+                    'MembershipPerson_MembershipPersonOrganization': {
                         'value': Organization.objects.get(id=org),
-                        'confidence': 1,
+                        'confidence': orgs_confidence,
                         'sources': [self.source],
                     }
                 }
@@ -310,7 +320,7 @@ class PersonCreate(BaseFormSetView):
                     'first': first
                 })
                 first = False
-        
+
         self.request.session['people'] = [{'id': p.id, 'name': p.name.get_value().value} \
                                                      for p in self.people]
         self.request.session['memberships'] = self.memberships

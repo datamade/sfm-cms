@@ -36,7 +36,13 @@
                     </button>
 
                 </h4>
-                {% if form.organization.errors %}
+                <hr />
+                <div class="row">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-8"><p><strong>{% trans "Value" %}</strong></p></div>
+                    <div class="col-sm-2"><p><strong>{% trans "Confidence" %}</strong></p></div>
+                </div>
+                {% if form.organization.errors or form.organization_confidence.errors %}
                     <div class="form-group has-error has-feedback">
                 {% else %}
                     <div class="form-group">
@@ -60,8 +66,24 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
+                        <div class="col-sm-2">
+                            <select class="form-control confidence-field" id="id_form-{{ forloop.counter0 }}-organization_confidence" name="form-{{ forloop.counter0 }}-organization_confidence">
+                                {% for value, name in confidence_levels %}
+                                    {% if form.cleaned_data.organization_confidence == value %}
+                                        <option value="{{ value }}" selected=true>{{ name }}</option>
+                                    {% else %}
+                                        <option value="{{ value }}">{{ name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if form.organization_confidence.errors %}
+                                {% for error in form.organization_confidence.errors %}
+                                <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                {% if form.firstcitedfirstciteddate.errors or form.lastciteddate.errors %}
+                {% if form.firstcitedfirstciteddate.errors or form.lastciteddate.errors or form.date_confidence.errors %}
                     <div class="form-group has-error has-feedback">
                 {% else %}
                     <div class="form-group">
@@ -79,6 +101,22 @@
                             <input type="text" class="form-control datepicker" id="id_form-{{ forloop.counter0 }}-lastciteddate" name="form-{{ forloop.counter0 }}-enddate" value="{{ form.cleaned_data.enddate|date:'Y-m-d' }}" placeholder="Last citation date"/>
                             {% if form.lastciteddate.errors %}
                                 {% for error in form.lastciteddate.errors %}
+                                <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-2">
+                            <select class="form-control confidence-field" id="id_form-{{ forloop.counter0 }}-date_confidence" name="form-{{ forloop.counter0 }}-date_confidence">
+                                {% for value, name in confidence_levels %}
+                                    {% if form.cleaned_data.date_confidence == value %}
+                                        <option value="{{ value }}" selected=true>{{ name }}</option>
+                                    {% else %}
+                                        <option value="{{ value }}">{{ name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if form.date_confidence.errors %}
+                                {% for error in form.date_confidence.errors %}
                                 <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
                                 {% endfor %}
                             {% endif %}
@@ -123,8 +161,13 @@
 
         $('.organization-field').select2({
             placeholder: '',
-            allowClear: true
+            allowClear: true,
+            minimumResultsForSearch: Infinity
         });
+
+        $('.confidence-field').select2({
+            minimumResultsForSearch: Infinity
+        })
 
         $('.remove-relationship').on('click', deleteForm);
     });

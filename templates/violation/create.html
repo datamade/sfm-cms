@@ -12,7 +12,7 @@
 {% include 'partials/nav-wizard.html' %}
 <div class="row">
     <h2><i class="fa fa-fw fa-exclamation-triangle"></i> Incidents</h2>
-    <p>Describe any incidents found in <strong>{{ source.title }}</strong> ({{source.publication.title}}, {{ source.published_on|date:"F d, Y"}})</p>
+    <p>{% trans "Describe any incidents found in" %} <strong>{{ source.title }}</strong> ({{source.publication.title}}, {{ source.published_on|date:"F d, Y"}})</p>
     <hr />
 </div>
 <form method="post" action="" id="person-form" class="form form-horizontal">
@@ -24,12 +24,17 @@
         {% for form in formset %}
             {% with form_id=forloop.counter0 %}
                 <div id="form-{{ form_id }}-wrapper">
-                    {% if form.description.errors %}
+                    <div class="row">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-8"><p><strong>{% trans "Value" %}</strong></p></div>
+                        <div class="col-sm-2"><p><strong>{% trans "Confidence" %}</strong></p></div>
+                    </div>
+                    {% if form.description.errors or form.description_confidence.errors %}
                         <div class="form-group has-error has-feedback">
                     {% else %}
                         <div class="form-group">
                     {% endif %}
-                            <label class="control-label col-sm-2">Description</label>
+                    <label class="control-label col-sm-2">{% trans "Description" %}</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" id="id_form-{{ form_id }}-description" name="form-{{ form_id }}-description" value="{{ form.cleaned_data.description }}">
                                 {% if form.description.errors %}
@@ -38,13 +43,29 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
+                            <div class="col-sm-2">
+                                <select class="form-control confidence-field" id="id_form-{{ form_id }}-description_confidence" name="form-{{ form_id }}-description_confidence">
+                                    {% for value, name in confidence_levels %}
+                                        {% if form.cleaned_data.description_confidence == value %}
+                                            <option value="{{ value }}" selected=true>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if form.description_confidence.errors %}
+                                    {% for error in form.description_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                         </div>
-                    {% if form.type.errors %}
+                    {% if form.type.errors or form.type_confidence.errors %}
                         <div class="form-group has-error has-feedback">
                     {% else %}
                         <div class="form-group">
                     {% endif %}
-                            <label class="control-label col-sm-2">Violation types</label>
+                    <label class="control-label col-sm-2">{% trans "Violation types" %}</label>
                             <div class="col-sm-8">
                                 <select id="id_form-{{ form_id }}-vtype" class="form-control violation-type" name="form-{{ form_id }}-vtype" multiple=true>
                                     {% for type in types %}
@@ -61,13 +82,29 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
+                            <div class="col-sm-2">
+                                <select class="form-control confidence-field" id="id_form-{{ form_id }}-type_confidence" name="form-{{ form_id }}-type_confidence">
+                                    {% for value, name in confidence_levels %}
+                                        {% if form.cleaned_data.type_confidence == value %}
+                                            <option value="{{ value }}" selected=true>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if form.type_confidence.errors %}
+                                    {% for error in form.type_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                         </div>
-                    {% if form.startdate.errors or form.enddate.errors %}
+                    {% if form.startdate.errors or form.enddate.errors or form.date_confidence.errors %}
                         <div class="form-group has-error has-feedback">
                     {% else %}
                         <div class="form-group">
                     {% endif %}
-                            <label class="control-label col-sm-2" for="id_form-{{ form_id }}-startdate">Start & end dates</label>
+                    <label class="control-label col-sm-2" for="id_form-{{ form_id }}-startdate">{% trans "Start and end dates" %}</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control datepicker" id="id_form-{{ form_id }}-startdate" name="form-{{ form_id }}-startdate" value="{{ form.cleaned_data.startdate|date:'Y-m-d' }}"/>
                                 {% if form.startdate.errors %}
@@ -84,13 +121,29 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
+                            <div class="col-sm-2">
+                                <select class="form-control confidence-field" id="id_form-{{ form_id }}-date_confidence" name="form-{{ form_id }}-date_confidence">
+                                    {% for value, name in confidence_levels %}
+                                        {% if form.cleaned_data.date_confidence == value %}
+                                            <option value="{{ value }}" selected=true>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if form.date_confidence.errors %}
+                                    {% for error in form.date_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                         </div>
-                    {% if form.orgs.errors %}
+                    {% if form.orgs.errors or form.orgs_confidence.errors %}
                         <div class="form-group has-error has-feedback">
                     {% else %}
                         <div class="form-group">
                     {% endif %}
-                            <label class="control-label col-sm-2" for="id_form-{{ form_id }}-orgs">Perpetrator units </label>
+                    <label class="control-label col-sm-2" for="id_form-{{ form_id }}-orgs">{% trans "Perpetrator units" %} </label>
                             <div class="col-sm-8">
                                 <select id="id_form-{{ form_id }}-orgs" class="form-control" name="form-{{ form_id }}-orgs" multiple=true>
                                     {% for organization in organizations %}
@@ -103,13 +156,29 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
+                            <div class="col-sm-2">
+                                <select class="form-control confidence-field" id="id_form-{{ form_id }}-orgs_confidence" name="form-{{ form_id }}-orgs_confidence">
+                                    {% for value, name in confidence_levels %}
+                                        {% if form.cleaned_data.orgs_confidence == value %}
+                                            <option value="{{ value }}" selected=true>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if form.orgs_confidence.errors %}
+                                    {% for error in form.orgs_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                         </div>
-                    {% if form.perpetrators.errors %}
+                    {% if form.perpetrators.errors or form.perp_confidence.errors %}
                         <div class="form-group has-error has-feedback">
                     {% else %}
                         <div class="form-group">
                     {% endif %}
-                        <label class="control-label col-sm-2" for="id_form-{{ form_id }}-perpetrators">Perpetrator personnel </label>
+                    <label class="control-label col-sm-2" for="id_form-{{ form_id }}-perpetrators">{% trans "Perpetrator personnel" %} </label>
                         <div class="col-sm-8">
                             <select id="id_form-{{ form_id }}-perpetrators" class="form-control" name="form-{{ form_id }}-perpetrators" multiple=true>
                                 {% for person in people %}
@@ -122,13 +191,29 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
+                        <div class="col-sm-2">
+                            <select class="form-control confidence-field" id="id_form-{{ form_id }}-perp_confidence" name="form-{{ form_id }}-perp_confidence">
+                                {% for value, name in confidence_levels %}
+                                    {% if form.cleaned_data.perp_confidence == value %}
+                                        <option value="{{ value }}" selected=true>{{ name }}</option>
+                                    {% else %}
+                                        <option value="{{ value }}">{{ name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if form.perp_confidence.errors %}
+                                {% for error in form.perp_confidence.errors %}
+                                <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                    {% if form.osm_id.errors %}
+                    {% if form.osm_id.errors or form.osm_confidence.errors %}
                         <div class="form-group has-error has-feedback">
                     {% else %}
                         <div class="form-group">
                     {% endif %}
-                            <label class="control-label col-sm-2" for="id_form-{{ form_id }}-osm_id">Location</label>
+                    <label class="control-label col-sm-2" for="id_form-{{ form_id }}-osm_id">{% trans "Location" %}</label>
                             <div class="col-sm-8">
                                 <select class="form-control" class="osm_id-field" id="id_form-{{ form_id }}-osm_id" name="form-{{ form_id }}-osm_id">
                                     {% if form.cleaned_data.osm_id %}
@@ -143,21 +228,53 @@
                                 <input type="hidden" name="form-{{ form_id }}-osm_id_text" id="id_form-{{ form_id }}-osm_id_text" value="{{ form.cleaned_data.osm_id_text }}" />
                                 <input type="hidden" name="form-{{ form_id }}-geotype" id="id_form-{{ form_id }}-geotype" value="{{ form.cleaned_data.geotype }}" />
                             </div>
+                            <div class="col-sm-2">
+                                <select class="form-control confidence-field" id="id_form-{{ form_id }}-osm_confidence" name="form-{{ form_id }}-osm_confidence">
+                                    {% for value, name in confidence_levels %}
+                                        {% if form.cleaned_data.osm_confidence == value %}
+                                            <option value="{{ value }}" selected=true>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if form.osm_confidence.errors %}
+                                    {% for error in form.osm_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                         </div>
-                    {% if form.locationdescription.errors %}
+                    {% if form.locationdescription.errors or form.locationdescription_confidence.errors %}
                         <div class="form-group has-error has-feedback">
                     {% else %}
                         <div class="form-group">
                     {% endif %}
-                            <label class="control-label col-sm-2" for="id_form-{{ form_id }}-locationdescription">Location description</label>
+                    <label class="control-label col-sm-2" for="id_form-{{ form_id }}-locationdescription">{% trans "Location description" %}</label>
                             <div class="col-sm-8">
                                 <input type="text" name="form-{{ form_id }}-locationdescription" id="id_form-{{ form_id }}-locationdescription" class="form-control" value="{{ form.cleaned_data.locationdescription }}" />
+                            </div>
+                            <div class="col-sm-2">
+                                <select class="form-control confidence-field" id="id_form-{{ form_id }}-locationdescription_confidence" name="form-{{ form_id }}-locationdescription_confidence">
+                                    {% for value, name in confidence_levels %}
+                                        {% if form.cleaned_data.locationdescription_confidence == value %}
+                                            <option value="{{ value }}" selected=true>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if form.locationdescription_confidence.errors %}
+                                    {% for error in form.locationdescription_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
                     {% if form_id > 0 %}
                         <div class="col-sm-10 col-sm-offset-2">
                             <button id="remove_form-{{ form_id }}" type="button" class="remove-form btn btn-link">
-                                <i class="fa fa-fw fa-times"></i> Remove this incident
+                                <i class="fa fa-fw fa-times"></i> {% trans "Remove this incident" %}
                             </button>
                         </div>
                         <br />
@@ -172,7 +289,7 @@
     <div class="col-sm-12">
         <button class="btn btn-link" id="add-form">
             <i class="fa fa-fw fa-plus-circle"></i>
-            Add incident
+            {% trans "Add new incident" %}
         </button>
     </div>
 </div>
@@ -190,14 +307,26 @@
 <script src="{% static "js/bootstrap-datepicker.min.js" %}"></script>
 <script type="text/EJS" id="formTemplate">
 <div id="form-<%= form_id %>-wrapper">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8"><p><strong>{% trans "Value" %}</strong></p></div>
+        <div class="col-sm-2"><p><strong>{% trans "Confidence" %}</strong></p></div>
+    </div>
     <div class="form-group">
-        <label class="control-label col-sm-2">Description</label>
+        <label class="control-label col-sm-2">{% trans "Description" %}</label>
         <div class="col-sm-8">
             <input type="text" class="form-control" id="id_form-<%= form_id %>-description" name="form-<%= form_id %>-description">
         </div>
+        <div class="col-sm-2">
+            <select class="form-control confidence-field" id="id_form-<%= form_id %>-description_confidence" name="form-<%= form_id %>-description_confidence">
+                {% for value, name in confidence_levels %}
+                    <option value="{{ value }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2">Violation type</label>
+        <label class="control-label col-sm-2">{% trans "Violation type" %}</label>
         <div class="col-sm-8">
             <select id="id_form-<%= form_id %>-vtype" class="form-control violation-type" name="form-<%= form_id %>-vtype" multiple=true>
                 {% for type in types %}
@@ -205,19 +334,33 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="col-sm-2">
+            <select class="form-control confidence-field" id="id_form-<%= form_id %>-type_confidence" name="form-<%= form_id %>-type_confidence">
+                {% for value, name in confidence_levels %}
+                    <option value="{{ value }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="id_form-<%= form_id %>-startdate">Start & end date</label>
+        <label class="control-label col-sm-2" for="id_form-<%= form_id %>-startdate">{% trans "Start and end date" %}</label>
         <div class="col-sm-4">
             <input type="text" class="form-control datepicker" id="id_form-<%= form_id %>-startdate" name="form-<%= form_id %>-startdate" placeholder="Start date"/>
         </div>
         <div class="col-sm-4">
             <input type="text" class="form-control datepicker" id="id_form-<%= form_id %>-enddate" name="form-<%= form_id %>-enddate" placeholder="End date"/>
         </div>
+        <div class="col-sm-2">
+            <select class="form-control confidence-field" id="id_form-<%= form_id %>-date_confidence" name="form-<%= form_id %>-date_confidence">
+                {% for value, name in confidence_levels %}
+                    <option value="{{ value }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <br />
     <div class="form-group">
-        <label class="control-label col-sm-2" for="id_form-<%= form_id %>-orgs">Perpetrator units </label>
+        <label class="control-label col-sm-2" for="id_form-<%= form_id %>-orgs">{% trans "Perpetrator units" %} </label>
         <div class="col-sm-8">
             <select id="id_form-<%= form_id %>-orgs" class="form-control" name="form-<%= form_id %>-orgs" multiple=true>
                 {% for organization in organizations %}
@@ -225,9 +368,16 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="col-sm-2">
+            <select class="form-control confidence-field" id="id_form-<%= form_id %>-orgs_confidence" name="form-<%= form_id %>-orgs_confidence">
+                {% for value, name in confidence_levels %}
+                    <option value="{{ value }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="id_form-<%= form_id %>-perpetrators">Perpetrator personnel </label>
+        <label class="control-label col-sm-2" for="id_form-<%= form_id %>-perpetrators">{% trans "Perpetrator personnel" %} </label>
         <div class="col-sm-8">
             <select id="id_form-<%= form_id %>-perpetrators" class="form-control" name="form-<%= form_id %>-perpetrators" multiple=true>
                 {% for person in people  %}
@@ -235,26 +385,47 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="col-sm-2">
+            <select class="form-control confidence-field" id="id_form-<%= form_id %>-perp_confidence" name="form-<%= form_id %>-perp_confidence">
+                {% for value, name in confidence_levels %}
+                    <option value="{{ value }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="id_form-<%= form_id %>-osm_id">Location</label>
+        <label class="control-label col-sm-2" for="id_form-<%= form_id %>-osm_id">{% trans "Location" %}</label>
         <div class="col-sm-8">
             <select class="form-control" class="osm_id-field" id="id_form-<%= form_id %>-osm_id" name="form-<%= form_id %>-osm_id">
             </select>
             <input type="hidden" name="form-<%= form_id %>-osm_id_text" id="id_form-<%= form_id %>-osm_id_text" />
             <input type="hidden" name="form-<%= form_id %>-geotype" id="id_form-<%= form_id %>-geotype" />
         </div>
+        <div class="col-sm-2">
+            <select class="form-control confidence-field" id="id_form-<%= form_id %>-osm_confidence" name="form-<%= form_id %>-osm_confidence">
+                {% for value, name in confidence_levels %}
+                    <option value="{{ value }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="id_form-<%= form_id %>-locationdescription">Location description</label>
+        <label class="control-label col-sm-2" for="id_form-<%= form_id %>-locationdescription">{% trans "Location description" %}</label>
         <div class="col-sm-8">
             <input type="text" name="form-<%= form_id %>-locationdescription" id="id_form-<%= form_id %>-locationdescription" class="form-control">
+        </div>
+        <div class="col-sm-2">
+            <select class="form-control confidence-field" id="id_form-<%= form_id %>-locationdescription_confidence" name="form-<%= form_id %>-locationdescription_confidence">
+                {% for value, name in confidence_levels %}
+                    <option value="{{ value }}">{{ name }}</option>
+                {% endfor %}
+            </select>
         </div>
     </div>
     <% if (form_id > 0) { %>
         <div class="col-sm-10 col-sm-offset-2">
             <button id="remove_form-<%= form_id %>" type="button" class="remove-form btn btn-link">
-                <i class="fa fa-fw fa-times"></i> Remove this incident
+                <i class="fa fa-fw fa-times"></i> {% trans "Remove this incident" %}
             </button>
         </div>
         <br />
@@ -329,6 +500,7 @@
         minimumInputLength: 2,
         tags: true
     }
+
     var osm_opts = {
         ajax: {
             url: "{% url 'osm-autocomplete' %}",
@@ -362,8 +534,13 @@
             return template.render(data);
         }
     }
+
     var violation_opts = {
         tags: true
+    }
+
+    var confidence_opts = {
+        minimumResultsForSearch: Infinity
     }
 
     $(document).ready(function(e) {
@@ -376,10 +553,11 @@
                 var osm_id_field =  '#id_form-' + form_num + '-osm_id';
                 var geotype_field = '#id_form-' + form_num + '-geotype';
                 var violation_field = '#id_form-' + form_num + '-vtype';
+                var confidence_field = '.confidence-field'
 
-                activateInputs(perp_field, org_field, osm_id_field, geotype_field, violation_field);
+                activateInputs(perp_field, org_field, osm_id_field, geotype_field, violation_field, confidence_field);
 
-                $('.datepicker').datepicker({'autoclose': true, format: "dd/mm/yyyy", endDate: "0d"});
+                $('.datepicker').datepicker({'autoclose': true, format: "yyyy-mm-dd", endDate: "0d"});
 
                 form_num ++
 
@@ -427,8 +605,9 @@
         var osm_id_field =  '#id_form-' + form_num + '-osm_id';
         var geotype_field = '#id_form-' + form_num + '-geotype';
         var violation_field = '#id_form-' + form_num + '-vtype';
+        var confidence_field = '.confidence-field'
 
-        activateInputs(perp_field, org_field, osm_id_field, geotype_field, violation_field);
+        activateInputs(perp_field, org_field, osm_id_field, geotype_field, violation_field, confidence_field);
 
         $('#remove_form-' +  form_num).on('click', deleteForm);
 
@@ -444,12 +623,13 @@
         form_num ++;
     }
 
-    function activateInputs(perp_field, org_field, osm_id_field, geotype_field, violation_field) {
+    function activateInputs(perp_field, org_field, osm_id_field, geotype_field, violation_field, confidence_field) {
 
         $(perp_field).select2(perp_opts);
         $(org_field).select2(org_opts);
         $(osm_id_field).select2(osm_opts);
         $(violation_field).select2(violation_opts);
+        $(confidence_field).select2(confidence_opts);
 
         $(osm_id_field).on('select2:select', function(e){
             var value = e.params.data.value;

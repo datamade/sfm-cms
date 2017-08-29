@@ -229,10 +229,10 @@ class OrganizationCreate(BaseFormSetView):
                 continue
 
             name_text = formset.data[name_text_key]
-            name_confidence = formset.data.get(name_confidence_key, 1)
+            name_confidence = int(formset.data.get(name_confidence_key, 1))
 
             division_id = formset.data[division_id_key]
-            division_confidence = formset.data.get(division_confidence_key, 1)
+            division_confidence = int(formset.data.get(division_confidence_key, 1))
 
             org_info = {
                 'Organization_OrganizationName': {

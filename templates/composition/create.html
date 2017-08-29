@@ -30,7 +30,12 @@
                     </button>
 
                 </h4>
-                {% if form.relationship_type.errors %}
+                <div class="row">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-8"><p><strong>{% trans "Value" %}</strong></p></div>
+                    <div class="col-sm-2"><p><strong>{% trans "Confidence" %}</strong></p></div>
+                </div>
+                {% if form.relationship_type.errors or form.relationship_type_confidence.errors %}
                     <div class="form-group has-error has-feedback">
                 {% else %}
                     <div class="form-group">
@@ -52,8 +57,24 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
+                        <div class="col-sm-2">
+                            <select class="form-control confidence-field" id="id_form-{{ forloop.counter0 }}-relationship_type_confidence" name="form-{{ forloop.counter0 }}-relationship_type_confidence">
+                                {% for value, name in confidence_levels %}
+                                    {% if form.cleaned_data.relationship_type_confidence == value %}
+                                        <option value="{{ value }}" selected=true>{{ name }}</option>
+                                    {% else %}
+                                        <option value="{{ value }}">{{ name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if form.relationship_type_confidence.errors %}
+                                {% for error in form.relationship_type_confidence.errors %}
+                                <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                {% if form.related_organization.errors %}
+                {% if form.related_organization.errors or form.related_org_confidence.errors %}
                     <div class="form-group has-error has-feedback">
                 {% else %}
                     <div class="form-group">
@@ -77,8 +98,24 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
+                        <div class="col-sm-2">
+                            <select class="form-control confidence-field" id="id_form-{{ forloop.counter0 }}-related_org_confidence" name="form-{{ forloop.counter0 }}-related_org_confidence">
+                                {% for value, name in confidence_levels %}
+                                    {% if form.cleaned_data.related_org_confidence == value %}
+                                        <option value="{{ value }}" selected=true>{{ name }}</option>
+                                    {% else %}
+                                        <option value="{{ value }}">{{ name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if form.related_org_confidence.errors %}
+                                {% for error in form.related_org_confidence.errors %}
+                                <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                {% if form.classification.errors %}
+                {% if form.classification.errors or form.classification_confidence.errors %}
                     <div class="form-group has-error has-feedback">
                 {% else %}
                     <div class="form-group">
@@ -100,8 +137,24 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
+                        <div class="col-sm-2">
+                            <select class="form-control confidence-field" id="id_form-{{ forloop.counter0 }}-classification_confidence" name="form-{{ forloop.counter0 }}-classification_confidence">
+                                {% for value, name in confidence_levels %}
+                                    {% if form.cleaned_data.classification_confidence == value %}
+                                        <option value="{{ value }}" selected=true>{{ name }}</option>
+                                    {% else %}
+                                        <option value="{{ value }}">{{ name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if form.classification_confidence.errors %}
+                                {% for error in form.classification_confidence.errors %}
+                                <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                {% if form.startdate.errors or form.enddate.errors %}
+                {% if form.startdate.errors or form.enddate.errors or form.date_confidence.errors %}
                     <div class="form-group has-error has-feedback">
                 {% else %}
                     <div class="form-group">
@@ -119,6 +172,22 @@
                             <input type="text" class="form-control datepicker" id="id_form-{{ forloop.counter0 }}-enddate" name="form-{{ forloop.counter0 }}-enddate" placeholder="End date" value="{{ form.cleaned_data.enddate|date:'Y-m-d' }}"/>
                             {% if form.enddate.errors %}
                                 {% for error in form.enddate.errors %}
+                                <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-2">
+                            <select class="form-control confidence-field" id="id_form-{{ forloop.counter0 }}-date_confidence" name="form-{{ forloop.counter0 }}-date_confidence">
+                                {% for value, name in confidence_levels %}
+                                    {% if form.cleaned_data.date_confidence == value %}
+                                        <option value="{{ value }}" selected=true>{{ name }}</option>
+                                    {% else %}
+                                        <option value="{{ value }}">{{ name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if form.date_confidence.errors %}
+                                {% for error in form.date_confidence.errors %}
                                 <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
                                 {% endfor %}
                             {% endif %}
@@ -158,13 +227,33 @@
 <script src="{% static "js/bootstrap-datepicker.min.js" %}"></script>
 <script type="text/javascript">
 
+    var rel_type_opts = {
+        placeholder: '{% trans "Parent or child" %}',
+        minimumResultsForSearch: Infinity
+    }
+
+    var org_opts = {
+        placeholder: '{% trans "Select an organization" %}',
+        minimumResultsForSearch: Infinity
+    }
+
+    var classification_opts = {
+        placeholder: '{% trans "Select a classification" %}',
+        minimumResultsForSearch: Infinity
+    }
+
+    var confidence_opts = {
+        minimumResultsForSearch: Infinity
+    }
+
     $(document).ready(function(e){
 
         $('.datepicker').datepicker({'autoclose': true, format: "yyyy-mm-dd", endDate: '0d'});
 
-        $('.relationship-type-field').select2({placeholder: 'Parent or child'});
-        $('.organization-field').select2({placeholder: 'Select an organization'});
-        $('.classification-field').select2({placeholder: 'Select a classification'});
+        $('.relationship-type-field').select2(rel_type_opts);
+        $('.organization-field').select2(org_opts);
+        $('.classification-field').select2(classification_opts);
+        $('.confidence-field').select2(confidence_opts);
 
         $('.remove-relationship').on('click', deleteForm);
     });

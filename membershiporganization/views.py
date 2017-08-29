@@ -55,30 +55,36 @@ class MembershipOrganizationCreate(BaseFormSetView):
             organization_id = formset.data[form_prefix + 'organization']
             organization = Organization.objects.get(id=organization_id)
 
+            organization_confidence = int(formset.data.get(form_prefix +
+                                                           'organization_confidence', 1))
+
             membership_info = {
                 'MembershipOrganization_MembershipOrganizationMember': {
                     'value': member_organization,
-                    'confidence': 1,
+                    'confidence': organization_confidence,
                     'sources': [source],
                 },
                 'MembershipOrganization_MembershipOrganizationOrganization': {
                     'value': organization,
-                    'confidence': 1,
+                    'confidence': organization_confidence,
                     'sources': [source]
                 },
             }
 
+            date_confidence = int(formset.data.get(form_prefix +
+                                                   'date_confidence', 1))
+
             if formset.data.get(form_prefix + 'firstciteddate'):
                 membership_info['MembershipOrganization_MembershipOrganizationFirstCitedDate'] = {
                     'value': formset.data[form_prefix + 'firstciteddate'],
-                    'confidence': 1,
+                    'confidence': date_confidence,
                     'sources': [source]
                 }
 
             if formset.data.get(form_prefix + 'lastciteddate'):
                 membership_info['MembershipOrganization_MembershipOrganizationLastCitedDate'] = {
                     'value': formset.data[form_prefix + 'lastciteddate'],
-                    'confidence': 1,
+                    'confidence': date_confidence,
                     'sources': [source]
                 }
 
@@ -89,6 +95,7 @@ class MembershipOrganizationCreate(BaseFormSetView):
                 sources = set(self.sourcesList(membership, 'member') + \
                               self.sourcesList(membership, 'organization'))
                 membership_info['MembershipOrganization_MembershipOrganizationMember']['sources'] += sources
+
                 membership.update(membership_info)
 
             except MembershipOrganization.DoesNotExist:

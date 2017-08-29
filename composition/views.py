@@ -57,26 +57,31 @@ class CompositionCreate(BaseFormSetView):
 
             composition_info = {}
 
+            date_confidence = int(formset.data.get(form_prefix + 'date_confidence', 1))
+
             if formset.data.get(form_prefix + 'startdate'):
+
                 composition_info['Composition_CompositionStartDate'] = {
                     'value': formset.data[form_prefix + 'startdate'],
-                    'confidence': 1,
+                    'confidence': date_confidence,
                     'sources': [source]
                 }
 
             if formset.data.get(form_prefix + 'enddate'):
                 composition_info['Composition_CompositionEndDate'] = {
                     'value': formset.data[form_prefix + 'enddate'],
-                    'confidence': 1,
+                    'confidence': date_confidence,
                     'sources': [source]
                 }
 
             classification_id = formset.data[form_prefix + 'classification']
             classification = Classification.objects.get(id=classification_id)
+            classification_confidence = int(formset.data.get(form_prefix +
+                                                             'classification_confidence', 1))
 
             composition_info['Composition_CompositionClassification'] = {
                 'value': classification,
-                'confidence': 1,
+                'confidence': classification_confidence,
                 'sources': [source]
             }
 
@@ -85,8 +90,13 @@ class CompositionCreate(BaseFormSetView):
 
             related_organization_id = formset.data[form_prefix + 'related_organization']
             related_organization = Organization.objects.get(id=related_organization_id)
+            related_org_confidence = int(formset.data.get(form_prefix +
+                                                          'related_org_confidence', 1))
 
             rel_type = formset.data[form_prefix + 'relationship_type']
+            rel_type_confidence = int(formset.data.get(form_prefix +
+                                                       'relationship_type_confidence', 1))
+
             if rel_type == 'child':
 
                 composition, created = Composition.objects.get_or_create(compositionparent__value=related_organization,
@@ -101,12 +111,12 @@ class CompositionCreate(BaseFormSetView):
 
                 composition_info['Composition_CompositionChild'] = {
                     'value': organization,
-                    'confidence': 1,
+                    'confidence': rel_type_confidence,
                     'sources': sources
                 }
                 composition_info['Composition_CompositionParent'] = {
                     'value': related_organization,
-                    'confidence': 1,
+                    'confidence': rel_type_confidence,
                     'sources': sources
                 }
 
@@ -124,12 +134,12 @@ class CompositionCreate(BaseFormSetView):
 
                 composition_info['Composition_CompositionParent'] = {
                     'value': organization,
-                    'confidence': 1,
+                    'confidence': rel_type_confidence,
                     'sources': [source]
                 }
                 composition_info['Composition_CompositionChild'] = {
                     'value': related_organization,
-                    'confidence': 1,
+                    'confidence': rel_type_confidence,
                     'sources': [source]
                 }
 

@@ -56,57 +56,70 @@ class MembershipPersonCreate(BaseFormSetView):
     def formset_valid(self, formset):
         source = Source.objects.get(id=self.request.session['source_id'])
         num_forms = int(formset.data['form-TOTAL_FORMS'][0])
+
         for i in range(0, num_forms):
             form_prefix = 'form-{0}-'.format(i)
-            
-            form_keys = [k for k in formset.data.keys() \
-                             if k.startswith(form_prefix)]
+
             membership = MembershipPerson.objects.get(id=formset.data[form_prefix + 'membership'])
+
             mem_data = {}
+
+            rank_role_confidence = int(formset.data.get(form_prefix +
+                                                        'rank_role_confidence', 1))
             if formset.data[form_prefix + 'role']:
                 mem_data['MembershipPerson_MembershipPersonRole'] = {
                     'value': Role.objects.get(id=formset.data[form_prefix + 'role']),
-                    'confidence': 1,
-                    'sources': [source]
-                }
-            if formset.data[form_prefix + 'title']:
-                mem_data['MembershipPerson_MembershipPersonTitle'] = {
-                    'value': formset.data[form_prefix + 'title'],
-                    'confidence': 1,
+                    'confidence': rank_role_confidence,
                     'sources': [source]
                 }
             if formset.data[form_prefix + 'rank']:
                 mem_data['MembershipPerson_MembershipPersonRank'] = {
                     'value': Rank.objects.get(id=formset.data[form_prefix + 'rank']),
-                    'confidence': 1,
+                    'confidence': rank_role_confidence,
                     'sources': [source]
                 }
+
+            title_confidence = int(formset.data.get(form_prefix +
+                                                    'title_confidence', 1))
+            if formset.data[form_prefix + 'title']:
+                mem_data['MembershipPerson_MembershipPersonTitle'] = {
+                    'value': formset.data[form_prefix + 'title'],
+                    'confidence': title_confidence,
+                    'sources': [source]
+                }
+
+            startcontext_confidence = int(formset.data.get(form_prefix +
+                                                           'startcontext_confidence', 1))
             if formset.data[form_prefix + 'startcontext']:
                 mem_data['MembershipPerson_MembershipStartContext'] = {
                     'value': formset.data[form_prefix + 'startcontext'],
-                    'confidence': 1,
+                    'confidence': startcontext_confidence,
                     'sources': [source]
                 }
             if formset.data.get(form_prefix + 'realstart'):
                 mem_data['MembershipPerson_MembershipPersonRealStart'] = {
                     'value': formset.data[form_prefix + 'realstart'],
-                    'confidence': 1,
+                    'confidence': startcontext_confidence,
                     'sources': [source]
                 }
+
+            endcontext_confidence = int(formset.data.get(form_prefix +
+                                                         'endcontext_confidence', 1))
             if formset.data[form_prefix + 'endcontext']:
                 mem_data['MembershipPerson_MembershipEndContext'] = {
                     'value': formset.data[form_prefix + 'endcontext'],
-                    'confidence': 1,
+                    'confidence': endcontext_confidence,
                     'sources': [source]
                 }
             if formset.data.get(form_prefix + 'realend'):
                 mem_data['MembershipPerson_MembershipRealEnd'] = {
                     'value': formset.data[form_prefix + 'realend'],
-                    'confidence': 1,
+                    'confidence': endcontext_confidence,
                     'sources': [source]
                 }
+
             membership.update(mem_data)
- 
+
         response = super().formset_valid(formset)
         return response
 
