@@ -30,7 +30,7 @@
                             <div class="col-sm-8"><p><strong>{% trans "Value" %}</strong></p></div>
                             <div class="col-sm-2"><p><strong>{% trans "Confidence" %}</strong></p></div>
                         </div>
-                        {% if form.name.errors %}
+                        {% if form.name.errors or form.name_confidence.errors %}
                             <div class="form-group has-error has-feedback">
                         {% else %}
                             <div class="form-group">
@@ -59,9 +59,14 @@
                                         {% endif %}
                                     {% endfor %}
                                 </select>
+                                {% if form.name_confidence.errors %}
+                                    {% for error in form.name_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
-                        {% if form.alias.errors %}
+                        {% if form.alias.errors or form.alias_confidence.errors %}
                             <div class="form-group has-error has-feedback">
                         {% else %}
                             <div class="form-group">
@@ -92,9 +97,14 @@
                                         {% endif %}
                                     {% endfor %}
                                 </select>
+                                {% if form.alias_confidence.errors %}
+                                    {% for error in form.alias_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
-                        {% if form.classification.errors %}
+                        {% if form.classification.errors or form.classification_confidence.errors %}
                             <div class="form-group has-error has-feedback">
                         {% else %}
                             <div class="form-group">
@@ -125,9 +135,14 @@
                                         {% endif %}
                                     {% endfor %}
                                 </select>
+                                {% if form.classification_confidence.errors %}
+                                    {% for error in form.classification_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
-                        {% if form.division_id.errors %}
+                        {% if form.division_id.errors or form.division_confidence.errors %}
                             <div class="form-group has-error has-feedback">
                         {% else %}
                             <div class="form-group">
@@ -156,6 +171,11 @@
                                         {% endif %}
                                     {% endfor %}
                                 </select>
+                                {% if form.division_confidence.errors %}
+                                    {% for error in form.division_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
                         {% if form_id > 0 %}

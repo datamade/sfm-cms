@@ -165,7 +165,7 @@ class OrganizationCreate(BaseFormSetView):
         form_data = {}
 
         for key, value in request.POST.items():
-            if 'alias' in key or 'classification' in key:
+            if ('alias' in key or 'classification' in key) and 'confidence' not in key:
                 form_data[key] = request.POST.getlist(key)
             else:
                 form_data[key] = request.POST.get(key)
