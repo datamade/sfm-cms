@@ -63,8 +63,11 @@
 {% if messages %}
     <div class="row">
         {% for message in messages %}
-        <div {% if message.tags %}class="{{ message.tags }}"{% endif %} role="alert">
-                {{ message }}
+        <div {% if message.tags %}class="alert {{ message.tags }}"{% endif %} role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
             </div>
         {% endfor %}
     </div>

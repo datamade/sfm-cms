@@ -15,6 +15,7 @@ import os
 import dj_database_url
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.messages import constants as messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -251,3 +252,8 @@ OSM_DATA = [
         'country_code': 'sd',
     },
 ]
+
+# Override built-in messages tags
+MESSAGE_TAGS = {
+    messages.SUCCESS: 'alert-success'
+}

@@ -66,7 +66,7 @@ class ViolationList(PaginatedList):
 class ViolationCreate(FormSetView):
     template_name = 'violation/create.html'
     form_class = ViolationForm
-    success_url = reverse_lazy('set-confidence')
+    success_url = reverse_lazy('dashboard')
     extra = 1
     max_num = None
 
@@ -257,6 +257,10 @@ class ViolationCreate(FormSetView):
                     vpo_obj.save()
 
         response = super().formset_valid(formset)
+
+        success_message = 'Thanks for adding a new source! The database has been updated.'
+        messages.add_message(self.request, messages.SUCCESS, success_message)
+
         return response
 
 class ViolationUpdate(BaseUpdateView):
