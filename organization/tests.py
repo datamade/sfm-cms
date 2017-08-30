@@ -71,10 +71,14 @@ class OrganizationTest(TestCase):
             'form-FORMS_ADDED': 3,
             'form-0-name': -1,
             'form-0-name_text': 'Test Organization',
+            'form-0-name_confidence': 1,
             'form-0-division_id': 'ocd-division/country:ng',
+            'form-0-division_confidence': 1,
             'form-0-alias_text': ['Testy', 'Lil tester'],
             'form-0-classification_text': ['Army', 'Military'],
+            'form-0-classification_confidence': 1,
             'form-0-alias': [],
+            'form-0-alias_confidence': 1,
             'form-0-classification': [1, 2],
         }
 
@@ -98,10 +102,14 @@ class OrganizationTest(TestCase):
             data = {
                 'form-{}-name'.format(index): organization.id,
                 'form-{}-name_text'.format(index): organization.name.get_value().value,
+                'form-{}-name_confidence'.format(index): 1,
                 'form-{}-division_id'.format(index): 'ocd-division/country:ng',
+                'form-{}-division_confidence'.format(index): 1,
                 'form-{}-alias_text'.format(index): aliases,
                 'form-{}-classification_text'.format(index): classifications,
+                'form-{}-classification_confidence'.format(index): 1,
                 'form-{}-alias'.format(index): alias_ids,
+                'form-{}-alias_confidence'.format(index): 1,
                 'form-{}-classification'.format(index): classification_ids,
             }
 
@@ -133,11 +141,15 @@ class OrganizationTest(TestCase):
         post_data = {
             'name': -1,
             'name_text': 'Test Organization',
+            'name_confidence': 1,
             'division_id': 'ocd-division/country:ng',
+            'division_confidence': 1,
             'alias_text': ['Testy', 'Lil tester'],
+            'alias_confidence': 1,
             'classification_text': ['Army', 'Military'],
             'alias': [],
             'classification': [1, 2],
+            'classification_confidence': 1,
             'source': self.source.id,
         }
 

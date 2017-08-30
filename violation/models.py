@@ -14,15 +14,8 @@ from source.models import Source
 from person.models import Person
 from organization.models import Organization
 
-CONFIDENCE_LEVELS = (
-    ('1', _('Low')),
-    ('2', _('Medium')),
-    ('3', _('High')),
-)
-
 
 class Violation(models.Model, BaseModel):
-    confidence_required = False
     uuid = models.UUIDField(default=uuid.uuid4, 
                             editable=False, 
                             db_index=True)
@@ -56,7 +49,7 @@ class Violation(models.Model, BaseModel):
                                self.osmid, self.location, self.description, 
                                self.division_id]
 
-        self.required_fields = []
+        self.required_fields = [self.description, self.startdate, self.enddate]
 
 
     def get_value(self):

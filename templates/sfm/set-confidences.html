@@ -23,7 +23,7 @@
                             <td>
                                 <div class="form-group">
                                     <select class="form-control" name="confidence-{{ relation.relation_label }}-{{ relation.relation_id }}-{{ relation.object_ref_object_name}}-{{ relation.object_ref_id }}">
-                                        {% for value, name in confidence_choices %}
+                                        {% for value, name in confidence_levels %}
                                             {% if relation.confidence == value %}
                                                 <option value="{{ value }}" selected=true>{{ name }}</option>
                                             {% else %}

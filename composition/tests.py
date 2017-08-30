@@ -92,10 +92,14 @@ class CompositionTest(TestCase):
             data = {
                 'form-{}-startdate'.format(index): '2001-01-01',
                 'form-{}-enddate'.format(index): '2010-01-01',
+                'form-{}-date_confidence'.format(index): 1,
                 'form-{}-classification'.format(index): self.classification.id,
+                'form-{}-classification_confidence'.format(index): 1,
                 'form-{}-organization'.format(index): organization['id'],
                 'form-{}-related_organization'.format(index): organizations[index - 1]['id'],
+                'form-{}-related_org_confidence'.format(index): 1,
                 'form-{}-relationship_type'.format(index): rel_type,
+                'form-{}-relationship_type_confidence'.format(index): 1,
             }
 
             post_data.update(data)

@@ -16,6 +16,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 
 from extra_views import FormSetView
+from complex_fields.models import CONFIDENCE_LEVELS
 
 from violation.models import Violation, Type, ViolationType, \
     ViolationPerpetrator, ViolationPerpetratorOrganization
@@ -65,19 +66,20 @@ class ViolationList(PaginatedList):
 class ViolationCreate(FormSetView):
     template_name = 'violation/create.html'
     form_class = ViolationForm
-    success_url = reverse_lazy('set-confidence')
+    success_url = reverse_lazy('dashboard')
     extra = 1
     max_num = None
-   
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+        context['confidence_levels'] = CONFIDENCE_LEVELS
+
         organizations = self.request.session.get('organizations')
         people = self.request.session.get('people')
-        
+
         context['types'] = ViolationType.objects.filter(lang=get_language())\
                                                 .distinct('value')
-        context['people'] = people         
+        context['people'] = people
         context['organizations'] = organizations
         context['source'] = Source.objects.get(id=self.request.session['source_id'])
 
@@ -89,24 +91,52 @@ class ViolationCreate(FormSetView):
     def formset_valid(self, formset):
         source = Source.objects.get(id=self.request.session['source_id'])
         num_forms = int(formset.data['form-TOTAL_FORMS'][0])
+
         for i in range(0, num_forms):
             form_prefix = 'form-{0}-'.format(i)
-            
-            form_keys = [k for k in formset.data.keys() \
-                             if k.startswith(form_prefix)]
+
             startdate = formset.data[form_prefix + 'startdate']
             enddate = formset.data[form_prefix + 'enddate']
-            locationdescription = formset.data[form_prefix + 'locationdescription']
-            geoid = formset.data[form_prefix + 'osm_id']
-            geotype = formset.data[form_prefix + 'geotype']
+            date_confidence = int(formset.data.get(form_prefix +
+                                                   'date_confidence', 1))
+
+            locationdescription = formset.data.get(form_prefix + 'locationdescription')
+            locationdescription_confidence = int(formset.data.get(form_prefix +
+                                                                  'locationdescription_confidence', 1))
+
+            geoid = formset.data.get(form_prefix + 'osm_id')
+            geotype = formset.data.get(form_prefix + 'geotype')
+            osm_confidence = int(formset.data.get(form_prefix +
+                                                  'osm_confidence', 1))
+
             description = formset.data[form_prefix + 'description']
+            description_confidence = int(formset.data.get(form_prefix +
+                                                          'description_confidence', 1))
+
             perpetrators = formset.data.getlist(form_prefix + 'perpetrators')
+            perp_confidence = int(formset.data.get(form_prefix +
+                                                   'perp_confidence', 1))
+
             orgs = formset.data.getlist(form_prefix + 'orgs')
+            orgs_confidence = int(formset.data.get(form_prefix +
+                                                   'orgs_confidence', 1))
+
             vtypes = formset.data.getlist(form_prefix + 'vtype')
-            
-            geo = get_osm_by_id(geoid)
-            hierarchy = get_hierarchy_by_id(geoid)
-            
+            type_confidence = int(formset.data.get(form_prefix +
+                                                   'type_confidence', 1))
+
+            if geoid:
+                geo = get_osm_by_id(geoid)
+                geo_id, geo_name, geo_geometry = geo.id, geo.name, geo.geometry
+                country_code = geo.country_code.lower()
+                division_id = 'ocd-division/country:{}'.format(country_code)
+                hierarchy = get_hierarchy_by_id(geoid)
+            else:
+                geo, geo_id, geo_name, geo_geometry = None, None, None, None
+                country_code = None
+                division_id = None
+                hierarchy = None
+
             admin1 = None
             admin2 = None
 
@@ -116,117 +146,121 @@ class ViolationCreate(FormSetView):
                         admin1 = member.name
                     elif member.admin_level == 4:
                         admin2 = member.name
-            
-            country_code = geo.country_code.lower()
-            
-            division_id = 'ocd-division/country:{}'.format(country_code)
-            
+
             violation_data = {
                 'Violation_ViolationDescription': {
                    'value': description,
                    'sources': [source],
-                   'confidence': 1
+                   'confidence': description_confidence
                 },
                 'Violation_ViolationLocationDescription': {
                     'value': locationdescription,
                     'sources': [source],
-                    'confidence': 1
+                    'confidence': locationdescription_confidence
                 },
                 'Violation_ViolationAdminLevel1': {
                     'value': admin1,
                     'sources': [source],
-                    'confidence': 1
+                    'confidence': osm_confidence
                 },
                 'Violation_ViolationAdminLevel2': {
                     'value': admin2,
                     'sources': [source],
-                    'confidence': 1
+                    'confidence': osm_confidence
                 },
                 'Violation_ViolationOSMname': {
-                    'value': geo.name,
+                    'value': geo_name,
                     'sources': [source],
-                    'confidence': 1
+                    'confidence': osm_confidence
                 },
                 'Violation_ViolationOSMId': {
-                    'value': geo.id,
+                    'value': geo_id,
                     'sources': [source],
-                    'confidence': 1
+                    'confidence': osm_confidence
                 },
                 'Violation_ViolationDivisionId': {
                     'value': division_id,
                     'sources': [source],
-                    'confidence': 1
+                    'confidence': osm_confidence
                 },
                 'Violation_ViolationLocation': {
-                    'value': geo.geometry,
+                    'value': geo_geometry,
                     'sources': [source],
-                    'confidence': 1
+                    'confidence': osm_confidence
                 },
                 'Violation_ViolationStartDate': {
                     'value': startdate,
                     'sources': [source],
-                    'confidence': 1
+                    'confidence': date_confidence
                 },
                 'Violation_ViolationEndDate': {
                     'value': enddate,
                     'sources': [source],
-                    'confidence': 1
+                    'confidence': date_confidence
                 }
             }
+
             violation = Violation.create(violation_data)
-            
+
             if vtypes:
                 for vtype in vtypes:
                     type_obj = Type.objects.get(id=vtype)
                     vt_obj, created = ViolationType.objects.get_or_create(value=type_obj,
                                                                           object_ref=violation,
-                                                                          lang=get_language())
+                                                                          lang=get_language(),
+                                                                          confidence=type_confidence)
                     vt_obj.sources.add(source)
                     vt_obj.save()
 
             if perpetrators:
                 for perpetrator in perpetrators:
-                    
+
                     try:
                         perp = Person.objects.get(id=perpetrator)
                     except (Person.DoesNotExist, ValueError):
                         info = {
                             'Person_PersonName': {
                                 'value': perpetrator,
-                                'confidence': 1,
+                                'confidence': perp_confidence,
                                 'sources': [source],
                             }
                         }
                         perp = Person.create(info)
-                    
+
                     vp_obj, created = ViolationPerpetrator.objects.get_or_create(value=perp,
-                                                                                 object_ref=violation)
+                                                                                 object_ref=violation,
+                                                                                 confidence=perp_confidence)
 
                     vp_obj.sources.add(source)
                     vp_obj.save()
-            
+
             if orgs:
                 for org in orgs:
-                    
+
                     try:
                         organization = Organization.objects.get(id=org)
                     except (Organization.DoesNotExist, ValueError):
                         info = {
                             'Organization_OrganizationName': {
                                 'value': org,
-                                'confidence': 1,
+                                'confidence': orgs_confidence,
                                 'sources': [source],
                             }
                         }
                         organization = Organization.create(info)
 
                     vpo_obj, created = ViolationPerpetratorOrganization.objects.get_or_create(value=organization,
-                                                                                              object_ref=violation)
+                                                                                              object_ref=violation,
+                                                                                              confidence=orgs_confidence)
 
                     vpo_obj.sources.add(source)
                     vpo_obj.save()
 
         response = super().formset_valid(formset)
+
+        success_message = 'Thanks for adding a new source! The database has been updated.'
+        messages.add_message(self.request, messages.SUCCESS, success_message)
+
         return response
 
 class ViolationUpdate(BaseUpdateView):

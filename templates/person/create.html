@@ -26,7 +26,12 @@
             {% with form_id=forloop.counter0 %}
                 <div id="form-{{ form_id }}-wrapper">
                     <div class="row">
-                        {% if form.name.errors %}
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-8"><p><strong>{% trans "Value" %}</strong></p></div>
+                        <div class="col-sm-2"><p><strong>{% trans "Confidence" %}</strong></p></div>
+                    </div>
+                    <div class="row">
+                        {% if form.name.errors or form.name_confidence.errors %}
                             <div class="form-group has-error has-feedback">
                         {% else %}
                             <div class="form-group">
@@ -45,8 +50,24 @@
                                 {% endif %}
                                 <input type="hidden" name="form-{{ form_id }}-name_text" id="id_form-{{ form_id }}-name_text" value="{{ form.cleaned_data.name_text }}" />
                             </div>
+                            <div class="col-sm-2">
+                                <select class="form-control confidence-field" id="id_form-{{ form_id }}-name_confidence" name="form-{{ form_id }}-name_confidence">
+                                    {% for value, name in confidence_levels %}
+                                        {% if form.cleaned_data.name_confidence == value %}
+                                            <option value="{{ value }}" selected=true>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if form.name_confidence.errors %}
+                                    {% for error in form.name_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                         </div>
-                        {% if form.alias.errors %}
+                        {% if form.alias.errors or form.alias_confidence.errors %}
                             <div class="form-group has-error has-feedback">
                         {% else %}
                             <div class="form-group">
@@ -61,8 +82,24 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
+                            <div class="col-sm-2">
+                                <select class="form-control confidence-field" id="id_form-{{ form_id }}-alias_confidence" name="form-{{ form_id }}-alias_confidence">
+                                    {% for value, name in confidence_levels %}
+                                        {% if form.cleaned_data.alias_confidence == value %}
+                                            <option value="{{ value }}" selected=true>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if form.alias_confidence.errors %}
+                                    {% for error in form.alias_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                         </div>
-                        {% if form.division_id.errors %}
+                        {% if form.division_id.errors or form.division_confidence.errors %}
                             <div class="form-group has-error has-feedback">
                         {% else %}
                             <div class="form-group">
@@ -80,25 +117,57 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
+                            <div class="col-sm-2">
+                                <select class="form-control confidence-field" id="id_form-{{ form_id }}-division_confidence" name="form-{{ form_id }}-division_confidence">
+                                    {% for value, name in confidence_levels %}
+                                        {% if form.cleaned_data.division_confidence == value %}
+                                            <option value="{{ value }}" selected=true>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if form.division_confidence.errors %}
+                                    {% for error in form.division_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     <div class="row">
-                    {% if form.orgs.errors %}
-                        <div class="form-group hass-eror has-feedback">
+                    {% if form.orgs.errors or form.orgs_confidence.errors %}
+                        <div class="form-group has-eror has-feedback">
                     {% else %}
                         <div class="form-group">
                     {% endif %}
-                    <label class="col-sm-2 control-label" for="id_form-{{ form_id }}-orgs">{% trans "Member units" %}</label>
-                    <div class="col-sm-8">
-                        <select id="id_form-{{ form_id }}-orgs" class="form-control orgs-field" name="form-{{ form_id }}-orgs" multiple="multiple">
-                                {% for organization in form.cleaned_data.orgs %}
-                                    <option value="{{ organization.id }}" selected=true>{{ organization.name }}</option>
-                                {% endfor %}
-                            </select>
-                                {% if form.orgs.errors %}
-                                    <span class="help-block"><i class="fa fa-remove"> </i> {% trans "A person must belong to at least one unit." %}</span>
+                            <label class="col-sm-2 control-label" for="id_form-{{ form_id }}-orgs">{% trans "Member units" %}</label>
+                            <div class="col-sm-8">
+                                <select id="id_form-{{ form_id }}-orgs" class="form-control orgs-field" name="form-{{ form_id }}-orgs" multiple="multiple">
+                                        {% for organization in form.cleaned_data.orgs %}
+                                            <option value="{{ organization.id }}" selected=true>{{ organization.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                        {% if form.orgs.errors %}
+                                            <span class="help-block"><i class="fa fa-remove"> </i> {% trans "A person must belong to at least one unit." %}</span>
+                                        {% endif %}
+                            </div>
+                            <div class="col-sm-2">
+                                <select class="form-control confidence-field" id="id_form-{{ form_id }}-orgs_confidence" name="form-{{ form_id }}-orgs_confidence">
+                                    {% for value, name in confidence_levels %}
+                                        {% if form.cleaned_data.orgs_confidence == value %}
+                                            <option value="{{ value }}" selected=true>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{ value }}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% if form.orgs_confidence.errors %}
+                                    {% for error in form.orgs_confidence.errors %}
+                                    <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                                    {% endfor %}
                                 {% endif %}
-                        </div>
+                            </div>
                         </div>
                     </div>
                     {% if form_id > 0 %}
@@ -139,6 +208,11 @@
 <script src="{% static "js/bootstrap-datepicker.min.js" %}"></script>
 <script type="text/EJS" id="formTemplate">
     <div id="form-<%= form_id %>-wrapper">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8"><p>{% trans "Value" %}</p></div>
+            <div class="col-sm-2"><p>{% trans "Confidence" %}</p></div>
+        </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">{% trans "Name" %}</label>
             <div class="col-sm-8">
@@ -146,11 +220,25 @@
                 </select>
                 <input type="hidden" name="form-<%= form_id %>-name_text" id="id_form-<%= form_id %>-name_text" />
             </div>
+            <div class="col-sm-2">
+                <select class="form-control confidence-field" id="id_form-<%= form_id %>-name_confidence" name="form-<%= form_id %>-name_confidence">
+                    {% for value, name in confidence_levels %}
+                        <option value="{{ value }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">{% trans "Aliases" %}</label>
             <div class="col-sm-8">
                 <select id="id_form-<%= form_id %>-alias" class="form-control" name="form-<%= form_id %>-alias" multiple="multiple">
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control confidence-field" id="id_form-<%= form_id %>-alias_confidence" name="form-<%= form_id %>-alias_confidence">
+                    {% for value, name in confidence_levels %}
+                        <option value="{{ value }}">{{ name }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
@@ -160,6 +248,13 @@
                 <select id="id_form-<%= form_id %>-division_id" class="form-control division-field" name="form-<%= form_id %>-division_id">
                 </select>
             </div>
+            <div class="col-sm-2">
+                <select class="form-control confidence-field" id="id_form-<%= form_id %>-division_confidence" name="form-<%= form_id %>-division_confidence">
+                    {% for value, name in confidence_levels %}
+                        <option value="{{ value }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label" for="id_form-<%= form_id %>-orgs">{% trans "Member units" %}</label>
@@ -167,6 +262,13 @@
                 <select id="id_form-<%= form_id %>-orgs" class="form-control orgs-field" name="form-<%= form_id %>-orgs" multiple="multiple">
                     {% for organization in organizations %}
                         <option value="{{ organization.id }}">{{ organization.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control confidence-field" id="id_form-<%= form_id %>-orgs_confidence" name="form-<%= form_id %>-orgs_confidence">
+                    {% for value, name in confidence_levels %}
+                        <option value="{{ value }}">{{ name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -287,6 +389,9 @@
         tags: true,
         allowClear: true
     }
+    var confidence_opts = {
+        minimumResultsForSearch: Infinity
+    }
 
     $(document).ready(function(e) {
         {% if formset.errors %}
@@ -297,8 +402,9 @@
                 var alias_field = '#id_form-' + form_num + '-alias';
                 var division_field = '#id_form-' + form_num + '-division_id';
                 var orgs_field = '#id_form-' + form_num + '-orgs';
+                var confidence_field = '.confidence-field';
 
-                activateInputs(name_field, alias_field, division_field, orgs_field);
+                activateInputs(name_field, alias_field, division_field, orgs_field, confidence_field);
 
                 form_num ++;
 
@@ -345,8 +451,9 @@
         var alias_field = '#id_form-' + form_num + '-alias';
         var division_field = '#id_form-' + form_num + '-division_id';
         var orgs_field = '#id_form-' + form_num + '-orgs';
+        var confidence_field = '.confidence-field';
 
-        activateInputs(name_field, alias_field, division_field, orgs_field);
+        activateInputs(name_field, alias_field, division_field, orgs_field, confidence_field);
 
         $('#remove_form-' +  form_num).on('click', deleteForm);
 
@@ -359,12 +466,13 @@
         form_num ++;
     }
 
-    function activateInputs(name_field, alias_field, division_field, orgs_field) {
+    function activateInputs(name_field, alias_field, division_field, orgs_field, confidence_field) {
 
         $(name_field).select2(name_opts);
         $(alias_field).select2(alias_opts);
         $(division_field).select2(division_opts);
         $(orgs_field).select2(orgs_opts);
+        $(confidence_field).select2(confidence_opts);
 
         $(alias_field, orgs_field).on('select2:select', function(e){
             var value = e.params.data.text;

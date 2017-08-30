@@ -32,7 +32,12 @@
                 <input type="hidden" name="form-{{ form_id }}-membership" id="id_form-{{ form_id }}-person" value="{{ a_membership.membership }}">
             {% endwith %}
             </div>
-            {% if form.title.errors %}
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-8"><p><strong>{% trans "Value" %}</strong></p></div>
+                <div class="col-sm-2"><p><strong>{% trans "Confidence" %}</strong></p></div>
+            </div>
+            {% if form.title.errors or form.title_confidence.errors %}
             <div class="form-group has-error has-feedback">
             {% else %}
             <div class="form-group">
@@ -46,8 +51,24 @@
                        {% endfor %}
                    {% endif %}
                 </div>
+                <div class="col-sm-2">
+                    <select class="form-control confidence-field" id="id_form-{{ form_id }}-title_confidence" name="form-{{ form_id }}-title_confidence">
+                        {% for value, name in confidence_levels %}
+                            {% if form.cleaned_data.title_confidence == value %}
+                                <option value="{{ value }}" selected=true>{{ name }}</option>
+                            {% else %}
+                                <option value="{{ value }}">{{ name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% if form.title_confidence.errors %}
+                        {% for error in form.title_confidence.errors %}
+                        <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
             </div>
-            {% if form.role.errors or form.rank.errors %}
+            {% if form.role.errors or form.rank.errors or form.role_rank_confidence.errors %}
             <div class="form-group has-error has-feedback">
             {% else %}
             <div class="form-group">
@@ -81,8 +102,24 @@
                     {% endif %}
                     <input type="hidden" name="form-{{ form_id }}-rank-name_text" id="id_form-{{ form_id }}-rank_text" />
                 </div>
+                <div class="col-sm-2">
+                    <select class="form-control confidence-field" id="id_form-{{ form_id }}-role_rank_confidence" name="form-{{ form_id }}-role_rank_confidence">
+                        {% for value, name in confidence_levels %}
+                            {% if form.cleaned_data.role_rank_confidence == value %}
+                                <option value="{{ value }}" selected=true>{{ name }}</option>
+                            {% else %}
+                                <option value="{{ value }}">{{ name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% if form.role_rank_confidence.errors %}
+                        {% for error in form.role_rank_confidence.errors %}
+                        <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
             </div>
-            {% if form.startcontext.errors %}
+            {% if form.startcontext.errors or form.startcontext_confidence.errors %}
             <div class="form-group has-error has-feedback">
             {% else %}
             <div class="form-group">
@@ -110,8 +147,24 @@
                         {% endfor %}
                     {% endif %}
                 </div>
+                <div class="col-sm-2">
+                    <select class="form-control confidence-field" id="id_form-{{ form_id }}-startcontext_confidence" name="form-{{ form_id }}-startcontext_confidence">
+                        {% for value, name in confidence_levels %}
+                            {% if form.cleaned_data.startcontext_confidence == value %}
+                                <option value="{{ value }}" selected=true>{{ name }}</option>
+                            {% else %}
+                                <option value="{{ value }}">{{ name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% if form.startcontext_confidence.errors %}
+                        {% for error in form.startcontext_confidence.errors %}
+                        <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
             </div>
-            {% if form.endcontext.errors %}
+            {% if form.endcontext.errors or form.endcontext_confidence.errors %}
             <div class="form-group has-error has-feedback">
             {% else %}
             <div class="form-group">
@@ -139,8 +192,24 @@
                         {% endfor %}
                     {% endif %}
                 </div>
+                <div class="col-sm-2">
+                    <select class="form-control confidence-field" id="id_form-{{ form_id }}-endcontext_confidence" name="form-{{ form_id }}-endcontext_confidence">
+                        {% for value, name in confidence_levels %}
+                            {% if form.cleaned_data.endcontext_confidence == value %}
+                                <option value="{{ value }}" selected=true>{{ name }}</option>
+                            {% else %}
+                                <option value="{{ value }}">{{ name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% if form.endcontext_confidence.errors %}
+                        {% for error in form.endcontext_confidence.errors %}
+                        <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
             </div>
-            {% if form.firstciteddate.errors or form.lastcited.errors %}
+            {% if form.firstciteddate.errors or form.lastcited.errors or form.date_confidence.errors %}
                 <div class="form-group has-error has-feedback">
             {% else %}
                 <div class="form-group">
@@ -158,6 +227,22 @@
                     <input type="text" class="form-control datepicker" id="id_form-{{ form_id }}-lastciteddate" name="form-{{ form_id }}-lastciteddate" value="{{ form.cleaned_data.lastciteddate|date:'Y-m-d' }}" placeholder="Last cited date" />
                     {% if form.lastciteddate.errors %}
                         {% for error in form.lastciteddate.errors %}
+                        <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="col-sm-2">
+                    <select class="form-control confidence-field" id="id_form-{{ forloop.counter0 }}-date_confidence" name="form-{{ forloop.counter0 }}-date_confidence">
+                        {% for value, name in confidence_levels %}
+                            {% if form.cleaned_data.date_confidence == value %}
+                                <option value="{{ value }}" selected=true>{{ name }}</option>
+                            {% else %}
+                                <option value="{{ value }}">{{ name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% if form.date_confidence.errors %}
+                        {% for error in form.date_confidence.errors %}
                         <span class="help-block"><i class="fa fa-remove"> </i> {{error}}</span>
                         {% endfor %}
                     {% endif %}
@@ -194,6 +279,9 @@ $(document).ready(function() {
         placeholder: 'Select a role',
         allowClear: true
     });
+    $('.confidence-field').select2({
+        minimumResultsForSearch: Infinity
+    })
 });
 </script>
 {% endblock %}
