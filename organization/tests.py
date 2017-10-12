@@ -22,6 +22,7 @@ def setUpModule():
     call_command('loaddata', 'tests/fixtures/auth.json')
     call_command('loaddata', 'tests/fixtures/source.json')
     call_command('loaddata', 'tests/fixtures/organization.json')
+    call_command('update_countries_plus')
 
 
 def tearDownModule():
