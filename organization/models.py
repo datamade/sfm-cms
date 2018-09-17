@@ -1,7 +1,7 @@
 import uuid
 
 from django.db import models
-from django.db.models.functions import Coalesce, Value
+from django.db.models.functions import Coalesce
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
@@ -56,7 +56,7 @@ class Organization(models.Model, BaseModel, VersionsMixin):
         assocs = self.associationorganization_set\
                      .annotate(lcd=Coalesce('object_ref__associationstartdate__value',
                                             'object_ref__associationenddate__value',
-                                            Value('1000-0-0')))\
+                                            models.Value('1000-0-0')))\
                      .order_by('-lcd')
 
         return assocs
@@ -72,7 +72,7 @@ class Organization(models.Model, BaseModel, VersionsMixin):
         empls = self.emplacementorganization_set\
                     .annotate(lcd=Coalesce('object_ref__emplacementstartdate__value',
                                            'object_ref__emplacementenddate__value',
-                                           Value('1000-0-0')))\
+                                           models.Value('1000-0-0')))\
                     .order_by('-lcd')
 
         return empls
