@@ -488,24 +488,6 @@
     </div>
     {% endif %}
 
-    {% has_versions organization as changelog %}
-        {% if changelog %}
-        <div class="row">
-            <div class="col-sm-12">
-                <h3 id="changelog">
-                    <i class="fa fa-fw fa-refresh"></i>
-                    {% trans "Changelog" %}
-                </h3>
-                <small>
-                    {% trans "Select an attribute below to review the changes our staff have made to this entity." %}
-                </small>
-                <small class="pull-right">{% help href='whowasincommand/unitrec.html#anatomy_unit_record_changelog' %}</small>
-                <hr />
-            {% render_versions organization %}
-            </div>
-        </div>
-        {% endif %}
-
 {% endblock %}
 
 {% block extra_js %}

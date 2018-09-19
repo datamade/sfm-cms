@@ -42,7 +42,6 @@
                             <option value="Person" {% if 'Person' in entity_types %}selected=true{% endif %}>{% trans "Personnel" %}</option>
                             <option value="Organization" {% if 'Organization' in entity_types %}selected=true{% endif %}>{% trans "Units" %}</option>
                             <option value="Violation" {% if 'Violation' in entity_types %}selected=true{% endif %}>{% trans "Incidents" %}</option>
-                            <option value="Source" {% if 'Source' in entity_types %}selected=true{% endif %}>{% trans "Sources" %}</option>
                         </select>
                     </div>
                         <a href="{% url 'search' %}{% if query %}?q={{ query }}{% endif %}" class="btn btn-sm btn-default"
@@ -243,35 +242,6 @@
                 </div>
             {% endif %}
 
-            <!-- Sources -->
-
-            {% if 'Source' in entity_types and results.Source|length > 0 %}
-                <div class="panel panel-default">
-                    <div class="panel-heading" data-toggle="collapse" data-target='#source-filters'>
-                        <a role="button" class="filter-heading">
-                            <h4 class="panel-title">
-                                {% trans "Filters for <strong><i class='fa fa-fw fa-paperclip'></i>Sources</strong>" %}
-                                <i class="fa fa-fw
-                                {% if show_filter.Search %}
-                                    fa-minus
-                                {% else %}
-                                    fa-plus
-                                {% endif %}
-                                pull-right"></i>
-                            </h4>
-                        </a>
-                    </div>
-                    <!-- Facets -->
-                    <div class="panel-body {% if show_filter.Source %}panel-show{% endif %} collapse" id="source-filters">
-                        <!-- Publication name -->
-                        {% if facets.Source.facet_fields.publication_s_fct.any %}
-                            {% with facet_name='publication_s_fct' facet_label=_('Publication name') selected_list=selected_facets.publication_t_fct item_list=facets.Source.facet_fields.publication_s_fct.counts %}
-                                {% include 'partials/search_filter.html' %}
-                            {% endwith %}
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
         </div>
     </form>
     <div class="col-xs-12 col-sm-8 pull-right">
@@ -307,11 +277,6 @@
         {% if 'Violation' in results.keys %}
             {% with objects=results.Violation hit_count=hits.Violation %}
                 {% include 'partials/violation_search_results.html' %}
-            {% endwith %}
-        {% endif %}
-        {% if 'Source' in results.keys %}
-            {% with objects=results.Source hit_count=hits.Source %}
-                {% include 'partials/source_search_results.html' %}
             {% endwith %}
         {% endif %}
     {% else %}

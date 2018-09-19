@@ -2,6 +2,7 @@
 {% load citations %}
 {% load help %}
 
+{% if object_info %}
 <span class="citation-container">
     <span class="citation {{confidence_class}}">
         <sup>
@@ -22,3 +23,4 @@
         </sup>
     </span>
 </span>
+{% endif %}
