@@ -147,10 +147,23 @@ def get_commanders(mem_start, mem_end, compositions, relationship='child'):
         child_id = child.value.uuid
 
         child_commanders_query = '''
-            SELECT DISTINCT(id) FROM membershipperson
-            WHERE organization_id='{child_id}'
-            AND (first_cited < '{mem_end}' or first_cited is Null)
-            AND (last_cited > '{mem_start}' or last_cited is Null)
+            SELECT DISTINCT(person.id)
+            FROM membershipperson_membershipperson AS membership
+            JOIN membershipperson_membershippersonmember AS member
+              ON membership.id = member.object_ref_id
+            JOIN person_person AS person
+              ON member.value_id = person.id
+            JOIN membershipperson_membershippersonorganization AS member_org
+              ON membership.id = member_org.object_ref_id
+            JOIN organization_organization AS organization
+              ON member_org.value_id = organization.id
+            JOIN membershipperson_membershippersonfirstciteddate AS first_cited
+              ON membership.id = first_cited.object_ref_id
+            JOIN membershipperson_membershippersonlastciteddate AS last_cited
+              ON membership.id = last_cited.object_ref_id
+            WHERE organization.uuid='{child_id}'
+            AND (first_cited.value < '{mem_end}' or first_cited is NULL)
+            AND (last_cited.value > '{mem_start}' or last_cited is NULL)
         '''.format(child_id=child_id,
                     mem_end=mem_end,
                     mem_start=mem_start)
@@ -277,7 +290,7 @@ def person_autocomplete(request):
     return HttpResponse(json.dumps(attrs), content_type='application/json')
 
 
-class PersonEditView(UpdateView, NeverCacheMixin, LoginRequiredMixin):
+class PersonEditView(LoginRequiredMixin, UpdateView, NeverCacheMixin):
     template_name = 'person/edit.html'
     model = Person
     slug_field = 'uuid'
