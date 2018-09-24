@@ -44,7 +44,7 @@ class Command(BaseCommand):
             dest='entity_types',
             help='Comma separated list of entity types to index',
             # default="people,organizations,sources,violations"
-            default="people,organizations,violations,sources"
+            default="people,organizations,violations"
         )
         parser.add_argument(
             '--id',
@@ -699,73 +699,6 @@ class Command(BaseCommand):
                 self.added_count += 1
 
         self.add_to_index(documents)
-
-    # def index_compositions(self, update=False, doc_id=None):
-
-    #     if doc_id:
-    #         compositions = Composition.objects.filter(id='composition-{}'.format(doc_id))
-    #     else:
-    #         compositions = Composition.objects.all()
-
-    #     documents = []
-
-    #     for composition in compositions:
-    #         parent_org = composition.parent.get_value()
-    #         child_org = composition.child.get_value()
-    #         start_date = self.format_date(composition.startdate.get_value())
-    #         end_date = self.format_date(composition.enddate.get_value())
-    #         open_ended = composition.open_ended.get_value()
-    #         classification = composition.classification.get_value()
-
-    #         document = {
-    #             'id': 'composition-{}'.format(composition.id),
-    #             'content': 'Composition',
-    #             'text': 'Composition',
-    #             'entity_type': 'Composition'
-    #         }
-
-    #         if parent_org:
-    #             document['composition_parent_uuid_s'] = parent_org.value.uuid
-    #             document['composition_parent_id_s'] = parent_org.value.id
-    #             document['composition_parent_name_s'] = parent_org.value.name.get_value().value
-
-    #         if child_org:
-    #             document['composition_child_uuid_s'] = child_org.value.uuid
-    #             document['composition_child_id_s'] = child_org.value.id
-    #             document['composition_child_name_s'] = child_org.value.name.get_value().value
-
-    #         if start_date:
-    #             document['composition_start_date_dt'] = start_date
-
-    #         if end_date:
-    #             document['composition_end_date_dt'] = end_date
-
-    #         if open_ended:
-    #             document['composition_open_ended_s'] = open_ended.value
-
-    #         if classification:
-    #             document['composition_classification_s'] = classification.value
-
-    #         if start_date and end_date:
-    #             start_date = start_date.split('T')[0]
-    #             end_date = end_date.split('T')[0]
-
-    #             args = [start_date, end_date]
-
-    #             if dateparser.parse(start_date) > dateparser.parse(end_date):
-    #                 args = [end_date, start_date]
-
-    #             document['composition_daterange_dr'] = '[{0} TO {1}]'.format(*args)
-
-    #         elif start_date and not end_date and open_ended and open_ended.value.strip() == 'Y':
-    #             document['composition_daterange_dr'] = '[{} TO *]'.format(start_date.split('T')[0])
-
-    #         elif not start_date and end_date:
-    #             document['composition_daterange_dr'] = '[* TO {}]'.format(end_date.split('T')[0])
-
-    #         documents.append(document)
-
-    #     self.add_to_index(documents)
 
     def add_to_index(self, documents):
 
