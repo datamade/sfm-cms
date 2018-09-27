@@ -464,6 +464,8 @@ class Command(UtilityMixin, BaseCommand):
 
             if confidence and sources:
 
+                division_id = 'ocd-division/country:{}'.format(country_code)
+
                 org_info = {
                     'Organization_OrganizationName': {
                         'value': name_value,
@@ -471,14 +473,15 @@ class Command(UtilityMixin, BaseCommand):
                         'sources': sources
                     },
                     'Organization_OrganizationDivisionId': {
-                        'value': 'ocd-division/country:{}'.format(country_code),
+                        'value': division_id,
                         'confidence': confidence,
                         'sources': sources,
                     }
                 }
 
                 try:
-                    organization = Organization.objects.get(organizationname__value=name_value)
+                    organization = Organization.objects.get(organizationname__value=name_value,
+                                                            organizationdivisionid__value=division_id)
                     existing_sources = self.sourcesList(organization, 'name')
                     org_info["Organization_OrganizationName"]['sources'] += existing_sources
 
