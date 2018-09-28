@@ -147,12 +147,10 @@ def get_commanders(mem_start, mem_end, compositions, relationship='child'):
         child_id = child.value.uuid
 
         child_commanders_query = '''
-            SELECT DISTINCT(person.id)
+            SELECT DISTINCT(membership.id)
             FROM membershipperson_membershipperson AS membership
             JOIN membershipperson_membershippersonmember AS member
               ON membership.id = member.object_ref_id
-            JOIN person_person AS person
-              ON member.value_id = person.id
             JOIN membershipperson_membershippersonorganization AS member_org
               ON membership.id = member_org.object_ref_id
             JOIN organization_organization AS organization
