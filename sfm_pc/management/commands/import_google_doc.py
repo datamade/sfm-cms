@@ -570,7 +570,12 @@ class Command(UtilityMixin, BaseCommand):
                                 'value': parent_org_name,
                                 'confidence': parent_confidence,
                                 'sources': parent_sources
-                            }
+                            },
+                            'Organization_OrganizationDivisionId': {
+                                'value': division_id,
+                                'confidence': confidence,
+                                'sources': sources,
+                            },
                         }
                         try:
                             parent_organization = Organization.objects.get(organizationname__value=parent_org_name)
@@ -658,6 +663,11 @@ class Command(UtilityMixin, BaseCommand):
                         member_org_info = {
                             'Organization_OrganizationName': {
                                 'value': member_org_name,
+                                'confidence': confidence,
+                                'sources': sources,
+                            },
+                            'Organization_OrganizationDivisionId': {
+                                'value': division_id,
                                 'confidence': confidence,
                                 'sources': sources,
                             },
