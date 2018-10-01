@@ -100,7 +100,6 @@ class Command(BaseCommand):
                 name VARCHAR,
                 country_code VARCHAR,
                 feature_type VARCHAR,
-                search_index tsvector,
                 PRIMARY KEY (id)
             )
         '''
@@ -127,8 +126,7 @@ class Command(BaseCommand):
                 name,
                 country_code,
                 geometry,
-                'boundary'::VARCHAR AS feature_type,
-                to_tsvector('english', COALESCE(name, ''))
+                'boundary'::VARCHAR AS feature_type
               FROM osm_boundaries
               WHERE country_code = :country_code
               UNION
@@ -141,11 +139,24 @@ class Command(BaseCommand):
                 name AS name,
                 country_code,
                 ST_Transform(way, 4326) AS geometry,
-                'point'::VARCHAR AS feature_type,
-                to_tsvector('english', COALESCE(name, ''))
+                'point'::VARCHAR AS feature_type
               FROM planet_osm_point
               WHERE name IS NOT NULL
                 AND country_code = :country_code
+              UNION
+              SELECT
+                osm_id,
+                MAX(name) AS localname,
+                NULL::VARCHAR[] AS hierarchy,
+                NULL::jsonb AS tags,
+                MAX(admin_level)::integer,
+                MAX(name) AS name,
+                NULL::VARCHAR AS country_code,
+                ST_Transform(ST_Union(way), 4326) AS geometry,
+                'polygon'::VARCHAR AS feature_type
+              FROM planet_osm_polygon
+              WHERE name IS NOT NULL
+              GROUP BY osm_id
         '''
 
         self.executeTransaction('DROP TABLE IF EXISTS raw_osm_data')
@@ -185,8 +196,7 @@ class Command(BaseCommand):
               name,
               country_code,
               geometry,
-              feature_type,
-              search_index
+              feature_type
             )
               SELECT raw.*
               FROM new_osm_data AS new
