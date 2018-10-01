@@ -114,6 +114,10 @@ class Command(BaseCommand):
             CREATE INDEX geometry_index ON osm_data USING GIST (geometry)
         """, raise_exc=False)
 
+        self.executeTransaction("""
+            ALTER TABLE osm_data ALTER COLUMN admin_level TYPE VARCHAR
+        """, raise_exc=False)
+
     def makeRawTable(self, country):
         create = '''
             CREATE TABLE raw_osm_data AS
@@ -122,7 +126,7 @@ class Command(BaseCommand):
                 localname,
                 hierarchy,
                 tags,
-                admin_level,
+                admin_level::VARCHAR,
                 name,
                 country_code,
                 geometry,
@@ -135,7 +139,7 @@ class Command(BaseCommand):
                 name AS localname,
                 NULL::VARCHAR[] AS hierarchy,
                 NULL::jsonb AS tags,
-                admin_level::integer,
+                admin_level::VARCHAR,
                 name AS name,
                 country_code,
                 ST_Transform(way, 4326) AS geometry,
@@ -149,7 +153,7 @@ class Command(BaseCommand):
                 MAX(name) AS localname,
                 NULL::VARCHAR[] AS hierarchy,
                 NULL::jsonb AS tags,
-                MAX(admin_level)::integer,
+                MAX(admin_level)::VARCHAR,
                 MAX(name) AS name,
                 NULL::VARCHAR AS country_code,
                 ST_Transform(ST_Union(way), 4326) AS geometry,
