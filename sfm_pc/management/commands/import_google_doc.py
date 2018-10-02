@@ -1399,7 +1399,7 @@ class Command(UtilityMixin, BaseCommand):
                     'sources': sources,
                 }
 
-            else:
+            elif not confidence or not sources:
                 missing = []
                 if not confidence:
                     missing.append('confidence')
@@ -1407,6 +1407,9 @@ class Command(UtilityMixin, BaseCommand):
                     missing.append('sources')
 
                 self.log_error('{0} {1} did not have {2}'.format(attribute, value, ', '.join(missing)))
+
+            elif not geo:
+                self.log_error("Can't find OSM ID {0} for Site {1}".format(attr_osm_id, site.name))
 
         try:
             site.update(site_data)
@@ -1565,7 +1568,7 @@ class Command(UtilityMixin, BaseCommand):
     def get_sources(self, source_id_string):
 
         sources = []
-        source_ids = source_id_string.strip().split(';')
+        source_ids = [s.strip() for s in source_id_string.split(';') if s]
 
         for source_id in source_ids:
             try:
@@ -1574,6 +1577,7 @@ class Command(UtilityMixin, BaseCommand):
 
             except ValueError:
                 self.log_error("Invalid source: " + source_id)
+
 
         return sources
 
