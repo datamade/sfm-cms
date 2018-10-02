@@ -1575,7 +1575,7 @@ class Command(UtilityMixin, BaseCommand):
                 source = Source.objects.get(uuid=source_id)
                 sources.append(source)
 
-            except ValueError:
+            except (ValueError, ValidationError):
                 self.log_error("Invalid source: " + source_id)
 
 
