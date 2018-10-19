@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-12 col-md-10 col-md-offset-1 post">
+        <h2><i class="fa fa-fw fa-globe"></i>{% trans "Uganda" %}</h2>
+        <hr />
+
+        <h3 id="overview-of-coverage">{% trans "Overview of Coverage" %}</h3>
+        <p>
+            {% blocktrans %}
+            The Security Force Monitor’s current dataset is a “snapshot” of the structure of the Uganda Police Force as of September 2016. Additional research (detailed below) will focus on other elements of the security forces of Uganda. If you have public data that can add to our coverage or need support in your investigations, please get in touch: info [at] securityforcemonitor.org
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="administrative-division">{% trans "Administrative Division of Uganda" %}</h3>
+        <p>
+            {% blocktrans %}
+            Uganda is divided into four regions which are further subdivided into 111 districts.
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="security-forces">{% trans "Security Forces of Uganda" %}</h3>
+
+        <h4 id="police">{% trans "Police" %}</h4>
+        <p>
+            {% blocktrans %}
+            The Inspector General of Police commands the Uganda Police Force which is divided into Directorates at the headquarters level and operationally into and Police Regions which are further divided into Police Districts, Police Stations, Police Posts and Police Booths.
+            {% endblocktrans %}
+        </p>
+        
+        <h3 id="outstanding-areas">{% trans "Outstanding Areas for Further Research" %}</h3>
+        <ul>
+            <li>{% trans "Expanding the command structure of the Uganda Police Force through time." %}</li>
+            <li>{% trans "Detailing commanders of the Uganda Police Force across various units and branches." %}</li>
+            <li>{% trans "Identifying locations and areas of operations through time of Uganda Police Force units." %}</li>
+            <li>{% trans "Building command hierarchy of the armed forces of Uganda and identifying location and area of operations of various units." %}</li>
+            <li>{% trans "Investigating other priorities as guided by partners concerned about the human rights practices of the security forces of Uganda." %}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -6,6 +6,14 @@
         <h2><i class="fa fa-fw fa-globe"></i>{% trans "Mexico" %}</h2>
         <hr />
 
+
+        <h3 id="overview-of-coverage">{% trans "Overview of Coverage" %}</h3>
+        <p>
+           {% blocktrans %}
+           The Security Force Monitor’s current dataset comprehensively covers the command structure, locations and areas of operation of the Mexican armed forces from roughly 2006 to 2018. The Monitor has extensive data on commanders, though some smaller units have gaps. Finally our data includes a “snapshot” of the command structure and locations of Policía Federal units as of June 2016. Additional research (detailed below) will focus on other elements of the security forces of Mexico. If you have public data that can add to our coverage or need support in your investigations, please get in touch: info [at] securityforcemonitor.org
+           {% endblocktrans %}
+        </p>
+
         <h3 id="general-background">{% trans "General Background on Security Forces" %}</h3>
         <p>
             {% blocktrans %}
@@ -16,7 +24,7 @@
         <h3 id="administrative-division">{% trans "Administrative Division of Mexico" %}</h3>
         <p>
             {% blocktrans %}
-            Mexico has a federal structure. There are 31 states and a federal capital territory, currently in transition to becoming an autonomous federal entity. Each state is subdivided into municipios of which there are 2,456.
+            Mexico has a federal structure. There are 31 states as well as a federal entity of Mexico City. Each state is subdivided into municipios of which there are 2,456.
             {% endblocktrans %}
         </p>
 
@@ -25,7 +33,7 @@
         <h4 id="police">{% trans "Police" %}</h4>
         <p>
             {% blocktrans %}
-            Mexico has federal, state and municipio (municipal) police forces as well as a separate police for the federal capital. At the federal and state level police forces are generally divided by role and command structure into policía preventiva (preventive police) in charge of maintaining order and usually under the command of the Secretaría de Seguridad Pública (Ministry of Public Security) and policía judicial (judicial police) usually under the command of the state Procuraduría General de Justicia (Attorney General).
+            Mexico has federal, state and municipio (municipal) police forces as well as a separate police for the federal capital. At the federal and state level police forces are generally divided by role and command structure into policía preventiva (preventive police) in charge of maintaining order and usually under the command of the Secretaría de Seguridad Pública (Ministry of Public Security) and policía judicial (judicial police) usually under the command of the state  Procuraduría General de Justicia (Attorney General).  
             {% endblocktrans %}
         </p>
         <p>
@@ -56,9 +64,16 @@
         <h4 id="navy">{% trans "Navy/Marines" %}</h4>
         <p>
             {% blocktrans %}
-            Similar to the Army, the SEMAR is broken into several Regiones Navales (Naval Regions) which command Zonas Navales (Naval Zones). SEMAR also includes two Fuerzas Navales (Naval Forces). The Navy has been very active in internal security operations, mainly through the deployment of the marines, which are generally grouped into Brigadas de Infanteria de Marina (Marine Brigades) and smaller Batallónes de Infantería de Marina (Marine Battalions). Since 2007 the command structure of the marines has been restructured several, but currently marine units are generally under the command of a Zona Naval or Región Naval.
+            Similar to the Army, the SEMAR is broken into several Regiones Navales (Naval Regions) which command Zonas Navales (Naval Zones). SEMAR also includes two Fuerzas Navales (Naval Forces). The Navy has been very active in internal security operations, mainly through the deployment of the marines, which are generally grouped into Brigadas de Infanteria de Marina (Marine Brigades) and smaller Batallones de Infantería de Marina (Marine Battalions). Since 2007 the command structure of the marines has been restructured several, but currently marine units are generally under the command of a Zona Naval or Región Naval.
             {% endblocktrans %}
         </p>
+        <h3 id="outstanding-areas">{% trans "Outstanding Areas for Further Research" %}</h3>
+        <ul>
+            <li>{% trans "Expanding the command structure of the Policía Federal through time." %}</li>
+            <li>{% trans "Detailing command structures, locations and areas of operations for state and municipal police forces in various states of Mexico through time." %}</li>
+            <li>{% trans "Identifying additional details on individual units and personnel as needed to fill any gaps in the records of units and commanders of the armed forces of Mexico during the timeframe of 2006 to 2018." %}</li>
+            <li>{% trans "Investigating other priorities as guided by partners concerned about the human rights practices of the security forces of Mexico." %}</li>
+        </ul>
     </div>
 </div>
 {% endblock %}

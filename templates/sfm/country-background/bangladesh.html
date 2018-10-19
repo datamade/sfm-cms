@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-12 col-md-10 col-md-offset-1 post">
+        <h2><i class="fa fa-fw fa-globe"></i>{% trans "Bangladesh" %}</h2>
+        <hr />
+
+        <h3 id="overview-of-coverage">{% trans "Overview of Coverage" %}</h3>
+
+        <p>
+            {% blocktrans %} 
+            The Security Force Monitor’s current dataset is focused on the structure of police in Bangladesh. Additional research (detailed below) will focus on other elements of the security forces of Bangladesh. If you have public data that can add to our coverage or need support in your investigations, please get in touch: info [at] securityforcemonitor.org
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="administrative-divisions">{% trans "Administrative Division of Bangladesh" %}</h3>
+
+        <p>
+            {% blocktrans %}
+            Bangladesh is divided into 8 Divisions which are further divided into 64 Districts and then 491 Upazilas.
+            {% endblocktrans %} 
+        </p>
+
+        <h3 id="police">{% trans "Police" %}</h3>
+
+        <p>
+            {% blocktrans %}
+            The Bangladesh Police is the national police force of Bangladesh, overseeing all branches of the police. The Bangladesh is divided into the Special Branch, Criminal Investigation Department, Rapid Action Battalions, and Ranges (which oversee police forces across large geographic areas and are further divided into District Police, Circles and Police Stations) and an Armed Police Battalion. Specialized branches of the Bangladesh Police include the Highway Police, Industrial Police and Railway Police. Additionally, the Bangladesh Police has several Metropolitan Police forces for the major cities of Barisal, Chittagong, Dhaka (the capital), Khulna, Rajshahi, and Sylhet. Each Metropolitan Police is further divided into Divisions, Zones and Police Stations.
+            {% endblocktrans %}
+        </p>
+
+        <h3 id-"outstanding-areas">{% trans "Outstanding areas for further research" %}</h3>
+
+        <ul>   
+            <li>{% trans "Detailing commanders of Bangladesh Police across various units and branches." %}</li>
+            <li>{% trans "Identifying locations and areas of operations through time of Bangladesh Police units." %}</li>
+            <li>{% trans "Building command hierarchy of the armed forces of Bangladesh and identifying location and area of operations of various units." %}</li>
+            <li>{% trans "Investigating other priorities as guided by partners concerned about the human rights practices of the security forces of Bangladesh." %}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

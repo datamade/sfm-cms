@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-12 col-md-10 col-md-offset-1 post">
+        <h2><i class="fa fa-fw fa-globe"></i>{% trans "Country" %}</h2>
+        <hr />
+
+
+        <h3 id="overview-of-coverage">{% trans "Overview of Coverage" %}</h3>
+        <p>
+            {% blocktrans %}
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="general-background">{% trans "General Background on Security Forces" %}</h3>
+        <p>
+            {% blocktrans %}
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="administrative-division">{% trans "Administrative Division of " %}</h3>
+        <p>
+            {% blocktrans %}
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="security-forces">{% trans "Security Forces of [Country]" %}</h3>
+
+        <h4 id="Start listing SFs here">{% trans "Generic h4" %}</h4>
+        <p>
+            {% blocktrans %}
+            {% endblocktrans %}
+        </p>
+        <p>
+            {% blocktrans %}
+            {% endblocktrans %}
+        </p>
+        
+        <h3 id="outstanding-areas">{% trans "Outstanding Areas for Further Research" %}</h3>
+        <ul>
+            <li>{% trans "" %}</li>
+            <li>{% trans "" %}</li>
+            <li>{% trans "" %}</li>
+            <li>{% trans "" %}</li>
+            <li>{% trans "" %}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

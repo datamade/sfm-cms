@@ -6,10 +6,17 @@
         <h2><i class="fa fa-fw fa-globe"></i>{% trans "Nigeria" %}</h2>
         <hr />
 
+        <h3 id="overview-of-coverage">{%trans "Overview of Coverage" %}</h3>
+        <p>
+            {% blocktrans %}
+            The Security Force Monitor’s current dataset comprehensively covers the Nigerian armed forces and the Nigeria Police Force in the states of Abia, Adamawa, Akwa Ibom, Anambra, Enugu, Kano, Katsina, Lagos, Ogun, Plateau, Rivers and Yobe from roughly 2008 to 2018. Additional research (detailed below) will focus on other elements of the security forces of Nigeria. If you have public data that can add to our coverage or need support in your investigations, please get in touch: info [at] securityforcemonitor.org
+            {% endblocktrans %}
+        </p>
+
         <h3 id="general-background">{% trans "General Background on Security Forces" %}</h3>
         <p>
             {% blocktrans %}
-                Nigeria has security forces with different responsibilities for internal security. Crime fighting is the prime responsibility of the Nigeria Police Force. The State Security Service focuses on threats to national security. The Nigerian Armed Forces, comprising the Nigerian Air Force, Nigerian Army and Nigerian Navy, are also very active in internal security operations, particularly against Boko Haram. The Nigerian Army is generally the branch most closely involved in internal security operations. Security forces in Nigeria are generally national in character with the President of Nigeria as the commander-in-chief of the respective forces.
+            Nigeria has security forces with different responsibilities for internal security. Crime fighting is the prime responsibility of the Nigeria Police Force. The State Security Service focuses on threats to national security. The Nigerian Armed Forces, comprising the Nigerian Air Force, Nigerian Army and Nigerian Navy, are also very active in internal security operations, particularly against Boko Haram. The Nigerian Army is generally the branch most closely involved in internal security operations. Security forces in Nigeria are generally national in character with the President of Nigeria as the commander-in-chief of the respective forces.
             {% endblocktrans %}
         </p>
 
@@ -25,12 +32,7 @@
         <h4 id="police">{% trans "Police" %}</h4>
         <p>
             {% blocktrans %}
-            The Nigeria Police Force (NPF) is the national police force of Nigeria. The NPF is under control of the president and headed by the Inspector General of Police (IGP) who is appointed by the President. The command structure flows from the IGP at Force Headquarters through Zonal Police Commands, each of which oversee police operations in at least two states and/or the Federal Capital Territory (FCT). Each State and the FCT has a Police Command headed by a Commissioner of Police who commands police operations in the state or FCT. Police Commands are divided into several Police Area Commands which are under the command of the Police Command. Police Area Commands are further divided into Police Divisions, which usually headed by a Chief Superintendent of Police and often referred to by their title, Divisional Police Officer. Police Divisions can also be under the direct command of their respective Police Command. Police Divisions in turn command the smaller formation of Police Stations which in turn command Police Posts. The smallest formation of the NPF is the Village Police Post which can be commanded by either a Police Post or Police Division, depending on the structure of the police formations in that particular area.
-            {% endblocktrans %}
-        </p>
-        <p>
-            {% blocktrans %}
-            Each Police Command also has a Criminal Investigation Department which commands the Special Anti Robbery Squad (SARS) in each state and the FCT. The SARS units in each state and the FCT are coordinated at the Force Headquarters by a Commissioner of Police.
+            The Nigeria Police Force (NPF) is the national police force of Nigeria. The NPF is under control of the president and headed by the Inspector General of Police (IGP) who is appointed by the President. The command structure flows from the IGP at Force Headquarters through Zonal Police Commands, each of which oversee police operations in at least two states and/or the Federal Capital Territory (FCT). Each State and the FCT has a Police Command headed by a Commissioner of Police who commands police operations in the state or FCT. Each Police Command also has a Criminal Investigation Department and a Special Anti Robbery Squad (the command structure for Special Anti Robbery Squad units has changed multiple times). Police Commands are divided into several Police Area Commands which are under the command of the Police Command. Police Area Commands are further divided into Police Divisions, which usually headed by a Chief Superintendent of Police and often referred to by their title, Divisional Police Officer. Police Divisions can also be under the direct command of their respective Police Command. Police Divisions in turn command the smaller formation of Police Stations which in turn command Police Posts. The smallest formation of the NPF is the Village Police Post which can be commanded by either a Police Post or Police Division, depending on the structure of the police formations in that particular area.
             {% endblocktrans %}
         </p>
         <p>
@@ -75,7 +77,7 @@
 
         <h4 id="nigerian-navy">{% trans "Nigerian Navy" %}</h4>
         <p>
-            {% trans "The Navy is under the command of the Chief of Naval Staff who reports to the Chief of Defence Staff." %} 
+            {% trans ".The Navy is under the command of the Chief of Naval Staff who reports to the Chief of Defence Staff." %} 
         </p>
         <p>
             {% trans "Operationally the Nigerian Navy is divided into the Western, Eastern and Central Naval Commands, each headed by a Flag Officer Commanding." %}
@@ -92,6 +94,14 @@
         <h4 id="joint-task-forces">{% trans "Joint Task Forces" %}</h4>
         <p>
             {% trans "Several Joint Task Forces (JTFs) operate and have operated throughout Nigeria. The mission profile and makeup of these JTFs have varied, though they generally include a police and army component. Most JTFs appear to have been commanded by army officers." %}
+        </p>
+
+        <h3 id="oustanding-areas">{% trans "Outstanding Areas for Further Reearch" %}</h3>
+        <ul>
+            <li>{% trans "Inclusion of additional details on units and commanders for Nigeria Police Force units in the Federal Capital Territory and the following states: Bauchi, Bayelsa, Benue, Borno, Cross River, Delta, Ebonyi, Edo, Ekiti, Gombe, Imo, Jigawa, Kaduna, Kebbi, Kogi, Kwara, Nasarawa, Niger, Ondo, Osun, Oyo, Sokoto, Taraba, Zamfara." %}</li>
+            <li>{% trans "Identifying additional details on individual units and personnel as needed to fill any gaps in the records of units and commanders of the armed forces of Nigeria during the timeframe of 2008 to 2018." %}</li>
+            <li>{% trans "Investigating other priorities as guided by partners concerned about the human rights practices of the security forces of Nigeria." %}</li>
+        </ul>
     </div>
 </div>
 {% endblock %}
