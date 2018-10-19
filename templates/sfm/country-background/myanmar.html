@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-12 col-md-10 col-md-offset-1 post">
+        <h2><i class="fa fa-fw fa-globe"></i>{% trans "Myanmar" %}</h2>
+        <hr />
+
+
+        <h3 id="overview-of-coverage">{% trans "Overview of Coverage" %}</h3>
+        <p>
+           {% blocktrans %}
+           The Security Force Monitor’s current dataset is focused on the army structure, location and area of operations from 2000 to 2018. Additional research (detailed below) will focus on additional elements of the security forces of Myanmar. If you have public data that can add to our coverage or need support in your investigations, please get in touch: info [at] securityforcemonitor.org
+           {% endblocktrans %}
+        </p>
+
+        <h3 id="general-background">{% trans "General Background on Security Forces" %}</h3>
+        <p>
+            {% blocktrans %}
+            The Tatmadaw, or armed forces of Myanmar, play a central role in internal security and politics. The military has directly ruled Myanmar and remains outside of civilian oversight or command. Within the Tatmadaw the army is the dominant branch. The Tatmadaw is one of the most opaque militaries in the world, with little information on its structure or operations coming directly from the military itself.
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="administrative-division">{% trans "Administrative Division of Myanmar" %}</h3>
+        <p>
+            {% blocktrans %}
+            Myanmar is divided into Regions and States, a capital “Union Territory” and also has several Self-Administered Zones. Some of these administrative boundaries are divided into Districts which are further divided into Townships.
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="security-forces">{% trans "Security Forces of Myanmar" %}</h3>
+
+        <h4 id="tatmadaw-armed-forces">{% trans "Tatmadaw/Armed Forces/Military" %}</h4>
+        <p>
+            {% blocktrans %}
+            The Commander-in-Chief of the Tatmadaw is at the apex of the chain of command with a Deputy Commander-in-Chief of Defence Services directly below this position, who also concurrently serves as the head of the army. 
+            {% endblocktrans %}
+        </p>
+        
+        <h4 id="tatmadaw-kyi-army">{% trans "Tatmadaw-Kyi/Army" %}</h4>
+        <p>
+            {% blocktrans %}
+            As of 2009 the Commander-in-Chief of the Tatmadaw is at the apex of the chain of command, the military does not come under the command of civilian political leaders of Myanmar. Underneath the Commander-in-Chief is the Deputy Commander-in-Chief of Defence Services who concurrently serves as the head of the army. In the army’s chain of command below the Deputy Commander-in-Chief of Defence Services is the General Staff Office (also referenced as the General Staff) which commands the six Bureaus of Special Operations (BSO). Each BSO commands one or more Regional Military Commands (RMC) which oversee army operations in one or more state, region or union territory. Below RMCs in the army hierarchy are Military Operations Commands (which generally command ten battalions), Regional Operations Commands (which generally command four battalions), and Tactical Operations Commands (which generally command three battalions). The main units of the army are Light Infantry Battalions and Infantry Battalions.
+        <p>
+        </p>
+            {% blocktrans %}
+            Light Infantry Divisions are regularly deployed for operations around the country and from 1990 to at least 2009 followed a separate chain of command, reporting directly to the Chief of Staff of the army (who heads the General Staff Office).
+            {% endblocktrans %}
+        </p>
+        <p>
+            {% blocktrans %}
+            As of 2009 artillery formations were generally under a separate chain of command, with Artillery Battalions under the command of Artillery Divisions. The chain of command from Artillery Divisions to the rest of the military is currently unclear, however, they eventually fall under the Deputy Commander-in-Chief of Defence Services, who in turn is under the command of the Commander-in-Chief, as does the rest of the military of Myanmar. 
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="outstanding-areas">{% trans "Outstanding Areas for Further Research" %}</h3>
+        <ul>
+            <li>{% trans "Investigating the command structure of other branches of the military as well as the police, border guards and other internal security forces." %}</li>
+            <li>{% trans "Expanding and deepening information on the command structure of artillery units." %}</li>
+            <li>{% trans "Detailing commanders of the various units of the security forces." %}</li>
+            <li>{% trans "Investigating other priorities as guided by partners concerned about the human rights practices of the security forces of Myanmar." %}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

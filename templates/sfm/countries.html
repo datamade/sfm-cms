@@ -3,6 +3,49 @@
 {% load static %}
 {% load help %}
 {% block content %}
+    <div class="col-xs-12">
+        <div class="panel panel-default" style="min-height:150px">
+            <div class="panel-heading">
+                <h3><strong>{% trans 'Bangladesh' %}</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{% static 'images/bangladesh.png' %}"></img>
+                    </div>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4">
+                                <h4><strong><i class="fa fa-fw fa-search"></i> {% trans "Browse data" %}</strong></h4>
+                                <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3ABangladesh">
+                                    <p>{% trans "Browse units" %}</p>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 col-sm-8">
+                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact%3AEgypt&selected_facets=organization_adminlevel1_ss_fct_exact%3ACairo+Governorate&selected_facets=organization_classification_ss_fct_exact%3APolice&entity_type=Person&entity_type=Organization&entity_type=Violation">
+                                    <p>{% trans "To define" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact%3AEgypt&selected_facets=organization_adminlevel1_ss_fct_exact%3AAlexandria%20Governorate&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3APolice">
+                                    <p>{% trans "To define" %}</p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
+                                <p>
+                                    {% trans "The Security Force Monitor’s current dataset is focused on the structure of police in Bangladesh. Additional research will focus on other elements of the security forces of Bangladesh." %}
+                                <a href="{% url 'background' 'bangladesh' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-xs-12">
@@ -37,7 +80,7 @@
                             <div class="col-xs-12">
                                 <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
                                 <p>
-                                    {% trans "Our research on Egypt is in progress. Currently we have partial coverage of Egyptian police forces covering most governorates." %}
+                                    {% trans "The Security Force Monitor’s current dataset is a “snapshot” of the structure of the police in Egypt as of September 2016 and military forces in 2011. Additional research on Egypt is dependent on funding and priorities of partners concerned about the human rights practices of the security forces of Egypt." %}
                                 <a href="{% url 'background' 'egypt' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
                                 </p>
                             </div>
@@ -89,10 +132,59 @@
                                 <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
                                 <p>
                                     {% blocktrans %}
-                                    Mexico has several layers of security forces. Crime fighting generally falls to local, state and federal police forces, each with their own chain of command. Specialized agencies within or independent to these police forces are also involved in crime fighting. Additionally, the armed forces of Mexico&mdash;particularly the Army and the Marines&mdash;have been increasingly involved in internal security operations.
+                                   The Security Force Monitor’s current dataset comprehensively covers the command structure, locations and areas of operation of the Mexican armed forces from roughly 2006 to 2018. The Monitor has extensive data on commanders, though some smaller units have gaps. Finally our data includes a “snapshot” of the command structure and locations of Policía Federal units as of June 2016.
                                     {% endblocktrans %}
                                 </p>
                                 <a href="{% url 'background' 'mexico' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default" style="min-height:150px">
+            <div class="panel-heading">
+                <h3><strong>{% trans "Myanmar" %}</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{% static 'images/myanmar.png' %}"></img>
+                    </div>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4">
+                                <h4><strong><i class="fa fa-fw fa-search"></i> {% trans "Browse data" %}</strong></h4>
+                                <a href="{% url 'search' %}?entity_type=Person&selected_facets=country_ss_fct_exact%3Myanmar">
+                                    <p>{% trans "Browse personnel" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3AMyanmar">
+                                    <p>{% trans "Browse units" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?entity_type=Violation&selected_facets=country_ss_fct_exact%3AMyanmar">
+                                    <p>{% trans "Browse incidents" %}</p>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 col-sm-8">
+                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
+                                <a href="{% url 'view-organization' boyona.uuid %}"><p>{% trans "To define" %}</p></a>
+                                <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "To define"%}</p></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
+                                <p>
+                                    {% blocktrans %}
+                                    The Security Force Monitor’s current dataset on Myanmar is focused on the army structure, location and area of operations from 2000 to 2018. 
+                                    {% endblocktrans %}
+                                <a href="{% url 'background' 'myanmar' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
                             </div>
                         </div>
                     </div>
@@ -138,7 +230,203 @@
                                 <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
                                 <p>
                                     {% blocktrans %}
-                                    Nigeria has security forces with different responsibilities for internal security. Crime fighting is the prime responsibility of the Nigeria Police Force. The State Security Service focuses on threats to national security. The Nigerian Armed Forces, comprising the Nigerian Air Force, Nigerian Army and Nigerian Navy, are also very active in internal security operations, particularly against Boko Haram. The Nigerian Army is generally the branch most closely involved in internal security operations. Security forces in Nigeria are generally national in character with the President of Nigeria as the commander-in-chief of the respective forces.
+                                    The Security Force Monitor’s current dataset comprehensively covers the Nigerian armed forces and the Nigeria Police Force in the states of Abia, Adamawa, Akwa Ibom, Anambra, Enugu, Kano, Katsina, Lagos, Ogun, Plateau, Rivers and Yobe from roughly 2008 to 2018.
+                                    {% endblocktrans %}
+                                <a href="{% url 'background' 'nigeria' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default" style="min-height:150px">
+            <div class="panel-heading">
+                <h3><strong>{% trans "Philippines" %}</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{% static 'images/philippines.png' %}"></img>
+                    </div>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4">
+                                <h4><strong><i class="fa fa-fw fa-search"></i> {% trans "Browse data" %}</strong></h4>
+                                <a href="{% url 'search' %}?entity_type=Person&selected_facets=country_ss_fct_exact%3APhilippines">
+                                    <p>{% trans "Browse personnel" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3APhilippines">
+                                    <p>{% trans "Browse units" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?entity_type=Violation&selected_facets=country_ss_fct_exact%3APhilippines">
+                                    <p>{% trans "Browse incidents" %}</p>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 col-sm-8">
+                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
+                                <a href="{% url 'view-organization' boyona.uuid %}"><p>{% trans "To define" %}</p></a>
+                                <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "To define" %}</p></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
+                                <p>
+                                    {% blocktrans %}
+                                    The Security Force Monitor’s current dataset is a “snapshot” of the structure of the Philippine National Police as of January 2018.
+                                    {% endblocktrans %}
+                                <a href="{% url 'background' 'nigeria' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default" style="min-height:150px">
+            <div class="panel-heading">
+                <h3><strong>{% trans "Rwanda" %}</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{% static 'images/rwanda.png' %}"></img>
+                    </div>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4">
+                                <h4><strong><i class="fa fa-fw fa-search"></i> {% trans "Browse data" %}</strong></h4>
+                                <a href="{% url 'search' %}?entity_type=Person&selected_facets=country_ss_fct_exact%3ARwanda">
+                                    <p>{% trans "Browse personnel" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3ARwanda">
+                                    <p>{% trans "Browse units" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?entity_type=Violation&selected_facets=country_ss_fct_exact%3ARwanda">
+                                    <p>{% trans "Browse incidents" %}</p>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 col-sm-8">
+                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
+                                <a href="{% url 'view-organization' boyona.uuid %}"><p>{% trans "To define" %}</p></a>
+                                <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "To define" %}</p></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
+                                <p>
+                                    {% blocktrans %}
+                                    The Security Force Monitor’s current dataset is a “snapshot” of the structure of the Rwanda National Police as of 2017.
+                                    {% endblocktrans %}
+                                <a href="{% url 'background' 'nigeria' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default" style="min-height:150px">
+            <div class="panel-heading">
+                <h3><strong>{% trans "Saudi Arabia" %}</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{% static 'images/saudiarabia.png' %}"></img>
+                    </div>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4">
+                                <h4><strong><i class="fa fa-fw fa-search"></i> {% trans "Browse data" %}</strong></h4>
+                                <a href="{% url 'search' %}?entity_type=Person&selected_facets=country_ss_fct_exact%3ASaudi%20Arabia">
+                                    <p>{% trans "Browse personnel" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3ASaudi%20Arabia">
+                                    <p>{% trans "Browse units" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?entity_type=Violation&selected_facets=country_ss_fct_exact%3ASaudi%20Arabia">
+                                    <p>{% trans "Browse incidents" %}</p>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 col-sm-8">
+                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
+                                <a href="{% url 'view-organization' boyona.uuid %}"><p>{% trans "To define" %}</p></a>
+                                <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "To define" %}</p></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
+                                <p>
+                                    {% blocktrans %}
+                                    The Security Force Monitor’s current dataset is a “snapshot” of the structure of the armed forces of Saudi Arabia as of 2009.
+                                    {% endblocktrans %}
+                                <a href="{% url 'background' 'nigeria' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default" style="min-height:150px">
+            <div class="panel-heading">
+                <h3><strong>{% trans "Uganda" %}</strong></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <img class="img img-responsive img-thumbnail map-thumbnail center-block" src="{% static 'images/uganda.png' %}"></img>
+                    </div>
+                    <div class="col-xs-12 col-sm-8">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4">
+                                <h4><strong><i class="fa fa-fw fa-search"></i> {% trans "Browse data" %}</strong></h4>
+                                <a href="{% url 'search' %}?entity_type=Person&selected_facets=country_ss_fct_exact%3AUganda">
+                                    <p>{% trans "Browse personnel" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3AUganda">
+                                    <p>{% trans "Browse units" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?entity_type=Violation&selected_facets=country_ss_fct_exact%3AUganda">
+                                    <p>{% trans "Browse incidents" %}</p>
+                                </a>
+                            </div>
+                            <div class="col-xs-12 col-sm-8">
+                                <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
+                                <a href="{% url 'view-organization' boyona.uuid %}"><p>{% trans "To define" %}</p></a>
+                                <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "To define" %}</p></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
+                                <p>
+                                    {% blocktrans %}
+                                    The Security Force Monitor’s current dataset is a “snapshot” of the structure of the armed forces of Uganda as of September 2016.
                                     {% endblocktrans %}
                                 <a href="{% url 'background' 'nigeria' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
                             </div>

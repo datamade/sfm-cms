@@ -5,9 +5,13 @@
     <div class="col-xs-12 col-md-10 col-md-offset-1 post">
         <h2><i class="fa fa-fw fa-globe"></i>{% trans "Egypt" %}</h2>
         <hr />
+      
+        <h3 id="overview-of-coverage">{% trans "Overview of Coverage" %}</h3>
 
         <p>
-            {% trans "The Security Force Monitor’s research on Egypt is in progress, currently we have partial coverage of Egyptian police forces." %}
+            {% blocktrans %}
+            The Security Force Monitor’s current dataset is a “snapshot” of the structure of the police in Egypt as of September 2016 and military forces in 2011. Additional research on Egypt is dependent on funding and priorities of partners concerned about the human rights practices of the security forces of Egypt. If you have public data that can add to our coverage or need support in your investigations, please get in touch: info [at] securityforcemonitor.org
+            {% endblocktrans %}
         </p>
 
         <h3 id="general-background">{% trans "General Background on Security Forces" %}</h3>
@@ -39,7 +43,18 @@
             The Central Security Forces (CSF) is a specialized force focused on “anti-riot” activities, meaning they are generally deployed to police protests or other public gatherings. The CSF sits inside of the Ministry of Interior.
             {% endblocktrans %}
         </p>
-        <p><em>This country summary will be updated as the Monitor publishes more information on the security forces of Egypt.</em></p>
+        <h4 id="egyptian-armed-forces">{% trans "Egyptian Armed Forces" %}</h4>
+        <p>
+            {% blocktrans %}
+            The Egyptian military, particularly the army, plays a key role in politics and general security affairs. There are four major branches of the military, the Army, the Air Force, Air Defense Force and the Navy, all of which fall under the Ministry of Defense. Operationally, the main formations of the army are the Field Armies and Military Zones. Smaller units that report up to the relevant Field Armies or Military Zones are Divisions, Brigades and Battalions.
+            {% endblocktrans %}
+        </p>
+        <h3 id="outstanding-areas">{% trans "Outstanding Areas for Further Research" %}</h3>
+        <ul>
+	    <li>{% trans "Expanding the command structure of the General Investigations Police, Central Security Forces and Egyptian military through time." %}</li>
+            <li>{% trans "Detailing commanders of the General Investigations Police, Central Security Forces and Egyptian military across various units through time." %}</li>
+            <li>{% trans "Investigating other priorities as guided by partners concerned about the human rights practices of the security forces of Egypt." %}</li>
+       </ul>
     </div>
 </div>
 {% endblock %}

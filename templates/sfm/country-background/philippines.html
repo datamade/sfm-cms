@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-12 col-md-10 col-md-offset-1 post">
+        <h2><i class="fa fa-fw fa-globe"></i>{% trans "Philippines" %}</h2>
+        <hr />
+
+        <h3 id="overview-of-coverage">{% trans "Overview of Coverage" %}</h3>
+        <p>
+           {% blocktrans %}
+           The Security Force Monitor’s current dataset is a “snapshot” of the structure of the Philippine National Police as of January 2018. Additional research (detailed below) will focus on other elements of the security forces of the Philippines. If you have public data that can add to our coverage or need support in your investigations, please get in touch: info [at] securityforcemonitor.org
+           {% endblocktrans %}
+        </p>
+
+        <h3 id="administrative-division">{% trans "Administrative Division of the Philippines" %}</h3>
+        <p>{% trans "The Philippines is divided into regions, provinces, independent cities, municipalities and barangays." %}</p>
+
+        <h3 id="security-forces">{% trans "Security Forces of the Philippines" %}</h3>
+
+        <h4 id="philippine-national-police">{% trans "Philippine National Police" %}</h4>
+        <p>
+            {% blocktrans %}
+            The Philippine National Police (PNP) is national police force of the Philippines, established through the merging of precursor organizations and transfer of personnel and roles from other security agencies in December 1990.
+            {% endblocktrans %}
+        </p>
+        <p>
+            {% blocktrans %}
+             The PNP is headed by a Chief of Police who is assisted by a Deputy Chief for Operations and a Deputy Chief for Administration. The basic hierarchical structure since the establishment of the PNP has been: regional offices commanded by a regional director, then provincial offices commanded by a provincial director (which can be subdivided into police districts commanded by a district director) and finally at the city or municipal level police stations commanded by a chief of police.
+            {% endblocktrans %}
+        </p>
+        
+        <h3 id="outstanding-areas">{% trans "Outstanding Areas for Further Research" %}</h3>
+        <ul>
+            <li>{% trans "Expanding the command structure of the Philippine National Police through time." %}</li>
+            <li>{% trans "Detailing commanders of Philippine National Police across various units and branches." %}</li>
+            <li>{% trans "Identifying locations and areas of operations through time for units of the Philippine National Police." %}</li>
+            <li>{% trans "Building command hierarchy of the armed forces of the Philippines and identifying location and area of operations of various units." %}</li>
+            <li>{% trans "Investigating other priorities as guided by partners concerned about the human rights practices of the security forces of the Philippines." %}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

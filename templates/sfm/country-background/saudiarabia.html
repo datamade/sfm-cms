@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-12 col-md-10 col-md-offset-1 post">
+        <h2><i class="fa fa-fw fa-globe"></i>{% trans "Saudi Arabia" %}</h2>
+        <hr />
+
+
+        <h3 id="overview-of-coverage">{% trans "Overview of Coverage" %}</h3>
+        <p>
+            {% blocktrans %}
+            The Security Force Monitor’s current dataset is a “snapshot” of the structure of the armed forces of Saudi Arabia as of 2009. Additional research (detailed below) will focus on other elements of the security forces of Saudi Arabia. If you have public data that can add to our coverage or need support in your investigations, please get in touch: info [at] securityforcemonitor.org
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="administrative-division">{% trans "Administrative Division of Saudi Arabia" %}</h3>
+        <p>{% trans "Saudi Arabia is divided into 13 regions with further subdivisions of governorates and then sub-governorates." %}</p>
+
+        <h3 id="security-forces">{% trans "Security Forces of Saudi Arabia" %}</h3>
+
+        <h4 id="saudi-arabian-national-guard">{% trans "Saudi Arabian National Guard" %}</h4>
+        <p>
+            {% blocktrans %}
+            As of 2009 the King of Saudi Arabia exercised direct control over the Saudi Arabia National Guard (SANG). SANG is divided into two regional commands which command Brigades, as well as independent Brigades which report directly to SANG headquarters. Brigades commanded several Battalions. Additionally there were several independent battalions.
+            {% endblocktrans %}
+        </p>
+
+        <h4 id="military">{% trans "Military" %}</h4>
+        <p>
+            {% blocktrans %}
+            As of 2009 the King of Saudi Arabia was the commander in chief of the armed forces. The chain of command went from the King through the Ministry of Defense and Aviation to the Chief of General Staff who commanded the four branches of the military: the Royal Saudi Land Forces (army), Royal Saudi Air Force, Royal Saudi Navy and Royal Saudi Air Defense Force.
+            {% endblocktrans %}
+        </p>
+
+        <h4 id="royal-saudi-air-force">{% trans "Royal Saudi Air Force" %}</h4>
+        <p>
+            {% blocktrans %}
+            As of 2009 the air force was divided into Wings which command Squadrons.
+            {% endblocktrans %}
+        </p>
+ 
+        <h4 id="royal-saudi-navy">{% trans "Royal Saudi Navy" %}</h4>
+        <p>
+            {% blocktrans %}
+            As of 2009 the navy was divided into two fleets - the Western Fleet and Eastern Fleet.
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="outstanding-areas">{% trans "Outstanding Areas for Further Research" %}</h3>
+        <ul>
+            <li>{% trans "Expanding the command structure of the armed forces and SANG through time." %}</li>
+            <li>{% trans "Detailing commanders of the various units of the armed forces and SANG through time." %}</li>
+            <li>{% trans "Identifying locations and areas of operations through time for units of the armed forces and SANG through time." %}</li>
+            <li>{% trans "Building command hierarchy of internal security forces of Saudi Arabia and identifying location and area of operations of various units." %}</li>
+            <li>{% trans "Investigating other priorities as guided by partners concerned about the human rights practices of the security forces of Saudi Arabia." %}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-12 col-md-10 col-md-offset-1 post">
+        <h2><i class="fa fa-fw fa-globe"></i>{% trans "Rwanda" %}</h2>
+        <hr />
+
+        <h3 id="overview-of-coverage">{% trans "Overview of Coverage" %}</h3>
+        <p>
+            {% blocktrans %}
+            The Security Force Monitor’s current dataset is a “snapshot” of the structure of the Rwanda National Police as of 2017. Additional research (detailed below) will focus on other elements of the security forces of Rwanda. If you have public data that can add to our coverage or need support in your investigations, please get in touch: info [at] securityforcemonitor.org
+            {% endblocktrans %}
+        </p>
+
+        <h3 id="administrative-division">{% trans "Administrative Division of Rwanda" %}</h3>
+        <p{% trans "Rwanda is divided into provinces, which are further subdivided into districts, sectors and cells." %}></p>
+
+        <h3 id="security-forces">{% trans "Security Forces of Rwanda" %}</h3>
+
+        <h4 id="police">{% trans "Police" %}</h4>
+        <p>
+            {% blocktrans %}
+            The Inspector General of Police commands the Rwanda National Police which is divided operationally into and Police Regions which are further divided into Police Districts, Police Stations, Police Posts.
+            {% endblocktrans %}
+        </p>
+        
+        <h3 id="outstanding-areas">{% trans "Outstanding Areas for Further Research" %}</h3>
+        <ul>
+            <li>{% trans "Expanding the command structure of the Rwanda National Police through time." %}</li>
+            <li>{% trans "Detailing commanders of Rwanda National Police across various units and branches." %}</li>
+            <li>{% trans "Identifying locations and areas of operations through time for units of the Rwanda National Police." %}</li>
+            <li>{% trans "Building command hierarchy of the armed forces of Rwanda and identifying location and area of operations of various units." %}</li>
+            <li>{% trans "Investigating other priorities as guided by partners concerned about the human rights practices of the security forces of Rwanda." %}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
