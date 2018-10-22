@@ -101,8 +101,20 @@ class Help(TemplateView):
 
 def country_background(request, country):
 
+    valid_countries = [
+        'nigeria',
+        'mexico',
+        'egypt',
+        'bangladesh',
+        'myanmar',
+        'philippines',
+        'rwnada',
+        'saudiarabia',
+        'uganda',
+    ]
+
     try:
-        assert country in ('nigeria', 'mexico', 'egypt')
+        assert country in valid_countries
     except AssertionError:
         raise Http404()
 
