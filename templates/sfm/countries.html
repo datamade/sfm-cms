@@ -23,12 +23,7 @@
                             </div>
                             <div class="col-xs-12 col-sm-8">
                                 <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
-                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact%3AEgypt&selected_facets=organization_adminlevel1_ss_fct_exact%3ACairo+Governorate&selected_facets=organization_classification_ss_fct_exact%3APolice&entity_type=Person&entity_type=Organization&entity_type=Violation">
-                                    <p>{% trans "To define" %}</p>
-                                </a>
-                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact%3AEgypt&selected_facets=organization_adminlevel1_ss_fct_exact%3AAlexandria%20Governorate&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3APolice">
-                                    <p>{% trans "To define" %}</p>
-                                </a>
+                                    <p>{% trans "No collections yet" %}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -81,7 +76,7 @@
                                 <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
                                 <p>
                                     {% trans "The Security Force Monitor’s current dataset is a “snapshot” of the structure of the police in Egypt as of September 2016 and military forces in 2011. Additional research on Egypt is dependent on funding and priorities of partners concerned about the human rights practices of the security forces of Egypt." %}
-                                <a href="{% url 'background' 'egypt' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                                <a href="{% url 'background' 'egypt' %}"><p>{% trans "Read full background" %}<i class="fa fa-fw fa-arrow-right"></i></p></a>
                                 </p>
                             </div>
                         </div>
@@ -145,7 +140,6 @@
     </div>
 </div>
 
-
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-default" style="min-height:150px">
@@ -167,14 +161,17 @@
                                 <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3AMyanmar">
                                     <p>{% trans "Browse units" %}</p>
                                 </a>
-                                <a href="{% url 'search' %}?entity_type=Violation&selected_facets=country_ss_fct_exact%3AMyanmar">
-                                    <p>{% trans "Browse incidents" %}</p>
-                                </a>
                             </div>
                             <div class="col-xs-12 col-sm-8">
                                 <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
-                                <a href="{% url 'view-organization' boyona.uuid %}"><p>{% trans "To define" %}</p></a>
-                                <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "To define"%}</p></a>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact:Myanmar&entity_type=Organization&selected_facets=organization_adminlevel1_ss_fct_exact%3ARakhine">
+                                    <p>{% trans "Units in Rakhine State" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact:Myanmar&entity_type=Organization&selected_facets=organization_adminlevel1_ss_fct_exact%3AShan%20State">
+                                    <p>{% trans "Units in Shan State"%}</p>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact:Myanmar&entity_type=Organization&selected_facets=organization_parent_name_ss_fct_exact%3AWestern%20Regional%20Military%20Command">
+                                    <p>{% trans "Units under Western Region Military Command"%}</p>
+                                </a>
                             </div>
                         </div>
                         <div class="row">
@@ -242,7 +239,6 @@
     </div>
 </div>
 
-
 <div class="row">
     <div class="col-sm-12">
         <div class="panel panel-default" style="min-height:150px">
@@ -258,20 +254,18 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-4">
                                 <h4><strong><i class="fa fa-fw fa-search"></i> {% trans "Browse data" %}</strong></h4>
-                                <a href="{% url 'search' %}?entity_type=Person&selected_facets=country_ss_fct_exact%3APhilippines">
-                                    <p>{% trans "Browse personnel" %}</p>
-                                </a>
                                 <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3APhilippines">
                                     <p>{% trans "Browse units" %}</p>
-                                </a>
-                                <a href="{% url 'search' %}?entity_type=Violation&selected_facets=country_ss_fct_exact%3APhilippines">
-                                    <p>{% trans "Browse incidents" %}</p>
                                 </a>
                             </div>
                             <div class="col-xs-12 col-sm-8">
                                 <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
-                                <a href="{% url 'view-organization' boyona.uuid %}"><p>{% trans "To define" %}</p></a>
-                                <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "To define" %}</p></a>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact:Philippines&selected_facets=organization_classification_ss_fct_exact:Police&entity_type=Organization&selected_facets=organization_adminlevel1_ss_fct_exact%3AMetro%20Manila">
+                                    <p>{% trans "Police in Metro Manila" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact:Philippines&selected_facets=organization_classification_ss_fct_exact:Police&entity_type=Organization&selected_facets=organization_adminlevel1_ss_fct_exact%3ACebu">
+                                    <p>{% trans "Police in Cebu" %}</p>
+                                </a>
                             </div>
                         </div>
                         <div class="row">
@@ -281,7 +275,7 @@
                                     {% blocktrans %}
                                     The Security Force Monitor’s current dataset is a “snapshot” of the structure of the Philippine National Police as of January 2018.
                                     {% endblocktrans %}
-                                <a href="{% url 'background' 'nigeria' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                                <a href="{% url 'background' 'philippines' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
                             </div>
                         </div>
                     </div>
@@ -290,7 +284,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="row">
     <div class="col-sm-12">
@@ -307,20 +300,13 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-4">
                                 <h4><strong><i class="fa fa-fw fa-search"></i> {% trans "Browse data" %}</strong></h4>
-                                <a href="{% url 'search' %}?entity_type=Person&selected_facets=country_ss_fct_exact%3ARwanda">
-                                    <p>{% trans "Browse personnel" %}</p>
-                                </a>
                                 <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3ARwanda">
                                     <p>{% trans "Browse units" %}</p>
-                                </a>
-                                <a href="{% url 'search' %}?entity_type=Violation&selected_facets=country_ss_fct_exact%3ARwanda">
-                                    <p>{% trans "Browse incidents" %}</p>
                                 </a>
                             </div>
                             <div class="col-xs-12 col-sm-8">
                                 <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
-                                <a href="{% url 'view-organization' boyona.uuid %}"><p>{% trans "To define" %}</p></a>
-                                <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "To define" %}</p></a>
+                                <p>{% trans "No collections yet" %}</p>
                             </div>
                         </div>
                         <div class="row">
@@ -330,7 +316,7 @@
                                     {% blocktrans %}
                                     The Security Force Monitor’s current dataset is a “snapshot” of the structure of the Rwanda National Police as of 2017.
                                     {% endblocktrans %}
-                                <a href="{% url 'background' 'nigeria' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                                <a href="{% url 'background' 'rwanda' %}"><p>{% trans "Read full background" %}<i class="fa fa-fw fa-arrow-right"></i></p></a>
                             </div>
                         </div>
                     </div>
@@ -339,7 +325,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="row">
     <div class="col-sm-12">
@@ -356,20 +341,21 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-4">
                                 <h4><strong><i class="fa fa-fw fa-search"></i> {% trans "Browse data" %}</strong></h4>
-                                <a href="{% url 'search' %}?entity_type=Person&selected_facets=country_ss_fct_exact%3ASaudi%20Arabia">
-                                    <p>{% trans "Browse personnel" %}</p>
-                                </a>
                                 <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3ASaudi%20Arabia">
                                     <p>{% trans "Browse units" %}</p>
-                                </a>
-                                <a href="{% url 'search' %}?entity_type=Violation&selected_facets=country_ss_fct_exact%3ASaudi%20Arabia">
-                                    <p>{% trans "Browse incidents" %}</p>
                                 </a>
                             </div>
                             <div class="col-xs-12 col-sm-8">
                                 <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
-                                <a href="{% url 'view-organization' boyona.uuid %}"><p>{% trans "To define" %}</p></a>
-                                <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "To define" %}</p></a>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact%3ASaudi+Arabia&selected_facets=organization_classification_ss_fct_exact%3AAir+Force&q=&entity_type=Organization&start_date=&end_date=">
+                                    <p>{% trans "Royal Saudi Air Force" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact:Saudi%20Arabia&entity_type=Person&entity_type=Violation&entity_type=Source&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy">
+                                    <p>{% trans "Royal Saudi Land Forces" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact%3ASaudi+Arabia&selected_facets=organization_classification_ss_fct_exact%3ASaudi+Arabian+National+Guard%3BMilitary&q=&entity_type=Organization&start_date=&end_date=">
+                                    <p>{% trans "Saudi Arabian National Guard" %}</p>
+                                </a>
                             </div>
                         </div>
                         <div class="row">
@@ -379,7 +365,7 @@
                                     {% blocktrans %}
                                     The Security Force Monitor’s current dataset is a “snapshot” of the structure of the armed forces of Saudi Arabia as of 2009.
                                     {% endblocktrans %}
-                                <a href="{% url 'background' 'nigeria' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                                <a href="{% url 'background' 'saudiarabia' %}"><p>{% trans "Read full background" %}<i class="fa fa-fw fa-arrow-right"></i></p></a>
                             </div>
                         </div>
                     </div>
@@ -388,7 +374,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="row">
     <div class="col-sm-12">
@@ -405,20 +390,18 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-4">
                                 <h4><strong><i class="fa fa-fw fa-search"></i> {% trans "Browse data" %}</strong></h4>
-                                <a href="{% url 'search' %}?entity_type=Person&selected_facets=country_ss_fct_exact%3AUganda">
-                                    <p>{% trans "Browse personnel" %}</p>
-                                </a>
                                 <a href="{% url 'search' %}?entity_type=Organization&selected_facets=country_ss_fct_exact%3AUganda">
                                     <p>{% trans "Browse units" %}</p>
-                                </a>
-                                <a href="{% url 'search' %}?entity_type=Violation&selected_facets=country_ss_fct_exact%3AUganda">
-                                    <p>{% trans "Browse incidents" %}</p>
                                 </a>
                             </div>
                             <div class="col-xs-12 col-sm-8">
                                 <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
-                                <a href="{% url 'view-organization' boyona.uuid %}"><p>{% trans "To define" %}</p></a>
-                                <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "To define" %}</p></a>
+                                <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact:Uganda&selected_facets=organization_classification_ss_fct_exact:Police&entity_type=Person&entity_type=Violation&entity_type=Source&entity_type=Organization&selected_facets=organization_adminlevel1_ss_fct_exact%3AKampala">
+                                    <p>{% trans "Police in Kampala" %}</p>
+                                </a>
+                                <a href="{% url 'search' %}?start_date=&end_date=&q=&selected_facets=country_ss_fct_exact:Uganda&selected_facets=organization_classification_ss_fct_exact:Police&entity_type=Organization&selected_facets=organization_adminlevel1_ss_fct_exact%3AWakiso">
+                                    <p>{% trans "Police in Wakiso" %}</p>
+                                </a>
                             </div>
                         </div>
                         <div class="row">
@@ -428,7 +411,7 @@
                                     {% blocktrans %}
                                     The Security Force Monitor’s current dataset is a “snapshot” of the structure of the armed forces of Uganda as of September 2016.
                                     {% endblocktrans %}
-                                <a href="{% url 'background' 'nigeria' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
+                                <a href="{% url 'background' 'uganda' %}"><p>{% trans "Read full background" %}<i class="fa fa-fw fa-arrow-right"></i></p></a>
                             </div>
                         </div>
                     </div>
