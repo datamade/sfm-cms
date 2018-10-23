@@ -114,11 +114,7 @@ def country_background(request, country):
     ]
 
     try:
-<<<<<<< HEAD
-        assert country in ('bangladesh', 'egypt', 'mexico', 'myanmar', 'nigeria', 'philippines', 'rwanda', 'saudiarabia', 'uganda')
-=======
         assert country in valid_countries
->>>>>>> 2445a5cf8bd31b7b3fcf4880c6a5487e0fd573e5
     except AssertionError:
         raise Http404()
 
