@@ -25,7 +25,7 @@ from extra_views import FormSetView
 
 from countries_plus.models import Country
 
-from organization.models import Organization, OrganizationAlias, Alias as OAlias
+from organization.models import Organization, OrganizationAlias
 from person.models import Person, PersonAlias
 from violation.models import Violation
 from membershipperson.models import MembershipPerson

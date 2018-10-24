@@ -1,5 +1,7 @@
 import uuid
 
+import reversion
+
 from django.db import models
 from django.db.models.functions import Coalesce
 from django.utils.translation import ugettext as _
@@ -13,6 +15,26 @@ from django_date_extensions.fields import ApproximateDateField
 
 from sfm_pc.utils import VersionsMixin
 
+VERSION_RELATED_FIELDS = [
+    'associationorganization_set',
+    'emplacementorganization_set',
+    'organizationalias_set',
+    'organizationclassification_set',
+    'organizationdivisionid_set',
+    'organizationfirstciteddate_set',
+    'organizationheadquarters_set',
+    'organizationlastciteddate_set',
+    'organizationname_set',
+    'organizationopenended_set',
+    'organizationrealstart_set',
+    'membershiporganizationmember_set',
+    'membershiporganizationorganization_set',
+    'membershippersonorganization_set',
+    'violationperpetratororganization_set',
+]
+
+
+@reversion.register(follow=VERSION_RELATED_FIELDS)
 class Organization(models.Model, BaseModel, VersionsMixin):
 
     uuid = models.UUIDField(default=uuid.uuid4,
@@ -34,6 +56,8 @@ class Organization(models.Model, BaseModel, VersionsMixin):
         self.complex_fields = [self.name, self.division_id, self.firstciteddate,
                                self.lastciteddate, self.realstart, self.open_ended,
                                self.headquarters]
+
+        self.complex_lists = [self.aliases, self.classification]
 
         self.required_fields = [
             "Organization_OrganizationName",
@@ -92,32 +116,17 @@ class OrganizationName(ComplexField):
 @sourced
 class OrganizationAlias(ComplexField):
     object_ref = models.ForeignKey('Organization')
-    value = models.ForeignKey('Alias', default=None, blank=True, null=True)
+    value = models.TextField(blank=True, null=True)
 
     field_name = _("Alias")
-
-
-class Alias(models.Model):
-    value = models.TextField()
-
-    def __str__(self):
-        return self.value
 
 
 @versioned
 @sourced
 class OrganizationClassification(ComplexField):
     object_ref = models.ForeignKey('Organization')
-    value = models.ForeignKey('Classification', default=None, blank=True,
-                              null=True)
+    value = models.TextField(blank=True, null=True)
     field_name = _("Classification")
-
-
-class Classification(models.Model):
-    value = models.TextField()
-
-    def __str__(self):
-        return self.value
 
 
 @versioned

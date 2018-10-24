@@ -13,8 +13,8 @@ CREATE MATERIALIZED VIEW violation_all_export AS
     vvd.value AS description,
     pp.uuid AS perpetrator_id,
     oo.uuid AS perpetrator_organization_id,
-    pc.value AS perpetrator_classification,
-    vt.code AS violation_type,
+    vvpc.value AS perpetrator_classification,
+    vvt.value AS violation_type,
     MAX(vvd.confidence) AS confidence,
     vss.uuid AS source_id
   FROM violation_violation AS vv
@@ -54,12 +54,8 @@ CREATE MATERIALIZED VIEW violation_all_export AS
     ON vvpo.value_id = oo.id
   LEFT JOIN violation_violationperpetratorclassification AS vvpc
     ON vv.id = vvpc.object_ref_id
-  LEFT JOIN violation_perpetratorclassification AS pc
-    ON vvpc.value_id = pc.id
   LEFT JOIN violation_violationtype AS vvt
     ON vv.id = vvt.object_ref_id
-  LEFT JOIN violation_type AS vt
-    ON vvt.value_id = vt.id
   GROUP BY vv.uuid,
            vvsd.value,
            vved.value,
@@ -73,6 +69,6 @@ CREATE MATERIALIZED VIEW violation_all_export AS
            vvd.value,
            pp.uuid,
            oo.uuid,
-           pc.value,
-           vt.code,
+           vvpc.value,
+           vvt.value,
            vss.uuid

@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from .models import Violation, ViolationStartDate, ViolationEndDate, \
     ViolationLocationDescription, ViolationDescription, ViolationPerpetrator, \
-    ViolationPerpetratorOrganization, ViolationType, Type, ViolationLocationName, \
+    ViolationPerpetratorOrganization, ViolationType, ViolationLocationName, \
     ViolationLocationId
 
 
@@ -48,11 +48,6 @@ class ViolationTypeAdmin(reversion.admin.VersionAdmin):
     pass
 
 
-class TypeAdmin(reversion.admin.VersionAdmin):
-    pass
-
-
-admin.site.register(Type, TypeAdmin)
 admin.site.register(ViolationType, ViolationTypeAdmin)
 admin.site.register(ViolationPerpetratorOrganization, ViolationPerpetratorOrganizationAdmin)
 admin.site.register(ViolationPerpetrator, ViolationPerpetratorAdmin)

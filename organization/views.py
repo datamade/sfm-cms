@@ -16,8 +16,8 @@ from area.models import Area
 from association.models import Association
 from organization.forms import (OrganizationForm, OrganizationGeographyForm,
                                 BaseOrganizationFormSet)
-from organization.models import Organization, OrganizationAlias, Alias, \
-    OrganizationClassification, Classification
+from organization.models import Organization, OrganizationAlias, \
+    OrganizationClassification
 
 from sfm_pc.utils import (get_osm_by_id, get_hierarchy_by_id,
                           get_org_hierarchy_by_id,  get_command_edges,
@@ -120,6 +120,8 @@ class OrganizationDetail(DetailView):
             org_data['url'] = command_chain_url
 
             context['parents_list'].append(org_data)
+
+        context['versions'] = context['organization'].getVersions()
 
         return context
 

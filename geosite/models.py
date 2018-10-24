@@ -34,6 +34,8 @@ class Geosite(models.Model, BaseModel):
                                self.coordinates, self.location_name,
                                self.location_id, self.division_id]
 
+        self.complex_lists = []
+
         self.required_fields = ["Geosite_GeositeName"]
 
     def get_value(self):
@@ -50,7 +52,7 @@ class GeositeName(ComplexField):
     object_ref = models.ForeignKey('Geosite')
     value = models.TextField(default=None, blank=True, null=True)
     field_name = _("Name")
-    
+
     def __str__(self):
         return self.value
 

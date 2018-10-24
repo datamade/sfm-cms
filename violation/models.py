@@ -1,5 +1,7 @@
 import uuid
 
+import reversion
+
 from django.contrib.gis.db import models
 from django.utils.translation import ugettext as _
 from django.db.models import Max
@@ -16,7 +18,30 @@ from organization.models import Organization
 from geosite.models import Geosite
 from sfm_pc.utils import VersionsMixin
 
+VERSION_RELATED_FIELDS = [
+    'violationadminlevel1_set',
+    'violationadminlevel2_set',
+    'violationdescription_set',
+    'violationdivisionid_set',
+    'violationenddate_set',
+    'violationfirstallegation_set',
+    'violationlastupdate_set',
+    'violationlocation_set',
+    'violationlocationdescription_set',
+    'violationlocationid_set',
+    'violationlocationname_set',
+    'violationosmid_set',
+    'violationosmname_set',
+    'violationperpetrator_set',
+    'violationperpetratorclassification_set',
+    'violationperpetratororganization_set',
+    'violationstartdate_set',
+    'violationstatus_set',
+    'violationtype_set'
+]
 
+
+@reversion.register(follow=VERSION_RELATED_FIELDS)
 class Violation(models.Model, BaseModel, VersionsMixin):
     uuid = models.UUIDField(default=uuid.uuid4,
                             editable=False,
@@ -59,6 +84,8 @@ class Violation(models.Model, BaseModel, VersionsMixin):
                                self.enddate, self.last_update, self.status,
                                self.locationdescription, self.location,
                                self.description, self.division_id]
+
+        self.complex_lists = [self.perpetrator, self.perpetratororganization, self.types]
 
         self.required_fields = [self.description, self.startdate, self.enddate]
 
@@ -211,15 +238,8 @@ class ViolationPerpetratorOrganization(ComplexField):
 @translated
 class ViolationType(ComplexField):
     object_ref = models.ForeignKey('Violation', null=True)
-    value = models.ForeignKey('Type', default=None, blank=True, null=True)
+    value = models.TextField(blank=True, null=True)
     field_name = _("Violation type")
-
-
-class Type(models.Model):
-    code = models.TextField()
-
-    def __str__(self):
-        return self.code
 
 
 @versioned
@@ -227,12 +247,5 @@ class Type(models.Model):
 @translated
 class ViolationPerpetratorClassification(ComplexField):
     object_ref = models.ForeignKey('Violation', null=True)
-    value = models.ForeignKey('PerpetratorClassification', default=None, blank=True, null=True)
+    value = models.TextField(blank=True, null=True)
     field_name = _("Perpetrating unit classification")
-
-
-class PerpetratorClassification(models.Model):
-    value = models.TextField()
-
-    def __str__(self):
-        return self.value

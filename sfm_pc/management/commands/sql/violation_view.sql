@@ -1,5 +1,5 @@
-CREATE MATERIALIZED VIEW violation AS 
-  SELECT 
+CREATE MATERIALIZED VIEW violation AS
+  SELECT
     vv.uuid AS id,
     vvsd.value AS start_date,
     vvfa.value AS first_allegation,
@@ -16,8 +16,8 @@ CREATE MATERIALIZED VIEW violation AS
     vvd.value AS description,
     pp.uuid AS perpetrator_id,
     oo.uuid AS perpetrator_organization_id,
-    pc.value AS perpetrator_classification,
-    vt.code AS violation_type
+    vvpc.value AS perpetrator_classification,
+    vvt.value AS violation_type
   FROM violation_violation AS vv
   LEFT JOIN violation_violationstartdate AS vvsd
     ON vv.id = vvsd.object_ref_id
@@ -55,16 +55,12 @@ CREATE MATERIALIZED VIEW violation AS
     ON vvpo.value_id = oo.id
   LEFT JOIN violation_violationperpetratorclassification AS vvpc
     ON vv.id = vvpc.object_ref_id
-  LEFT JOIN violation_perpetratorclassification AS pc
-    ON vvpc.value_id = pc.id
   LEFT JOIN violation_violationtype AS vvt
-    ON vv.id = vvt.object_ref_id
-  LEFT JOIN violation_type AS vt
-    ON vvt.value_id = vt.id;
+    ON vv.id = vvt.object_ref_id;
 CREATE UNIQUE INDEX violation_id_index ON violation (
-  id, 
-  perpetrator_id, 
-  perpetrator_organization_id, 
-  perpetrator_classification, 
+  id,
+  perpetrator_id,
+  perpetrator_organization_id,
+  perpetrator_classification,
   violation_type
 )

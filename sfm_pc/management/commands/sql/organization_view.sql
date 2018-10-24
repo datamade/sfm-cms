@@ -1,9 +1,9 @@
-CREATE MATERIALIZED VIEW organization AS 
+CREATE MATERIALIZED VIEW organization AS
   SELECT DISTINCT ON (
     oo.uuid,
     oon.value,
-    oa.value,
-    oc.value,
+    ooa.value,
+    ooc.value,
     oofcd.value,
     oors.value,
     oolcd.value,
@@ -13,8 +13,8 @@ CREATE MATERIALIZED VIEW organization AS
   )
     oo.uuid AS id,
     oon.value AS name,
-    oa.value AS alias,
-    oc.value AS classification,
+    ooa.value AS alias,
+    ooc.value AS classification,
     oofcd.value AS first_cited,
     oors.value AS real_start,
     oolcd.value AS last_cited,
@@ -26,8 +26,6 @@ CREATE MATERIALIZED VIEW organization AS
     ON oo.id = oon.object_ref_id
   LEFT JOIN organization_organizationalias AS ooa
     ON oo.id = ooa.object_ref_id
-  LEFT JOIN organization_alias AS oa
-    ON ooa.value_id = oa.id
   LEFT JOIN organization_organizationclassification AS ooc
     ON oo.id = ooc.object_ref_id
   LEFT JOIN organization_organizationfirstciteddate AS oofcd
@@ -38,8 +36,6 @@ CREATE MATERIALIZED VIEW organization AS
     ON oo.id = oolcd.object_ref_id
   LEFT JOIN organization_organizationopenended AS oooo
     ON oo.id = oooo.object_ref_id
-  LEFT JOIN organization_classification AS oc
-    ON ooc.value_id = oc.id
   LEFT JOIN organization_organizationdivisionid AS ood
     ON oo.id = ood.object_ref_id
   LEFT JOIN organization_organizationheadquarters AS oohq

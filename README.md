@@ -3,7 +3,7 @@
 ## OS Level dependencies
 
 * Python 3.5
-* PostgreSQL 9.4+ 
+* PostgreSQL 9.4+
 * PostGIS
 * osm2pgsql
 
@@ -16,11 +16,12 @@
 Install the requirements:
 
     pip install -r requirements.txt
-    
+
 Create a local settings file:
 
     cp sfm_pc/settings_local.py.example sfm_pc/settings_local.py
-    # You can change some of the variables if you want, but it's not necessary to get the app running    
+
+Replace OSM_API_Key in `settings_local.py` with a Wambacher cliKey. Generate a key [here](https://wambachers-osm.website/boundaries/) by enabling OAuth, selecting a boundary, checking CLI, hitting Export, and looking at the generated URL.  
 
 Create a database:
 
@@ -37,7 +38,7 @@ Load static data:
 ./manage.py update_countries_plus
 ```
 
-Create Materialized Views for global search, and looking up a Geoname object based upon a geoname id: 
+Create Materialized Views for global search, and looking up a Geoname object based upon a geoname id:
 
     python manage.py import_osm
     python manage.py import_google_doc
@@ -45,7 +46,7 @@ Create Materialized Views for global search, and looking up a Geoname object bas
 
 You're almost done! The last step is to get solr and the search index setup. Start by following the instructions in [SOLR-SETUP.md](https://github.com/security-force-monitor/sfm-cms/blob/master/SOLR-SETUP.md) to get solr installed and running on your machine.
 
-Then, create the search index: 
+Then, create the search index:
 
     python manage.py make_search_index
 
@@ -61,7 +62,7 @@ Open http://127.0.0.1:8000/ and sign in with your email and password.
 
 ## Translations
 
-We use [Django translation](https://docs.djangoproject.com/en/1.11/topics/i18n/translation/) together with [Rosetta](https://github.com/mbi/django-rosetta) and [django-complex-fields](https://github.com/security-force-monitor/complex_fields). 
+We use [Django translation](https://docs.djangoproject.com/en/1.11/topics/i18n/translation/) together with [Rosetta](https://github.com/mbi/django-rosetta) and [django-complex-fields](https://github.com/security-force-monitor/complex_fields).
 
 Template translations appear inside `trans` tags, like so:
 
@@ -125,7 +126,7 @@ If you want to drop existing tables containing data in the database, you can
 use a SQL script that we have for that purpose:
 
 ```
-psql importer < sfm_pc/management/commands/flush/flush.sql 
+psql importer < sfm_pc/management/commands/flush/flush.sql
 
 # Refresh the country data, which gets dropped in flush.sql
 python manage.py update_countries_plus

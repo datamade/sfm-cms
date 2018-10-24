@@ -22,6 +22,8 @@ class Area(models.Model, BaseModel):
         self.complex_fields = [self.name, self.code, self.osmname,
                                self.geometry, self.division_id, self.osmid]
 
+        self.complex_lists = []
+
         self.required_fields = [
             "Area_AreaName",
         ]

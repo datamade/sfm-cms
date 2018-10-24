@@ -27,6 +27,8 @@ class Association(models.Model, BaseModel):
         self.complex_fields = [self.startdate, self.realstart, self.enddate,
                                self.open_ended, self.organization, self.area]
 
+        self.complex_lists = []
+
         self.required_fields = [
             "Association_AssociationOrganization",
             "Association_AssociationArea",

@@ -48,7 +48,7 @@ except ImportError:
 try:
     from .settings_local import DATABASE_URL, GOOGLE_MAPS_KEY, \
         SECRET_KEY, DEBUG, ALLOWED_HOSTS, IMPORTER_USER, SOLR_URL, \
-        CACHES
+        CACHES, OSM_API_KEY
 except ImportError as e:
     raise Exception('''DATABASE_URL,
                      GOOGLE_MAPS_KEY,
@@ -57,6 +57,7 @@ except ImportError as e:
                      IMPORTER_USER,
                      SOLR_URL,
                      CACHES,
+                     OSM_API_KEY,
                      and DEBUG must be defined in settings_local.py''')
 
 # Application definition
@@ -235,50 +236,52 @@ ALLOWED_CLASS_FOR_NAME = [
     'Emplacement', 'Geosite', 'Violation'
 ]
 
+OSM_BASE_URL = 'https://wambachers-osm.website/boundaries/exportBoundaries'
+
 OSM_DATA = [
     {
         'country': 'Nigeria',
         'pbf_url': 'http://download.geofabrik.de/africa/nigeria-latest.osm.pbf',
-        'boundary_url': 'https://s3.amazonaws.com/osm-polygons.mapzen.com/nigeria_geojson.tgz',
+        'relation_id': '192787',
         'country_code': 'ng',
     },
-    # {
-    #     'country': 'Mexico',
-    #     'pbf_url': 'http://download.geofabrik.de/north-america/mexico-latest.osm.pbf',
-    #     'boundary_url': 'https://s3.amazonaws.com/osm-polygons.mapzen.com/mexico_geojson.tgz',
-    #     'country_code': 'mx',
-    # },
-    # {
-    #     'country': 'Sierra Leone',
-    #     'pbf_url': 'http://download.geofabrik.de/africa/sierra-leone-latest.osm.pbf',
-    #     'boundary_url': 'https://s3.amazonaws.com/osm-polygons.mapzen.com/sierra-leone_geojson.tgz',
-    #     'country_code': 'sl',
-    # },
-    # {
-    #     'country': 'Democratic Republic of the Congo',
-    #     'pbf_url': 'http://download.geofabrik.de/africa/congo-democratic-republic-latest.osm.pbf',
-    #     'boundary_url': 'https://s3.amazonaws.com/osm-polygons.mapzen.com/congo-kinshasa_geojson.tgz',
-    #     'country_code': 'cd',
-    # },
-    # {
-    #     'country': 'Liberia',
-    #     'pbf_url': 'http://download.geofabrik.de/africa/liberia-latest.osm.pbf',
-    #     'boundary_url': 'https://s3.amazonaws.com/osm-polygons.mapzen.com/liberia_geojson.tgz',
-    #     'country_code': 'lr',
-    # },
-    # {
-    #     'country': 'Sudan',
-    #     'pbf_url': 'http://download.geofabrik.de/africa/sudan-latest.osm.pbf',
-    #     'boundary_url': 'https://s3.amazonaws.com/osm-polygons.mapzen.com/sudan_geojson.tgz',
-    #     'country_code': 'sd',
-    # },
-    # {
-    #     'country': 'Egypt',
-    #     'pbf_url': 'http://download.geofabrik.de/africa/egypt-latest.osm.pbf',
-    #     'boundary_url': 'https://s3.amazonaws.com/osm-polygons.mapzen.com/egypt_geojson.tgz',
-    #     'country_code': 'eg',
+    {
+        'country': 'Mexico',
+        'pbf_url': 'http://download.geofabrik.de/north-america/mexico-latest.osm.pbf',
+        'relation_id': '114686',
+        'country_code': 'mx',
+    },
+    {
+        'country': 'Sierra Leone',
+        'pbf_url': 'http://download.geofabrik.de/africa/sierra-leone-latest.osm.pbf',
+        'relation_id': '192777',
+        'country_code': 'sl',
+    },
+    {
+        'country': 'Democratic Republic of the Congo',
+        'pbf_url': 'http://download.geofabrik.de/africa/congo-democratic-republic-latest.osm.pbf',
+        'relation_id': '192795',
+        'country_code': 'cd',
+    },
+    {
+        'country': 'Liberia',
+        'pbf_url': 'http://download.geofabrik.de/africa/liberia-latest.osm.pbf',
+        'relation_id': '192780',
+        'country_code': 'lr',
+    },
+    {
+        'country': 'Sudan',
+        'pbf_url': 'http://download.geofabrik.de/africa/sudan-latest.osm.pbf',
+        'relation_id': '192789',
+        'country_code': 'sd',
+    },
+    {
+        'country': 'Egypt',
+        'pbf_url': 'http://download.geofabrik.de/africa/egypt-latest.osm.pbf',
+        'relation_id': '1473947',
+        'country_code': 'eg',
 
-    # }
+    }
 ]
 
 # Override built-in messages tags

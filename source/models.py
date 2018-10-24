@@ -11,6 +11,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from django_date_extensions.fields import ApproximateDateField
 
 from sfm_pc.utils import VersionsMixin
 
@@ -25,7 +26,7 @@ class Source(models.Model, VersionsMixin):
     title = models.TextField()
     publication = models.TextField(null=True)
     publication_country = models.CharField(max_length=1000, null=True)
-    published_on = models.DateField()
+    published_on = ApproximateDateField()
     source_url = models.URLField(max_length=1000, null=True, blank=True)
 
     date_updated = models.DateTimeField(auto_now=True)

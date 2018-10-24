@@ -33,6 +33,8 @@ class MembershipPerson(models.Model, BaseModel):
                                self.startcontext, self.endcontext,
                                self.firstciteddate, self.lastciteddate]
 
+        self.complex_lists = []
+
         self.required_fields = [
             "MembershipPerson_MembershipPersonMember",
             "MembershipPerson_MembershipPersonOrganization",

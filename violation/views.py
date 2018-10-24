@@ -22,7 +22,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from extra_views import FormSetView
 
-from violation.models import Violation, Type, ViolationType, \
+from violation.models import Violation, ViolationType, \
     ViolationPerpetrator, ViolationPerpetratorOrganization
 from source.models import Source
 from geosite.models import Geosite
@@ -51,6 +51,8 @@ class ViolationDetail(DetailView):
             location = context['violation'].location.get_value()
             if location.value:
                 context['location'] = location.value
+
+        context['versions'] = context['violation'].getVersions()
 
         return context
 
@@ -406,16 +408,16 @@ class ViolationUpdate(LoginRequiredMixin, BaseUpdateView):
     form_class = ViolationForm
     success_url = reverse_lazy('dashboard')
     sourced = True
-    
+
     def post(self, request, *args, **kwargs):
 
         self.checkSource(request)
-        
+
         return self.validateForm()
-    
+
     def form_valid(self, form):
         response = super().form_valid(form)
-        
+
         violation = Violation.objects.get(pk=self.kwargs['pk'])
         startdate = form.cleaned_data['startdate']
         enddate = form.cleaned_data['enddate']
@@ -425,10 +427,10 @@ class ViolationUpdate(LoginRequiredMixin, BaseUpdateView):
         perpetrators = form.data.getlist('perpetrators')
         orgs = form.data.getlist('orgs')
         vtypes = form.data.getlist('vtype')
-        
+
         geo = get_osm_by_id(geoid)
         hierarchy = get_hierarchy_by_id(geoid)
-        
+
         admin1 = None
         admin2 = None
 
@@ -438,7 +440,7 @@ class ViolationUpdate(LoginRequiredMixin, BaseUpdateView):
                     admin1 = member.name
                 elif member.admin_level == 4:
                     admin2 = member.name
-        
+
         coords = getattr(geo, 'geometry')
 
         violation_data = {
@@ -489,7 +491,7 @@ class ViolationUpdate(LoginRequiredMixin, BaseUpdateView):
             }
         }
         violation.update(violation_data)
-        
+
         if vtypes:
             for vtype in vtypes:
                 type_obj = Type.objects.get(id=vtype)
@@ -501,28 +503,28 @@ class ViolationUpdate(LoginRequiredMixin, BaseUpdateView):
 
         if perpetrators:
             for perpetrator in perpetrators:
-                
+
                 perp = Person.objects.get(id=perpetrator)
                 vp_obj, created = ViolationPerpetrator.objects.get_or_create(value=perp,
                                                                              object_ref=violation)
 
                 vp_obj.sources.add(self.source)
                 vp_obj.save()
-        
+
         if orgs:
             for org in orgs:
-                
+
                 organization = Organization.objects.get(id=org)
                 vpo_obj, created = ViolationPerpetratorOrganization.objects.get_or_create(value=organization,
                                                                                           object_ref=violation)
 
                 vpo_obj.sources.add(self.source)
                 vpo_obj.save()
-        
-        messages.add_message(self.request, 
-                             messages.INFO, 
+
+        messages.add_message(self.request,
+                             messages.INFO,
                              'Event saved!')
-        
+
         return response
 
     def get_context_data(self, **kwargs):
@@ -537,7 +539,7 @@ class ViolationUpdate(LoginRequiredMixin, BaseUpdateView):
 
         if not self.sourced:
             context['source_error'] = 'Please include the source for your changes'
-        
+
         context['osm'] = get_osm_by_id(violation.osmid.get_value().value)
         context['source'] = Source.objects.filter(id=self.request.GET.get('source_id')).first()
 

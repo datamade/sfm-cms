@@ -20,11 +20,13 @@ class MembershipOrganization(models.Model, BaseModel):
         self.firstciteddate = ComplexFieldContainer(self, MembershipOrganizationFirstCitedDate)
         self.realstart = ComplexFieldContainer(self, MembershipOrganizationRealStart)
         self.lastciteddate = ComplexFieldContainer(self, MembershipOrganizationLastCitedDate)
-        self.realend= ComplexFieldContainer(self, MembershipOrganizationRealEnd)
+        self.realend = ComplexFieldContainer(self, MembershipOrganizationRealEnd)
 
         self.complex_fields = [self.member, self.organization,
                                self.firstciteddate, self.lastciteddate,
                                self.realstart, self.realend]
+
+        self.complex_lists = []
 
         self.required_fields = [
             "MembershipOrganization_MembershipOrganizationMember",

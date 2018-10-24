@@ -2,7 +2,7 @@ import reversion
 
 from django.contrib import admin
 from .models import (Organization, OrganizationName, OrganizationAlias,
-                     OrganizationClassification, Classification)
+                     OrganizationClassification)
 
 
 class OrganizationAdmin(admin.ModelAdmin):
@@ -29,4 +29,3 @@ admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(OrganizationName, OrganizationNameAdmin)
 admin.site.register(OrganizationAlias, OrganizationAliasAdmin)
 admin.site.register(OrganizationClassification, OrganizationClassificationAdmin)
-admin.site.register(Classification, ClassificationAdmin)

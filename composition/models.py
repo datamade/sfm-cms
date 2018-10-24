@@ -25,6 +25,8 @@ class Composition(models.Model, BaseModel):
                                self.realstart, self.enddate, self.open_ended,
                                self.classification]
 
+        self.complex_lists = []
+
         self.required_fields = [
             "Composition_CompositionParent", "Composition_CompositionChild"
         ]
