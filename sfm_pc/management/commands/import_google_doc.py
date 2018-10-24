@@ -1740,7 +1740,8 @@ class Command(UtilityMixin, BaseCommand):
                 }
 
                 try:
-                    organization = Organization.objects.get(organizationname__value=organization_name)
+                    organization = Organization.objects.get(organizationname__value=organization_name,
+                                                            organizationdivisionid__value=division_id)
 
                 except Organization.DoesNotExist:
                     organization = Organization.create(org_info)
