@@ -109,12 +109,12 @@ class Command(BaseCommand):
 
             aliases = organization.aliases.get_list()
             if aliases:
-                content.extend(al.get_value().value.value for al in aliases)
+                content.extend(al.get_value().value for al in aliases)
 
             classes = organization.classification.get_list()
             class_count = len(classes)
             if classes:
-                content.extend(cl.get_value().value.value for cl in classes)
+                content.extend(cl.get_value().value for cl in classes)
 
             hq = organization.headquarters.get_value()
             if hq:
@@ -529,12 +529,12 @@ class Command(BaseCommand):
 
                     org_aliases = perp.aliases.get_list()
                     if org_aliases:
-                        perp_org_aliases.extend(al.get_value().value.value
+                        perp_org_aliases.extend(al.get_value().value
                                                 for al in org_aliases)
 
                     perp_org_names.append(perp.name.get_value().value)
 
-            perp_org_classes = list(cls.value.value for cls in
+            perp_org_classes = list(cls.value for cls in
                                     violation.violationperpetratorclassification_set.all())
             perp_org_class_count = len(perp_org_classes)
 

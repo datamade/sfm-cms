@@ -12,7 +12,7 @@ def remake_views(apps, schema_editor):
     sql_folder_path = os.path.join(settings.BASE_DIR, 'sfm_pc/management/commands/sql')
     view_paths = [
         os.path.join(sql_folder_path, 'organization_view.sql'),
-        os.path.join(sql_folder_path, 'organization_sources_view.sql'),
+        # os.path.join(sql_folder_path, 'organization_sources_view.sql'),
         os.path.join(sql_folder_path, 'organization_alias_export_view.sql'),
         os.path.join(sql_folder_path, 'organization_classification_export_view.sql'),
     ]

@@ -2005,7 +2005,7 @@ class Command(UtilityMixin, BaseCommand):
                     'confidence': 1
                 },
                 'Violation_ViolationLocationId': {
-                    'value': exactloc_,
+                    'value': exactloc_id,
                     'sources': sources,
                     'confidence': 1
                 },
