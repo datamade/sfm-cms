@@ -114,7 +114,7 @@
                             </div>
                             <div class="col-xs-12 col-sm-8">
                                 <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
-                                <a href="{% url 'view-organization' 212 %}">
+                                <a href="{% url 'view-organization' conjunta.id %}">
                                     <p>{% trans "Operación Conjunta Chihuahua" %}</p>
                                 </a>
                                 <a href="{% url 'search' %}?q=&start_date=2006-12-01&end_date=2012-11-30&selected_facets=country_ss_fct_exact%3AMexico&selected_facets=organization_classification_ss_fct_exact%3AEj%C3%A9rcito&entity_type=Person&entity_type=Organization&entity_type=Violation&Organization_rows=50">
@@ -179,7 +179,7 @@
                                 <h4><strong><i class="fa fa-fw fa-info-circle"></i> {% trans "Background" %}</strong></h4>
                                 <p>
                                     {% blocktrans %}
-                                    The Security Force Monitor’s current dataset on Myanmar is focused on the army structure, location and area of operations from 2000 to 2018. 
+                                    The Security Force Monitor’s current dataset on Myanmar is focused on the army structure, location and area of operations from 2000 to 2018.
                                     {% endblocktrans %}
                                 <a href="{% url 'background' 'myanmar' %}"><p>{% trans "Read full background" %} <i class="fa fa-fw fa-arrow-right"></i></p></a>
                             </div>
@@ -218,7 +218,7 @@
                             </div>
                             <div class="col-xs-12 col-sm-8">
                                 <h4><strong><i class="fa fa-fw fa-clock-o"></i> {% trans "Collections" %}</strong></h4>
-                                <a href="{% url 'view-organization' 948 %}"><p>{% trans "Operation BOYONA" %}</p></a>
+                                <a href="{% url 'view-organization' boyona.id %}"><p>{% trans "Operation BOYONA" %}</p></a>
                                 <a href="{% url 'search' %}?start_date=2010-02-09&end_date=2015-05-28&Organization_rows=25&selected_facets=country_ss_fct_exact%3ANigeria&entity_type=Organization&selected_facets=organization_classification_ss_fct_exact%3AArmy"><p>{% trans "Nigerian Army under President Jonathan (9 February 2010 to 28 May 2015)" %}</p></a>
                             </div>
                         </div>

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json
 from uuid import uuid4
 from collections import OrderedDict, namedtuple
@@ -197,6 +199,9 @@ class Countries(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        context['conjunta'] = Organization.objects.filter(organizationname__value="Operación Conjunta Chihuahua").first()
+        context['boyona'] = Organization.objects.filter(organizationname__value="Operation BOYONA").first()
 
         context['countries_tab'] = 'selected-tab'
 
