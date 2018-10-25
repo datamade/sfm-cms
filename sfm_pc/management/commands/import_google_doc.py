@@ -905,20 +905,20 @@ class Command(UtilityMixin, BaseCommand):
                         return None
 
                 else:
-                    relation_instance, created = relation_model.objects.get_or_create(value=value,
-                                                                                      object_ref=instance,
-                                                                                      lang='en')
-                    if created:
 
-                        for source in sources:
-                            relation_instance.sources.add(source)
+                    for val in value.split(';'):
+                        relation_instance, created = relation_model.objects.get_or_create(value=val.strip(),
+                                                                                          object_ref=instance,
+                                                                                          lang='en')
+                        if created:
 
-                        with reversion.create_revision():
-                            relation_instance.confidence = confidence
-                            relation_instance.save()
-                            reversion.set_user(self.user)
+                            for source in sources:
+                                relation_instance.sources.add(source)
 
-                return relation_instance
+                            with reversion.create_revision():
+                                relation_instance.confidence = confidence
+                                relation_instance.save()
+                                reversion.set_user(self.user)
 
             else:
                 missing = []
@@ -1702,10 +1702,10 @@ class Command(UtilityMixin, BaseCommand):
                 except Person.DoesNotExist:
                     person = Person.create(person_info)
 
-                aliases = self.make_relation('Alias',
-                                             person_positions['Alias'],
-                                             person_data,
-                                             person)
+                self.make_relation('Alias',
+                                   person_positions['Alias'],
+                                   person_data,
+                                   person)
 
                 # Make membership objects
                 try:
