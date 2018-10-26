@@ -213,4 +213,4 @@ OPEN_ENDED_CHOICES = (
     ('E', _('Exact'))
 )
 
-RESEARCH_HANDBOOK_URL = "https://help.securityforcemonitor.org"
+RESEARCH_HANDBOOK_URL = "https://help.securityforcemonitor.org/v"
