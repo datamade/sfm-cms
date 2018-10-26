@@ -44,11 +44,8 @@
                     <div class="col-xs-12 col-sm-6">
                         <p class="small">
                         {% comment %}Translators: 'on' is followed by the countries that we currently track{% endcomment %}
-                            {% trans "Currently includes data on" %}
-                            <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact:Egypt">{% trans "Egypt" %}</a>,
-                            <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact:Mexico">{% trans "Mexico" %}</a>,
-                            {% trans "and" %}
-                            <a href="{% url 'search' %}?selected_facets=country_ss_fct_exact:Nigeria">{% trans "Nigeria" %}</a>
+                        {% trans "Learn more about which countries are covered" %}
+                            <a href="{% url 'countries' %}">{% trans "here" %}</a>
                         </p>
                     </div>
                 </div>
