@@ -219,6 +219,10 @@ class Command(BaseCommand):
                 elif start_date and not end_date and open_ended and open_ended.value.strip() == 'Y':
                     composition_daterange = '[{} TO *]'.format(start_date.split('T')[0])
 
+                elif start_date and not end_date and open_ended and open_ended.value.strip() == 'N':
+                    date_string = start_date.split('T')[0]
+                    composition_daterange = '[{} TO {}]'.format(date_string, date_string)
+
                 elif not start_date and end_date:
                     composition_daterange = '[* TO {}]'.format(end_date.split('T')[0])
 
