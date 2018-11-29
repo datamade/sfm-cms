@@ -334,6 +334,12 @@ class DumpChangeLog(FormView, VersionsMixin):
     template_name = 'changelog.html'
     success_url = reverse_lazy('changelog')
 
+    # TODO:
+    # * Structure changes around transitions
+    # * Place sources and access points inline with the modified values they are
+    #   evidencing
+    # * Remove changes to violations and sources
+
     def form_valid(self, form):
         from_date = form.cleaned_data.get('from_date')
         to_date = form.cleaned_data.get('to_date')
