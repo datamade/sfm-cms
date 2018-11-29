@@ -290,6 +290,13 @@ class DownloadData(FormView):
     form_class = DownloadForm
     success_url = reverse_lazy('download')
 
+    # TODO:
+    # * Create versions of SQL that include sources
+    # * Add checkbox to user interface to tell us which version to use
+    # * Remove links to other download views
+    # * Turn on a Captcha?
+    # * Add downloads page to navigation
+
     def form_valid(self, form):
 
         download_type = form.cleaned_data['download_type']
