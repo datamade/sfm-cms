@@ -36,12 +36,13 @@ from extra_views import FormSetView
 from countries_plus.models import Country
 
 from organization.models import Organization, OrganizationAlias
+from composition.models import Composition
 from person.models import Person, PersonAlias
 from violation.models import Violation
 from membershipperson.models import MembershipPerson
 from source.models import Source, AccessPoint
 
-
+from sfm_pc import field_maps
 from sfm_pc.templatetags.render_from_source import get_relations, \
     get_relation_attributes
 from sfm_pc.utils import (import_class, get_osm_by_id, get_org_hierarchy_by_id,
@@ -295,17 +296,13 @@ class DownloadData(FormView):
     template_name = 'download.html'
     form_class = DownloadForm
     success_url = reverse_lazy('download')
-    # Serializer functions for use in exporting spreadsheet columns
-    serializers = {
-        'string': lambda x: str(x),
-        'identity': lambda x: x,
-        'division_id': lambda x: x.split(':')[-1] if x else x,
-        'complex_list': lambda x: '; '.join(set(elem for elem in x if elem)),
-    }
 
     def form_valid(self, form):
         download_type = form.cleaned_data['download_type']
         division_id = form.cleaned_data['division_id']
+        sources = form.cleaned_data['sources']
+        confidences = form.cleaned_data['confidences']
+
         iso = division_id[-2:]
         filename = '{}_{}_{}.csv'.format(
             download_type,
@@ -317,7 +314,32 @@ class DownloadData(FormView):
             self,
             '_download_{}'.format(download_type)
         )
-        return download_func(division_id, filename)
+        return download_func(division_id, filename, sources, confidences)
+
+    def _download_basic(self, division_id, filename, sources=False, confidences=False):
+        field_map = self._filter_field_map(field_maps.basic, sources, confidences)
+        queryset = Organization.objects.filter(
+            organizationdivisionid__value=division_id,
+            published=True
+        )
+        return self._render_to_csv_response(queryset, field_map, filename)
+
+    def _download_parentage(self, division_id, filename, sources=False, confidences=False):
+        field_map = self._filter_field_map(field_maps.parentage, sources, confidences)
+        queryset = Composition.objects.filter(
+            compositionchild__value__organizationdivisionid__value=division_id,
+            compositionchild__value__published=True
+        )
+        return self._render_to_csv_response(queryset, field_map, filename)
+
+    def _filter_field_map(self, field_map, sources=False, confidences=False):
+        """Filter sources and confidences from field_map as necessary."""
+        fields = field_map.items()
+        if sources is False:
+            fields = [(key, val) for key, val in fields if not val.get('source')]
+        if confidences is False:
+            fields = [(key, val) for key, val in fields if not val.get('confidence')]
+        return OrderedDict(fields)
 
     def _render_to_csv_response(self, queryset, field_map, filename):
         """
@@ -325,9 +347,7 @@ class DownloadData(FormView):
         represent a CSV download for a given queryset.
         """
         # Get the queryset that will be used to write a CSV
-        annotated_fields = OrderedDict((key, data['value']) for key, data in field_map.items()
-                                       if data.get('annotated') is True)
-        annotated_qset = queryset.annotate(**annotated_fields)
+        annotated_qset = queryset.annotate(**{key: data['value'] for key, data in field_map.items()})
         field_list = list(field_map.keys())
         qset_values = annotated_qset.values(*field_list)
 
@@ -346,102 +366,6 @@ class DownloadData(FormView):
             field_order=field_list,
             filename=filename
         )
-
-    def _get_field_map_basic(self):
-        """Field data for the Basic download."""
-        return OrderedDict([
-            ('uuid', {
-                'header': 'unit:id:admin',
-                'value': 'uuid',
-                'serializer': self.serializers['string'],
-            }),
-            ('name', {
-                'header': Organization.get_spreadsheet_field_name('name'),
-                'annotated': True,
-                'value': Max('organizationname__value'),
-                'serializer': self.serializers['identity'],
-            }),
-            ('division_id', {
-                'header': Organization.get_spreadsheet_field_name('division_id'),
-                'annotated': True,
-                'value': Max('organizationdivisionid__value'),
-                'serializer': self.serializers['division_id'],
-            }),
-            ('classifications', {
-                'header': Organization.get_spreadsheet_field_name('classification'),
-                'annotated': True,
-                'value': ArrayAgg('organizationclassification__value', distinct=True),
-                'serializer': self.serializers['complex_list'],
-            }),
-            ('aliases', {
-                'header': Organization.get_spreadsheet_field_name('aliases'),
-                'annotated': True,
-                'value': ArrayAgg('organizationalias__value', distinct=True),
-                'serializer': self.serializers['complex_list'],
-            }),
-            ('firstciteddate', {
-                'header': Organization.get_spreadsheet_field_name('firstciteddate'),
-                'annotated': True,
-                'value': Max('organizationfirstciteddate__value'),
-                'serializer': self.serializers['identity'],
-            }),
-            ('lastciteddate', {
-                'header': Organization.get_spreadsheet_field_name('lastciteddate'),
-                'annotated': True,
-                'value': Max('organizationlastciteddate__value'),
-                'serializer': self.serializers['identity'],
-            }),
-            ('realstart', {
-                'header': Organization.get_spreadsheet_field_name('realstart'),
-                'annotated': True,
-                'value': Max(
-                    Case(
-                        When(organizationrealstart__value=True, then=Value('Y')),
-                        When(organizationrealstart__value=False, then=Value('N')),
-                        When(organizationrealstart__value=None, then=Value('')),
-                        output_field=CharField()
-                    )
-                ),
-                'serializer': self.serializers['identity'],
-            }),
-            ('openended', {
-                'header': Organization.get_spreadsheet_field_name('open_ended'),
-                'annotated': True,
-                'value': Max('organizationopenended__value'),
-                'serializer': self.serializers['identity'],
-            }),
-        ])
-
-    def _get_field_map_parentage(self):
-        """Field data for the Parentage download."""
-        field_map = self._get_field_map_basic().copy()
-        # TODO: Finish this function
-        field_map.update(OrderedDict([
-            ('uuid', {
-                'header': 'unit:related_unit',
-                'value': 'uuid',
-                'serializer': self.serializers['string'],
-            }),
-        ]))
-        return field_map
-
-    def _download_basic(self, division_id, filename):
-        field_map = self._get_field_map_basic()
-        queryset = Organization.objects.filter(
-            organizationdivisionid__value=division_id,
-            published=True
-        )
-        return self._render_to_csv_response(queryset, field_map, filename)
-
-    def _download_parentage(self, division_id, filename):
-        """Queryset data for the Parentage download."""
-        # TODO: Do we need this function? Can we factor it out?
-        field_map = self._get_field_map_parentage()
-        queryset = Organization.objects.filter(
-            organizationdivisionid__value=division_id,
-            published=True
-        )
-        return self._render_to_csv_response(queryset, field_map, filename)
 
 
 class Echo:

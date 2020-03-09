@@ -559,9 +559,12 @@ def download_types():
         ('sources', _("Sources")),
     ]
 
+
 class DownloadForm(forms.Form):
     download_type = forms.ChoiceField(label=_("Choose a download type"), choices=download_types)
     division_id = forms.ChoiceField(label=_("Country"), choices=division_choices)
+    sources = forms.BooleanField(label=_("Include sources"), required=False)
+    confidences = forms.BooleanField(label=_("Include confidence scores"), required=False)
 
 
 class ChangeLogForm(forms.Form):
