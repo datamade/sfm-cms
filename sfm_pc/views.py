@@ -20,11 +20,9 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.utils.translation import get_language
 from django.db import connection
-from django.db.models import Max, Case, When, Value, CharField
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.postgres.aggregates import ArrayAgg
 from django.views.generic.edit import CreateView, UpdateView
 from django.utils import timezone
 from django.http import StreamingHttpResponse
@@ -43,6 +41,7 @@ from membershipperson.models import MembershipPerson
 from source.models import Source, AccessPoint
 
 from sfm_pc import field_maps
+from sfm_pc.models import BasicDownload
 from sfm_pc.templatetags.render_from_source import get_relations, \
     get_relation_attributes
 from sfm_pc.utils import (import_class, get_osm_by_id, get_org_hierarchy_by_id,
@@ -296,13 +295,15 @@ class DownloadData(FormView):
     template_name = 'download.html'
     form_class = DownloadForm
     success_url = reverse_lazy('download')
+    download_types_to_models = {
+        'basic': BasicDownload,
+    }
 
     def form_valid(self, form):
         download_type = form.cleaned_data['download_type']
-        division_id = form.cleaned_data['division_id']
-        sources = form.cleaned_data['sources']
-        confidences = form.cleaned_data['confidences']
+        DownloadModel = self.download_types_to_models[download_type]
 
+        division_id = form.cleaned_data['division_id']
         iso = division_id[-2:]
         filename = '{}_{}_{}.csv'.format(
             download_type,
@@ -310,11 +311,15 @@ class DownloadData(FormView):
             timezone.now().date().isoformat()
         )
 
-        download_func = getattr(
-            self,
-            '_download_{}'.format(download_type)
+        sources = form.cleaned_data['sources']
+        confidences = form.cleaned_data['confidences']
+
+        return DownloadModel.render_to_csv_response(
+            division_id,
+            filename,
+            sources,
+            confidences
         )
-        return download_func(division_id, filename, sources, confidences)
 
     def _download_basic(self, division_id, filename, sources=False, confidences=False):
         field_map = self._filter_field_map(field_maps.basic, sources, confidences)
@@ -343,8 +348,8 @@ class DownloadData(FormView):
 
     def _render_to_csv_response(self, queryset, field_map, filename):
         """
-        Retrieve the queryset values, field header map, and field serializer map that
-        represent a CSV download for a given queryset.
+        Given a queryset, field map, and filename, render a CSV response for
+        a download.
         """
         # Get the queryset that will be used to write a CSV
         annotated_qset = queryset.annotate(**{key: data['value'] for key, data in field_map.items()})

@@ -26,7 +26,6 @@ link_locations: import_directory flush_db
 .PHONY : update_db
 update_db : import_directory import_db auth_models.json flush_db link_locations import_google_docs
 	python manage.py loaddata auth_models.json
-	python manage.py make_flattened_views --recreate
 	python manage.py update_countries_plus
 	python manage.py make_search_index --recreate
 	# psql importer < sfm_pc/management/commands/flush/rename.sql
@@ -64,7 +63,6 @@ clean :
 
 .PHONY : search
 search : 
-	python manage.py make_flattened_views --recreate
 	python manage.py make_search_index --recreate
 
 

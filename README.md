@@ -247,7 +247,6 @@ sudo su - <user>
 workon sfm
 cd sfm-importer
 make update_db
-python manage.py make_flattened_views --recreate
 python manage.py update_search_index
 ```
 

@@ -16,7 +16,7 @@ from complex_fields.base_models import BaseModel
 from django_date_extensions.fields import ApproximateDateField
 
 from sfm_pc.utils import VersionsMixin
-from sfm_pc.models import GetComplexFieldNameMixin
+from sfm_pc.fields import GetComplexFieldNameMixin
 
 VERSION_RELATED_FIELDS = [
     'associationorganization_set',
