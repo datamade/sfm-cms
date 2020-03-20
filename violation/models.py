@@ -17,7 +17,7 @@ from source.models import Source
 from person.models import Person
 from organization.models import Organization
 from sfm_pc.utils import VersionsMixin
-from sfm_pc.models import GetComplexFieldNameMixin
+from sfm_pc.fields import GetComplexFieldNameMixin
 from location.models import Location
 
 

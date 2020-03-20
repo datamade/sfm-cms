@@ -8,7 +8,7 @@ from complex_fields.base_models import BaseModel
 from complex_fields.models import ComplexField, ComplexFieldContainer
 
 from sfm_pc.utils import VersionsMixin
-from sfm_pc.models import GetComplexFieldNameMixin
+from sfm_pc.fields import GetComplexFieldNameMixin
 
 
 @reversion.register()

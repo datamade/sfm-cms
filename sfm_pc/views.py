@@ -40,8 +40,7 @@ from violation.models import Violation
 from membershipperson.models import MembershipPerson
 from source.models import Source, AccessPoint
 
-from sfm_pc import field_maps
-from sfm_pc.models import BasicDownload
+from sfm_pc.models import BasicDownload, ParentageDownload
 from sfm_pc.templatetags.render_from_source import get_relations, \
     get_relation_attributes
 from sfm_pc.utils import (import_class, get_osm_by_id, get_org_hierarchy_by_id,
@@ -297,6 +296,7 @@ class DownloadData(FormView):
     success_url = reverse_lazy('download')
     download_types_to_models = {
         'basic': BasicDownload,
+        'parentage': ParentageDownload,
     }
 
     def form_valid(self, form):
@@ -319,57 +319,6 @@ class DownloadData(FormView):
             filename,
             sources,
             confidences
-        )
-
-    def _download_basic(self, division_id, filename, sources=False, confidences=False):
-        field_map = self._filter_field_map(field_maps.basic, sources, confidences)
-        queryset = Organization.objects.filter(
-            organizationdivisionid__value=division_id,
-            published=True
-        )
-        return self._render_to_csv_response(queryset, field_map, filename)
-
-    def _download_parentage(self, division_id, filename, sources=False, confidences=False):
-        field_map = self._filter_field_map(field_maps.parentage, sources, confidences)
-        queryset = Composition.objects.filter(
-            compositionchild__value__organizationdivisionid__value=division_id,
-            compositionchild__value__published=True
-        )
-        return self._render_to_csv_response(queryset, field_map, filename)
-
-    def _filter_field_map(self, field_map, sources=False, confidences=False):
-        """Filter sources and confidences from field_map as necessary."""
-        fields = field_map.items()
-        if sources is False:
-            fields = [(key, val) for key, val in fields if not val.get('source')]
-        if confidences is False:
-            fields = [(key, val) for key, val in fields if not val.get('confidence')]
-        return OrderedDict(fields)
-
-    def _render_to_csv_response(self, queryset, field_map, filename):
-        """
-        Given a queryset, field map, and filename, render a CSV response for
-        a download.
-        """
-        # Get the queryset that will be used to write a CSV
-        annotated_qset = queryset.annotate(**{key: data['value'] for key, data in field_map.items()})
-        field_list = list(field_map.keys())
-        qset_values = annotated_qset.values(*field_list)
-
-        # The field header map defines the headers that the CSV will use for
-        # each queryset field
-        field_header_map = {key: data['header'] for key, data in field_map.items()}
-
-        # The field serializer map defines the serializers that should be used
-        # to write each queryset field to a CSV field
-        field_serializer_map = {key: data['serializer'] for key, data in field_map.items()}
-
-        return djqscsv.render_to_csv_response(
-            qset_values,
-            field_header_map=field_header_map,
-            field_serializer_map=field_serializer_map,
-            field_order=field_list,
-            filename=filename
         )
 
 

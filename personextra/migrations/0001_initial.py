@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
             ],
-            bases=(models.Model, complex_fields.base_models.BaseModel, sfm_pc.utils.VersionsMixin, sfm_pc.models.GetComplexFieldNameMixin),
+            bases=(models.Model, complex_fields.base_models.BaseModel, sfm_pc.utils.VersionsMixin, sfm_pc.fields.GetComplexFieldNameMixin),
         ),
         migrations.CreateModel(
             name='PersonExtraAccount',

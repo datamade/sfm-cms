@@ -11,7 +11,7 @@ from complex_fields.base_models import BaseModel
 
 from person.models import Person
 from organization.models import Organization
-from sfm_pc.models import GetComplexFieldNameMixin
+from sfm_pc.fields import GetComplexFieldNameMixin
 
 
 class MembershipPerson(models.Model, BaseModel, GetComplexFieldNameMixin):

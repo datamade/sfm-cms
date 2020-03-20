@@ -8,7 +8,7 @@ from complex_fields.model_decorators import (versioned, translated, sourced,
 from complex_fields.models import ComplexField, ComplexFieldContainer
 from complex_fields.base_models import BaseModel
 
-from sfm_pc.models import GetComplexFieldNameMixin
+from sfm_pc.fields import GetComplexFieldNameMixin
 
 
 class Area(models.Model, BaseModel, GetComplexFieldNameMixin):

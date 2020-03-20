@@ -15,7 +15,7 @@ from complex_fields.models import ComplexField, ComplexFieldContainer, \
 from complex_fields.base_models import BaseModel
 
 from sfm_pc.utils import VersionsMixin
-from sfm_pc.models import GetComplexFieldNameMixin
+from sfm_pc.fields import GetComplexFieldNameMixin
 
 
 VERSION_RELATED_FIELDS = [

@@ -5,97 +5,11 @@ from django.db import models
 from django.db.models import Max, Case, When, Value, CharField, F
 from django.conf import settings
 from django.contrib.postgres import fields as pg_fields
-from django.contrib.postgres.aggregates import ArrayAgg
-from complex_fields.models import ComplexFieldContainer
 from django_date_extensions.fields import ApproximateDateField
 
 from organization.models import Organization
-
-
-class GetComplexFieldNameMixin:
-    """
-    Mixin to allow models with ComplexFields to retrieve the different types of
-    field names for a given ComplexField.
-    """
-    @classmethod
-    def get_field_model(cls, field_name):
-        """
-        Return the ComplexField model corresponding to a field on this model.
-        """
-        # Get the 0th ID instance, to indicate that we don't want a specific instance
-        # (for more information on these methods, see the source code in the
-        # complex_fields app)
-        container = ComplexFieldContainer.field_from_str_and_id(
-            cls.__name__.lower(), '0', field_name
-        )
-        return container.field_model()
-
-    @classmethod
-    def get_verbose_field_name(cls, field_name):
-        """
-        Get the canonical verbose name for a given field_name. For instance,
-        the verbose name for Person.aliases would be 'Other names'.
-        """
-        field_model = cls.get_field_model(field_name)
-        return field_model.field_name
-
-    @classmethod
-    def get_shortcode(cls, field_name):
-        """
-        Get the shortcode for a given field_name. For instance, the shortcode
-        for Person.aliases would be 'p_on'.
-        """
-        field_model = cls.get_field_model(field_name)
-        return field_model.shortcode
-
-    @classmethod
-    def get_spreadsheet_field_name(cls, field_name):
-        """
-        Get the spreadsheet field name for a given field_name. For instance,
-        the spreadsheet field name for Person.name would be 'person:name'.
-        """
-        field_model = cls.get_field_model(field_name)
-        return field_model.spreadsheet_field_name
-
-    @classmethod
-    def get_spreadsheet_confidence_field_name(cls, field_name):
-        """
-        Get the spreadsheet confidence field name for a given field_name. For
-        instance, the spreadsheet confidence field name for Person.name would
-        be 'person:name:confidence'.
-        """
-        field_model = cls.get_field_model(field_name)
-        if hasattr(field_model, 'spreadsheet_confidence_field_name'):
-            return getattr(field_model, 'spreadsheet_confidence_field_name')
-        else:
-            # If no confidence field name is specified, the default is usually
-            # the spreadsheet field name with ":confidence" appended on
-            return cls.get_spreadsheet_field_name(field_name) + ':confidence'
-
-    @classmethod
-    def get_spreadsheet_source_field_name(cls, field_name):
-        """
-        Get the spreadsheet source field name for a given field_name. For
-        instance, the spreadsheet source field name for Person.name would
-        be 'person:name:source'.
-        """
-        field_model = cls.get_field_model(field_name)
-        if hasattr(field_model, 'spreadsheet_source_field_name'):
-            return getattr(field_model, 'spreadsheet_source_field_name')
-        else:
-            # If no source field name is specified, the default is usually
-            # the spreadsheet field name with ":source" appended on
-            return cls.get_spreadsheet_field_name(field_name) + ':source'
-
-
-class DistinctArrayAgg(ArrayAgg):
-    # Allow ArrayAgg queries to optionally filter duplicate values.
-    # This change was introduced in Django 2.0, which we are not yet supporting.
-    # See: https://github.com/django/django/commit/b5393028bfc939adf14d0fa5e4088cddd3b9dfa1
-    template = '%(function)s(%(distinct)s%(expressions)s)'
-
-    def __init__(self, expression, distinct=False, **extra):
-        super().__init__(expression, distinct='DISTINCT ' if distinct else '', **extra)
+from composition.models import Composition
+from sfm_pc.fields import DistinctArrayAgg
 
 
 class DownloadMixin:
@@ -105,6 +19,10 @@ class DownloadMixin:
         'division_id': lambda x: x.split(':')[-1] if x else x,
         'list': lambda x: '; '.join(str(elem) for elem in x if elem),
     }
+    published_filters = {'published': True}
+
+    class Meta:
+        managed = False
 
     @classmethod
     def get_model(cls):
@@ -144,7 +62,7 @@ class DownloadMixin:
     @classmethod
     def get_materialized_view_sql_with_params(cls):
         Model = cls.get_model()
-        queryset = Model.objects.filter(published=True)
+        queryset = Model.objects.filter(**cls.published_filters)
 
         field_map = cls.get_field_map(sources=True, confidences=True)
         annotated_qset = queryset.annotate(**{key: data['value'] for key, data in field_map.items()})
@@ -205,9 +123,6 @@ class BasicDownload(DownloadMixin, models.Model):
     open_ended_confidence = models.CharField(max_length=1)
 
     model = Organization
-
-    class Meta:
-        managed = False
 
     @classmethod
     def _get_field_map(cls):
@@ -358,6 +273,355 @@ class BasicDownload(DownloadMixin, models.Model):
                 'header': Organization.get_spreadsheet_confidence_field_name('open_ended'),
                 'confidence': True,
                 'value': Max('organizationopenended__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+        ])
+
+
+class ParentageDownload(DownloadMixin, models.Model):
+    composition_id = models.IntegerField(primary_key=True)
+    child_unit_id = models.UUIDField()
+    name = models.TextField()
+    name_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    name_confidence = models.CharField(max_length=1)
+    division_id = models.TextField()
+    division_id_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    division_id_confidence = models.CharField(max_length=1)
+    classifications = pg_fields.ArrayField(models.TextField(), default=list)
+    classifications_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    classifications_confidence = models.CharField(max_length=1)
+    aliases = pg_fields.ArrayField(models.TextField(), default=list)
+    aliases_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    aliases_confidence = models.CharField(max_length=1)
+    firstciteddate = ApproximateDateField()
+    firstciteddate_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    firstciteddate_confidence = models.CharField(max_length=1)
+    lastciteddate = ApproximateDateField()
+    lastciteddate_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    lastciteddate_confidence = models.CharField(max_length=1)
+    realstart = models.NullBooleanField(default=None)
+    realstart_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    realstart_confidence = models.CharField(max_length=1)
+    open_ended = models.CharField(max_length=1, default='N', choices=settings.OPEN_ENDED_CHOICES)
+    open_ended_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    open_ended_confidence = models.CharField(max_length=1)
+    related_id = models.UUIDField()
+    related_id_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    related_id_confidence = models.CharField(max_length=1)
+    related_classifications = pg_fields.ArrayField(models.TextField(), default=list)
+    related_classifications_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    related_classifications_confidence = models.CharField(max_length=1)
+    related_firstciteddate = ApproximateDateField()
+    related_firstciteddate_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    related_firstciteddate_confidence = models.CharField(max_length=1)
+    related_lastciteddate = ApproximateDateField()
+    related_lastciteddate_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    related_lastciteddate_confidence = models.CharField(max_length=1)
+    related_realstart = models.NullBooleanField(default=None)
+    related_realstart_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    related_realstart_confidence = models.CharField(max_length=1)
+    related_open_ended = models.CharField(max_length=1, default='N', choices=settings.OPEN_ENDED_CHOICES)
+    related_open_ended_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    related_open_ended_confidence = models.CharField(max_length=1)
+
+    model = Composition
+    published_filters = {
+        'compositionchild__value__published': True,
+        'compositionparent__value__published': True
+    }
+
+    @classmethod
+    def _get_field_map(cls):
+        return OrderedDict([
+            ('child_id', {
+                'header': 'unit:id:admin',
+                'value': F('compositionchild__value__uuid'),
+                'serializer': cls.serializers['string'],
+            }),
+            ('name', {
+                'header': Organization.get_spreadsheet_field_name('name'),
+                'value': Max('compositionchild__value__organizationname__value'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('name_sources', {
+                'header': Organization.get_spreadsheet_source_field_name('name'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionchild__value__organizationname__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('name_confidence', {
+                'header': Organization.get_spreadsheet_confidence_field_name('name'),
+                'confidence': True,
+                'value': Max('compositionchild__value__organizationname__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('division_id', {
+                'header': Organization.get_spreadsheet_field_name('division_id'),
+                'value': Max('compositionchild__value__organizationdivisionid__value'),
+                'serializer': cls.serializers['division_id'],
+            }),
+            ('division_id_sources', {
+                'header': Organization.get_spreadsheet_source_field_name('division_id'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionchild__value__organizationdivisionid__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('division_id_confidence', {
+                'header': Organization.get_spreadsheet_confidence_field_name('division_id'),
+                'confidence': True,
+                'value': Max('compositionchild__value__organizationdivisionid__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('classifications', {
+                'header': Organization.get_spreadsheet_field_name('classification'),
+                'value': DistinctArrayAgg('compositionchild__value__organizationclassification__value', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('classifications_sources', {
+                'header': Organization.get_spreadsheet_source_field_name('classification'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionchild__value__organizationclassification__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('classifications_confidence', {
+                'header': Organization.get_spreadsheet_confidence_field_name('classification'),
+                'confidence': True,
+                'value': Max('compositionchild__value__organizationclassification__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('aliases', {
+                'header': Organization.get_spreadsheet_field_name('aliases'),
+                'value': DistinctArrayAgg('compositionchild__value__organizationalias__value', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('aliases_sources', {
+                'header': Organization.get_spreadsheet_source_field_name('aliases'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionchild__value__organizationalias__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('aliases_confidence', {
+                'header': Organization.get_spreadsheet_confidence_field_name('aliases'),
+                'confidence': True,
+                'value': Max('compositionchild__value__organizationalias__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('firstciteddate', {
+                'header': Organization.get_spreadsheet_field_name('firstciteddate'),
+                'value': Max('compositionchild__value__organizationfirstciteddate__value'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('firstciteddate_sources', {
+                'header': Organization.get_spreadsheet_source_field_name('firstciteddate'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionchild__value__organizationfirstciteddate__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('firstciteddate_confidence', {
+                'header': Organization.get_spreadsheet_confidence_field_name('firstciteddate'),
+                'confidence': True,
+                'value': Max('compositionchild__value__organizationfirstciteddate__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('lastciteddate', {
+                'header': Organization.get_spreadsheet_field_name('lastciteddate'),
+                'value': Max('compositionchild__value__organizationlastciteddate__value'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('lastciteddate_sources', {
+                'header': Organization.get_spreadsheet_source_field_name('lastciteddate'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionchild__value__organizationlastciteddate__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('lastciteddate_confidence', {
+                'header': Organization.get_spreadsheet_confidence_field_name('lastciteddate'),
+                'confidence': True,
+                'value': Max('compositionchild__value__organizationlastciteddate__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('realstart', {
+                'header': Organization.get_spreadsheet_field_name('realstart'),
+                'value': Max(
+                    Case(
+                        When(compositionchild__value__organizationrealstart__value=True, then=Value('Y')),
+                        When(compositionchild__value__organizationrealstart__value=False, then=Value('N')),
+                        When(compositionchild__value__organizationrealstart__value=None, then=Value('')),
+                        output_field=CharField()
+                    )
+                ),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('realstart_sources', {
+                'header': Organization.get_spreadsheet_source_field_name('realstart'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionchild__value__organizationrealstart__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('realstart_confidence', {
+                'header': Organization.get_spreadsheet_confidence_field_name('realstart'),
+                'confidence': True,
+                'value': Max('compositionchild__value__organizationrealstart__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('open_ended', {
+                'header': Organization.get_spreadsheet_field_name('open_ended'),
+                'value': Max('compositionchild__value__organizationopenended__value'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('open_ended_sources', {
+                'header': Organization.get_spreadsheet_source_field_name('open_ended'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionchild__value__organizationopenended__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('open_ended_confidence', {
+                'header': Organization.get_spreadsheet_confidence_field_name('open_ended'),
+                'confidence': True,
+                'value': Max('compositionchild__value__organizationopenended__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_id', {
+                'header': Composition.get_spreadsheet_field_name('parent'),
+                'value': F('compositionparent__value__uuid'),
+                'serializer': cls.serializers['string'],
+            }),
+            ('related_id_sources', {
+                'header': Composition.get_spreadsheet_source_field_name('parent'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionparent__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('related_id_confidence', {
+                'header': Composition.get_spreadsheet_confidence_field_name('parent'),
+                'confidence': True,
+                'value': Max('compositionparent__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_name', {
+                'header': Composition.get_spreadsheet_field_name('parent') + ':name',
+                'value': Max('compositionparent__value__organizationname__value'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_name_sources', {
+                'header': Composition.get_spreadsheet_field_name('parent') + ':name:source',
+                'source': True,
+                'value': DistinctArrayAgg('compositionparent__value__organizationname__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('related_name_confidence', {
+                'header': Composition.get_spreadsheet_field_name('parent') + ':name:confidence',
+                'confidence': True,
+                'value': Max('compositionparent__value__organizationname__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_division_id', {
+                'header': Composition.get_spreadsheet_field_name('parent') + ':country',
+                'value': Max('compositionparent__value__organizationdivisionid__value'),
+                'serializer': cls.serializers['division_id'],
+            }),
+            ('related_division_id_sources', {
+                'header': Composition.get_spreadsheet_field_name('parent') + ':country:sources',
+                'source': True,
+                'value': DistinctArrayAgg('compositionparent__value__organizationdivisionid__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('related_division_id_confidence', {
+                'header': Composition.get_spreadsheet_field_name('parent') + ':country:confidence',
+                'confidence': True,
+                'value': Max('compositionparent__value__organizationdivisionid__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_classifications', {
+                'header': Composition.get_spreadsheet_field_name('classification'),
+                'value': DistinctArrayAgg('compositionclassification__value', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('related_classifications_sources', {
+                'header': Composition.get_spreadsheet_source_field_name('classification'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionclassification__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('related_classifications_confidence', {
+                'header': Composition.get_spreadsheet_confidence_field_name('classification'),
+                'confidence': True,
+                'value': Max('compositionclassification__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_firstciteddate', {
+                'header': Composition.get_spreadsheet_field_name('startdate'),
+                'value': Max('compositionstartdate__value'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_firstciteddate_sources', {
+                'header': Composition.get_spreadsheet_source_field_name('startdate'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionstartdate__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('related_firstciteddate_confidence', {
+                'header': Composition.get_spreadsheet_confidence_field_name('startdate'),
+                'confidence': True,
+                'value': Max('compositionstartdate__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_realstart', {
+                'header': Composition.get_spreadsheet_field_name('realstart'),
+                'value': Max(
+                    Case(
+                        When(compositionrealstart__value=True, then=Value('Y')),
+                        When(compositionrealstart__value=False, then=Value('N')),
+                        When(compositionrealstart__value=None, then=Value('')),
+                        output_field=CharField()
+                    )
+                ),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_realstart_sources', {
+                'header': Composition.get_spreadsheet_source_field_name('realstart'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionrealstart__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('related_realstart_confidence', {
+                'header': Composition.get_spreadsheet_confidence_field_name('realstart'),
+                'confidence': True,
+                'value': Max('compositionrealstart__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_lastciteddate', {
+                'header': Composition.get_spreadsheet_field_name('enddate'),
+                'value': Max('compositionenddate__value'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_lastciteddate_sources', {
+                'header': Composition.get_spreadsheet_source_field_name('enddate'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionenddate__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('related_lastciteddate_confidence', {
+                'header': Composition.get_spreadsheet_confidence_field_name('enddate'),
+                'confidence': True,
+                'value': Max('compositionenddate__confidence'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_open_ended', {
+                'header': Composition.get_spreadsheet_field_name('open_ended'),
+                'value': Max('compositionopenended__value'),
+                'serializer': cls.serializers['identity'],
+            }),
+            ('related_open_ended_sources', {
+                'header': Composition.get_spreadsheet_source_field_name('open_ended'),
+                'source': True,
+                'value': DistinctArrayAgg('compositionopenended__sources', distinct=True),
+                'serializer': cls.serializers['list'],
+            }),
+            ('related_open_ended_confidence', {
+                'header': Composition.get_spreadsheet_confidence_field_name('open_ended'),
+                'confidence': True,
+                'value': Max('compositionopenended__confidence'),
                 'serializer': cls.serializers['identity'],
             }),
         ])
