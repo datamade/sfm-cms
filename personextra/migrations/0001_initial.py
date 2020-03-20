@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import complex_fields.base_models
 from django.db import migrations, models
 import django.db.models.deletion
-import sfm_pc.models
+import sfm_pc.fields
 import sfm_pc.utils
 import uuid
 

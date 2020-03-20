@@ -40,7 +40,7 @@ from violation.models import Violation
 from membershipperson.models import MembershipPerson
 from source.models import Source, AccessPoint
 
-from sfm_pc.models import BasicDownload, ParentageDownload
+from sfm_pc.downloads import BasicDownload, ParentageDownload
 from sfm_pc.templatetags.render_from_source import get_relations, \
     get_relation_attributes
 from sfm_pc.utils import (import_class, get_osm_by_id, get_org_hierarchy_by_id,
