@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connection, transaction
+from django.db import connection
 from django.db.utils import ProgrammingError
 
 from sfm_pc.views import DownloadData

@@ -42,6 +42,12 @@ class ParentageDownload(mixins.DownloadMixin, models.Model):
     related_id = models.UUIDField()
     related_id_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
     related_id_confidence = models.CharField(max_length=1)
+    related_name = models.TextField()
+    related_name_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    related_name_confidence = models.CharField(max_length=1)
+    related_division_id = models.TextField()
+    related_division_id_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
+    related_division_id_confidence = models.CharField(max_length=1)
     related_classifications = pg_fields.ArrayField(models.TextField(), default=list)
     related_classifications_sources = pg_fields.ArrayField(models.UUIDField(), default=list)
     related_classifications_confidence = models.CharField(max_length=1)
@@ -255,7 +261,7 @@ class ParentageDownload(mixins.DownloadMixin, models.Model):
                 'serializer': cls.serializers['division_id'],
             }),
             ('related_division_id_sources', {
-                'header': Composition.get_spreadsheet_field_name('parent') + ':country:sources',
+                'header': Composition.get_spreadsheet_field_name('parent') + ':country:source',
                 'source': True,
                 'value': DistinctArrayAgg('compositionparent__value__organizationdivisionid__sources', distinct=True),
                 'serializer': cls.serializers['list'],

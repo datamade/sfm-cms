@@ -28,8 +28,8 @@ def get_deleted_user():
 
 class GetSpreadsheetFieldNameMixin:
     """
-    Mixin to allow models with source_fields to retrieve the
-    spreadsheet_field_name for a given source_field.
+    Mixin to allow models with Django fields to retrieve the
+    spreadsheet_field_name for a given field.
     """
     @classmethod
     def get_spreadsheet_field_name(cls, field_name):
