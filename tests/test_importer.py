@@ -71,7 +71,11 @@ def test_number_of_imported_entities(entity_name, Model, data_import, data_folde
         # Exclude entities with a non-final status
         if entity_name in ('units', 'persons', 'incidents'):
             status_field = entity_name[:-1] + ':status:admin'
-            num_raw_records = sum(1 for rec in raw_records if rec[status_field] == '3')
+            comments_field = entity_name[:-1] + ':comments:admin'
+            num_raw_records = sum(
+                1 for rec in raw_records
+                if rec[status_field] == '3' and 'duplicate' not in rec[comments_field].lower()
+            )
         else:
             num_raw_records = len(raw_records)
     if type(Model) == tuple:
