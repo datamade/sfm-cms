@@ -16,14 +16,12 @@ Clone the repo:
 Next, create a local settings file. If you're on the Blackbox keyring for the repo,
 decrypt the development settings file:
 
-    blackbox_cat configs/settings_local_dev.py.gpg > sfm_pc/settings_local.dev.py
+    blackbox_cat configs/settings_local_dev.py.gpg > sfm_pc/settings_local.py
 
 If you're not on the keyring, you can copy the example settings file and set
 your own secret variables:
 
-    cp sfm_pc/settings_local.example.py sfm_pc/settings_local.dev.py
-
-Replace `OSM_API_KEY` in `settings_local.py` with a Wambacher cliKey. Generate a key [here](https://wambachers-osm.website/boundaries/) by enabling OAuth, selecting a boundary, checking CLI, hitting Export, and looking at the generated URL. You'll also need to set the `GOOGLE_MAPS_KEY` in order to load maps.
+    cp sfm_pc/settings_local.example.py sfm_pc/settings_local.py
 
 Build application container images:
 
@@ -35,21 +33,31 @@ Once you have container images, there are two ways that you can load data into y
 
 The standard data loading process for the app can take many hours to complete. If you're working with a developer who already has a database set up, you can save time by having them make a dump of their database for you:
 
-    docker-compose run --rm app pg_dump -Fc -h postgres -U postgres -d sfm -O > sfm_empty.dump
+    docker-compose run --rm app pg_dump -Fc -h postgres -U postgres -d sfm -O > sfm.dump
 
-Then, load this dump into your own database:
+Alternatively, if you have access to a server on which WWIC is deployed, you can generate your own dump:
 
-    docker-compose run --rm app pg_restore -h postgres -U postgres -d sfm -O sfm.dump
+    ssh ubuntu@somesfminstance.org pg_dump -Fc -O -U postgres sfm > sfm.dump
+
+Then, load this dump into your **empty** database:
+
+    # Start Postgres, but not the app, which will apply migrations and interfere with the restore
+    docker-compose up -d postgres
+
+    # Load in your dump
+    pg_restore -h localhost -p 32001 -U postgres -Fc -O -d sfm < sfm.dump
 
 Once the dump has been restored, move on to the step `Set up the search index` below.
 
 ### Option 2: Load data via management commands
 
-The standard way to load data into the app is to use the app's management commands for loading data. Start by updating the `Countries` models: 
+### N.b., the free service we used to retrieve SFM data is now deprecated and this method will no longer work. It will be heavily revised in an upcoming development effort.
+
+The standard way to load data into the app is to use the app's management commands for loading data. Start by updating the `Countries` models:
 
     docker-compose run --rm app ./manage.py update_countries_plus
 
-Next, import OSM data:
+Next, replace `OSM_API_KEY` in `settings_local.py` with a Wambacher cliKey. Generate a key [here](https://wambachers-osm.website/boundaries/) by enabling OAuth, selecting a boundary, checking CLI, hitting Export, and looking at the generated URL. You'll also need to set the `GOOGLE_MAPS_KEY` in order to load maps. Then, import OSM data:
 
     docker-compose run --rm app ./manage.py import_osm
     docker-compose run --rm app ./manage.py link_locations
