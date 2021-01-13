@@ -44,3 +44,12 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://solr:8983/solr/sfm_haystack',
+        'SILENTLY_FAIL': False,
+        'BATCH_SIZE': 100,
+    },
+}

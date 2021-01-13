@@ -53,6 +53,7 @@ class Dashboard(TemplateView):
 
         self.request.session.modified = True
 
+        # TODO: Refactor to use Haystack
         # Generate list of countries to use in the country select filter
         facet_search = solr.search('entity_type:Organization', **{
             'facet': 'on',

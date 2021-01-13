@@ -1,4 +1,3 @@
-
 FROM solr:7.3
 
 MAINTAINER Forest Gregg <fgregg@datamade.us>

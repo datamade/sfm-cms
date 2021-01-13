@@ -21,7 +21,7 @@ services:
       # Mount the development directory as a volume into the container, so
       # Docker automatically recognizes your changes.
       - .:/app
-      - ${PWD}/sfm_pc/settings_local.dev.py:/app/sfm_pc/settings_local.py
+      # - ${PWD}/sfm_pc/settings_local.dev.py:/app/sfm_pc/settings_local.py
     command: python manage.py runserver 0.0.0.0:8000
 
   migration:

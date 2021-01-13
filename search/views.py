@@ -402,6 +402,7 @@ def get_search_context(request, all_results=False):
 
 @never_cache
 def search(request):
+    print('here i am in the search view!')
 
     context = get_search_context(request)
     context['models'] = {

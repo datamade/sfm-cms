@@ -1,5 +1,6 @@
 dj-database-url==0.3.0
-Django<2.0
+Django>=2.2
+django-haystack==2.8.1
 django-jsonview==0.5.0
 django-localeurl==2.0.2
 django-reversion==2.0.4
