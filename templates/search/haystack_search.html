@@ -82,7 +82,7 @@
                         <input type="text" class="form-control datepicker select2-input-buffer" id="id_start_date" name="start_date" placeholder="{% trans 'Start date' %}" value="{{ start_date }}" />
                         <input type="text" class="form-control datepicker select2-input-buffer" id="id_end_date" name="end_date" placeholder="{% trans 'End date' %}" value="{{ end_date }}" />
                     </div>
-                    {% with facet_name='country' facet_label=_('Country') item_list=facets.fields_country %}
+                    {% with facet_name='country' facet_label=_('Country') item_list=facets.fields.country %}
                         {% include 'partials/search_filter.html' %}
                     {% endwith %}
                 </div>

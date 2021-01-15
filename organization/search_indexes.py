@@ -132,6 +132,9 @@ class Organization(SearchEntity, indexes.Indexable):
 
         return self.prepared_data
 
+    def prepare_country(self, object):
+        ...
+
     def prepare_published(self, object):
         parents = object.parent_organization.all()
 
