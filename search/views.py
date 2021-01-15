@@ -46,7 +46,7 @@ class HaystackSearchView(FacetedSearchView):
             'start_date': self.request.GET.get('start_date', ''),
             'end_date': self.request.GET.get('end_date', ''),
             'suggested_terms': self.queryset.spelling_suggestion(),  # omit query
-            'q_filters': self.request.GET.urlencode(),
+            'q_filters': self.request.GET.urlencode(),  # omit page args
         })
 
         return context

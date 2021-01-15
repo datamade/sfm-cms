@@ -48,7 +48,7 @@
     <!-- Next button -->
     {% if page.has_next %}
     <li>
-        <a href="?{{ q_filters }}&amp;{{ page_type }}_page={{ page.next_page_number }}" aria-label="Next">
+        <a href="?{{ q_filters }}&amp;page={{ page.next_page_number }}" aria-label="Next">
         <span aria-hidden="true">{% trans "Next" %} &raquo;</span>
       </a>
     </li>
