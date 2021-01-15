@@ -6,6 +6,9 @@ from django.shortcuts import render
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import never_cache
+
+from haystack.generic_views import FacetedSearchView
+
 import pysolr
 
 from source.models import Source
@@ -15,6 +18,38 @@ from person.models import Person
 from membershipperson.models import MembershipPerson
 from violation.models import Violation
 from sfm_pc.utils import get_osm_by_id, format_facets
+
+
+class HaystackSearchView(FacetedSearchView):
+
+    template_name = 'search/haystack_search.html'
+    facet_fields = ['classification', 'membership', 'parent_name', 'adminlevel1', 'country']
+    context_object_name = 'results'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+
+        context['models'] =  {
+            'Person': Person,
+            'MembershipPerson': MembershipPerson,
+            'Organization': Organization,
+            'Emplacement': Emplacement,
+            'Violation': Violation,
+            'Source': Source
+        }
+
+        context.update({
+            'user_query': self.request.GET.get('q'),
+            'entity_types': self.request.GET.getlist('entity_type') or ['Organization', 'Person', 'Violation'],
+            'location': self.request.GET.get('osm_id'),
+            'radius': self.request.GET.get('radius'),
+            'start_date': self.request.GET.get('start_date', ''),
+            'end_date': self.request.GET.get('end_date', ''),
+            'suggested_terms': self.queryset.spelling_suggestion(),  # omit query
+            'q_filters': self.request.GET.urlencode(),
+        })
+
+        return context
 
 
 # Model-specific search parameters
@@ -402,8 +437,6 @@ def get_search_context(request, all_results=False):
 
 @never_cache
 def search(request):
-    print('here i am in the search view!')
-
     context = get_search_context(request)
     context['models'] = {
         'Person': Person,

@@ -15,15 +15,15 @@
     {% endif %}
 
     <!-- Page numbers -->
-    {% if page.num_pages|length >= 10 and page.current_page_number >= 9 %}
+    {% if paginator.num_pages >= 10 and page.number >= 9 %}
     <!-- First page + ellipses -->
     <li><a href="?{{ q_filters }}&amp;{{ page_type }}_page=1">1</a></li>
     <li class="disabled"><a href="#">&#8230;</a></li>
     {% endif %}
 
-    {% for num in page.num_pages %}
-        {% if not forloop.last and page.current_page_number|absubtract:num < 5 %}
-            <li{% if num == page.current_page_number %} class="active"{% endif %}>
+    {% for num in paginator.page_range %}
+        {% if not forloop.last and page.number|absubtract:num < 5 %}
+            <li{% if num == page.number %} class="active"{% endif %}>
                 <a href="?{{ q_filters }}&amp;{{ page_type }}_page={{ num }}">
                     {{ num }}
                 </a>
@@ -31,17 +31,17 @@
         {% endif %}
     {% endfor %}
 
-    {% if page.num_pages|length >= 10 %}
-        {% if page.num_pages|length|subtract:page.current_page_number >= 10 %}
+    {% if paginator.num_pages >= 10 %}
+        {% if paginator.num_pages|subtract:page.number >= 10 %}
             <! -- Ellipses before the last page -->
             <li class="disabled"><a href="#">&#8230;</a></li>
         {% endif %}
     {% endif %}
 
     <!-- Last page -->
-    <li{% if page.num_pages|length == page.current_page_number %} class="active"{% endif %}>
-        <a href="?{{ q_filters }}&amp;{{ page_type }}_page={{ page.num_pages|length }}">
-            {{ page.num_pages|length }}
+    <li{% if paginator.num_pages == page.number %} class="active"{% endif %}>
+        <a href="?{{ q_filters }}&amp;{{ page_type }}_page={{ paginator.num_pages }}">
+            {{ paginator.num_pages }}
         </a>
     </li>
 
@@ -58,6 +58,7 @@
 </nav>
 
 <!-- Results per page -->
+<!-- TODO: Fix this -->
 {% if hit_count > 5 %}
 <div class="row">
     <div class="col-sm-12">

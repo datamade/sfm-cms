@@ -11,6 +11,6 @@
     {% include 'partials/organization_list_table.html' %}
 {% endwith %}
 
-{% with page=pages.Organization page_type='Organization' %}
+{% with page=page_obj page_type='Organization' %}
     {% include 'partials/pagination.html' %}
 {% endwith %}

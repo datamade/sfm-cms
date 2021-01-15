@@ -11,9 +11,8 @@
         <ul class="search-facet-list">
             {% for name, count in item_list %}
                 {% if count and count > 0 %}
-                    <!-- Dynamic date fields end with "dt" -->
                     <!-- (default:"" helps handle Nones) -->
-                    {% if facet_name|default:""|slice:"-2:" == "dt" %}
+                    {% if facet_name|default:""|slice:"-4:" == "date" %}
 
                         {% with facet_is_date=True %}
                             {% include 'partials/search_filter_item.html' %}
@@ -30,7 +29,6 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-
         </ul>
     </div>
 </div>

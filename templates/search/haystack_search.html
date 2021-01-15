@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+{% load help %}
+{% load model_meta %}
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static "css/select2.min.css" %}">
+  <link rel="stylesheet" href="{% static "css/bootstrap-datepicker3.min.css" %}">
+{% endblock %}
+{% block content %}
+{{ page.has_previous }}
+<div class="row">
+    <form class="form">
+        <div class="col-xs-12 col-sm-8 pull-right">
+            <div class="input-group main-search">
+
+                {% for facet, selections in selected_facets.items %}
+                    {% for s in selections %}
+                        <input name="selected_facets" type="hidden" class="form-control" value="{{facet}}_exact:{{s}}">
+                    {% endfor %}
+                {% endfor %}
+
+                <input type="text" class="form-control input-lg" placeholder="{% trans 'Search for' %} {{ search_term }}..." name="q" {% if query %}value="{{ query }}{% endif %}" id="q" autofocus>
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-lg" type="submit">{% trans "Go!" %}</button>
+                </span>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="col-xs-12 col-sm-4 pull-left">
+
+            <!-- Entity type -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <strong><i class="fa fa-fw fa-search"></i> {% trans "I'm looking for..." %}</strong>
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <select id="entity-type" name="entity_type" class="form-control" multiple="multiple">
+                            <option value="Person" {% if 'Person' in entity_types %}selected=true{% endif %}>{% trans "Personnel" %}</option>
+                            <option value="Organization" {% if 'Organization' in entity_types %}selected=true{% endif %}>{% trans "Units" %}</option>
+                            <option value="Violation" {% if 'Violation' in entity_types %}selected=true{% endif %}>{% trans "Incidents" %}</option>
+                            {% if request.user.is_staff %}
+                                <option value="Source" {% if 'Source' in entity_types %}selected=true{% endif %}>{% trans "Sources" %}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                        <a href="{% url 'search' %}{% if query %}?q={{ query }}{% endif %}" class="btn btn-sm btn-default"
+                                 {% if not show_clear %}style="display:none;"{% endif %}>
+                            <i class="fa fa-fw fa-times"></i>{% trans "Clear all filters" %}
+                        </a>
+                </div>
+            </div>
+
+            <!-- General filters -->
+            <div class="panel panel-default">
+                <div class="panel-heading" data-toggle="collapse" data-target="#general-filters">
+                    <a role="button" class="filter-heading">
+                        <h4 class="panel-title">
+                            <strong><i class="fa fa-fw fa-filter"></i>{% trans "General filters" %}</strong>
+                            <i class="fa fa-fw
+                            {% if start_date or end_date or 'country' in selected_facets %}
+                                fa-minus
+                            {% else %}
+                                fa-plus
+                            {% endif %}
+                            pull-right"></i>
+                        </h4>
+                    </a>
+                </div>
+                <div class="panel-body
+                {% if start_date or end_date or 'country' in selected_facets %}
+                    panel-show
+                {% endif %}
+                collapse" id="general-filters">
+                    <div class="form-group">
+                        <strong style="padding-left:12px;">{% trans "Date" %}</strong>
+                        <input type="text" class="form-control datepicker select2-input-buffer" id="id_start_date" name="start_date" placeholder="{% trans 'Start date' %}" value="{{ start_date }}" />
+                        <input type="text" class="form-control datepicker select2-input-buffer" id="id_end_date" name="end_date" placeholder="{% trans 'End date' %}" value="{{ end_date }}" />
+                    </div>
+                    {% with facet_name='country' facet_label=_('Country') item_list=facets.fields_country %}
+                        {% include 'partials/search_filter.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <!-- Organizations -->
+            {% if 'Organization' in entity_types %}
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-target='#organization-filters'>
+                        <a role="button" class="filter-heading">
+                            <h4 class="panel-title">
+                                {% trans "Filters for <strong><i class='fa fa-fw fa-users'></i>Units</strong>" %}
+                                <i class="fa fa-fw
+                                {% if show_filter.Organization %}
+                                    fa-minus
+                                {% else %}
+                                    fa-plus
+                                {% endif %}
+                                pull-right"></i>
+                            </h4>
+                        </a>
+                    </div>
+                    <!-- Facets -->
+                    <div class="panel-body {% if show_filter.Organization %}panel-show{% endif %} collapse" id="organization-filters">
+                        <!-- Classification -->
+                        {% if facets.fields.classification %}
+                            {% with facet_name='classification' facet_label=models.Organization|verbose_field_name:'classification' item_list=facets.fields.classification %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- Memberships -->
+                        {% if facets.fields.membership %}
+                            {% with facet_name='membership' facet_label=_('Membership') item_list=facets.fields.membership %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- Parents -->
+                        {% if facets.fields.parent_name %}
+                            {% with facet_name='parent_name' facet_label=_('Parents') item_list=facets.fields.parent_name %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- Admin level 1 -->
+                        {% if facets.fields.adminlevel1 %}
+                            {% with facet_name='adminlevel1' facet_label=models.Emplacement|verbose_field_name:'site' item_list=facets.fields.adminlevel1 %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- Start date -->
+                        {% if facets.fields.start_date %}
+                            {% with facet_name='start_date' facet_label=models.Organization|verbose_field_name:'firstciteddate' item_list=facets.fields.start_date %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- End date -->
+                        {% if facets.fields.end_date %}
+                            {% with facet_name='end_date' facet_label=models.Organization|verbose_field_name:'lastciteddate' item_list=facets.fields.end_date %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </form>
+    <div class="col-xs-12 col-sm-8 pull-right">
+    {% if results %}
+    <h1>{{ paginator.count|intcomma }} {% if paginator.count == 1 %}{% trans "result found" %}{% else %}{% trans "results found" %}{% endif %} {% if query %}{% trans "for" %} &ldquo;{{ query }}&rdquo;{% endif %}</h1>
+    {% else %}
+        <h1>{% trans "No results found" %} {% if query %}{% trans "for" %} &ldquo;{{ query  }}&rdquo;{% endif %}</h1>
+    {% endif %}
+
+    {% if suggested_terms %}
+        <p><strong>Did you mean:</strong>
+        {% for term in suggested_terms %}
+        <small><a class="did-you-mean" role="button">{{ term  }}</a></small>
+        {% if not forloop.last %}|
+        {% else %}
+            <small>{% help href='generalfunctions.html#why-does-whowasincommand-make-suggestions-to-me' %}</small>
+        {% endif %}
+        {% endfor %}
+        </p>
+    {% endif %}
+
+    {% if results %}
+        {% with objects=results hit_count=paginator.count %}
+            {% include 'partials/organization_search_results.html' %}
+        {% endwith %}
+    {% else %}
+        <br />
+        <p>
+            {% trans "For better results, try adjusting your search filters." %}
+        {% help href='generalfunctions.html#how-do-i-find-what-i-m-looking-for' %}
+        </p>
+        <p>{% trans "Think we're missing something?" %} <a href="mailto:technical@securityforcemonitor.org">{% trans "Let us know!" %}</a></p>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static "js/select2.min.js" %}"></script>
+<script src="{% static "js/bootstrap-datepicker.min.js" %}"></script>
+<script src="{% static "js/bootstrap-datepicker.es.js" %}"></script>
+<script src="{% static "js/bootstrap-datepicker.fr.js" %}"></script>
+<script type="text/javascript">
+    var osm_opts = {
+        ajax: {
+            url: "{% url 'osm-autocomplete' %}",
+            datType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term,
+                    types: ['city', 'district'],
+                };
+            },
+            cache: true,
+            processResults: function(data, params) {
+                if (data.length >= 1) {
+                    return { results: data };
+                } else {
+                        return { results: [] };
+                }
+            }
+        },
+        escapeMarkup: function(markup){ return markup; },
+        placeholder: 'Location',
+        minimumInputLength: 2,
+        allowClear: true
+    };
+    $(document).ready(function(){
+        // Language code
+        {% get_current_language as LANGUAGE_CODE %}
+            var language = '{{ LANGUAGE_CODE }}'
+
+        // Autofocus input on older browsers
+        if (!("autofocus" in document.createElement("input"))) {
+            $('#q').focus();
+        }
+
+        // Show dropdowns containing selected facets
+        $('.panel-show').addClass('in');
+
+        // Init dropdowns
+        $('.filter-heading').on('click', function(e) {
+            if ($(this).parent().siblings('.panel-body').hasClass("in")) {
+                $(this).find('i').removeClass("fa-minus").addClass("fa-plus");
+            } else {
+                $(this).find('i').removeClass("fa-plus").addClass("fa-minus");
+            }
+        });
+
+        // Init tooltips
+        $('[data-toggle="tooltip"]').tooltip();
+
+        // Init datepicker
+        $('.datepicker').datepicker({
+            'autoclose': true,
+            format: "yyyy-mm-dd",
+            endDate: "0d",
+            clearBtn: true,
+            forceParse: false,
+            language: language
+        });
+
+        // Facet logic
+        var existing_q = decodeURIComponent("{{ q_filters }}")
+                         .replace(/&amp;/g, '&')
+                         .replace(/\+/g, ' ');
+
+        var existing_q_no_query = decodeURIComponent("{{ filters_no_query }}")
+                                  .replace(/&amp;/g, '&')
+                                  .replace(/\+/g, ' ');
+
+        var base_url = '/' + language
+
+        $(".filter-value").click(function() {
+            var addtl_filter = $(this).attr('data');
+            if (existing_q) {
+                window.location.assign(base_url + '/search/haystack/?' + existing_q +
+                                       '&selected_facets=' +
+                                       encodeURIComponent(addtl_filter));
+            } else {
+                window.location.assign(base_url + '/search/haystack/?selected_facets=' +
+                                       encodeURIComponent(addtl_filter));
+            }
+        });
+
+        // Clicking on "Did you mean?" queries should re-search
+        $('.did-you-mean').click(function(e) {
+            e.preventDefault();
+            var term = $(this).html();
+            if (existing_q) {
+                window.location.assign(base_url + '/search/?' + existing_q_no_query +
+                                       '&q=' + encodeURIComponent(term));
+            } else {
+                window.location.assign(base_url + '/search/?q=' +
+                                       encodeURIComponent(term));
+            }
+        });
+
+        $(".remove-filter-value").click(function() {
+            var to_remove = encodeURIComponent('selected_facets=' +
+                                               $(this).attr('data'));
+            var existing_components = existing_q.split("&");
+            var new_components = $.grep(existing_components, function(value) {
+                return encodeURIComponent(value) != to_remove;
+            });
+            window.location.assign(base_url + '/search/?' + new_components.join('&'));
+        });
+
+        $(".remove-order-value").click(function() {
+            var to_remove = $(this).attr('data');
+            var existing_components = existing_q.split("&");
+            for (var i = existing_components.length -1; i >= 0 ; i--) {
+                var el = existing_components[i];
+                if (el.includes('ascending') ||
+                    el.includes(to_remove) ||
+                    el.includes('descending')) {
+                        existing_components.splice(i, 1);
+                }
+            }
+            window.location.assign(base_url + '/search/?' + existing_components.join('&'));
+        });
+
+        // Init select2 boxes
+        $('#location-filter').select2(osm_opts);
+        $('#entity-type').select2({
+            minimumResultsForSearch: Infinity
+        });
+        $('#radius').select2({
+            minimumResultsForSearch: Infinity
+        });
+
+    });
+
+</script>
+{% endblock %}
