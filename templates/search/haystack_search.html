@@ -61,13 +61,7 @@
                     <a role="button" class="filter-heading">
                         <h4 class="panel-title">
                             <strong><i class="fa fa-fw fa-filter"></i>{% trans "General filters" %}</strong>
-                            <i class="fa fa-fw
-                            {% if start_date or end_date or 'country' in selected_facets %}
-                                fa-minus
-                            {% else %}
-                                fa-plus
-                            {% endif %}
-                            pull-right"></i>
+                            <i class="fa fa-fw fa-minus pull-right"></i>
                         </h4>
                     </a>
                 </div>
@@ -90,13 +84,7 @@
                         <a role="button" class="filter-heading">
                             <h4 class="panel-title">
                                 {% trans "Filters for <strong><i class='fa fa-fw fa-users'></i>Units</strong>" %}
-                                <i class="fa fa-fw
-                                {% if show_filter.Organization %}
-                                    fa-minus
-                                {% else %}
-                                    fa-plus
-                                {% endif %}
-                                pull-right"></i>
+                                <i class="fa fa-fw fa-minus pull-right"></i>
                             </h4>
                         </a>
                     </div>
@@ -149,13 +137,7 @@
                             <h4 class="panel-title">
                                 {% comment %}Translators: Please preserve the "strong" and "i" tags, which display an icon. Use the single quote around 'fa fa-w fa-user'. {% endcomment %}
                                 {% trans "Filters for <strong><i class='fa fa-fw fa-user'></i>Personnel</strong>" %}
-                                <i class="fa fa-fw
-                                {% if show_filter.Person %}
-                                    fa-minus
-                                {% else %}
-                                    fa-plus
-                                {% endif %}
-                                pull-right"></i>
+                                <i class="fa fa-fw fa-minus pull-right"></i>
                             </h4>
                         </a>
                     </div>
@@ -270,9 +252,9 @@
         // Init dropdowns
         $('.filter-heading').on('click', function(e) {
             if ($(this).parent().siblings('.panel-body').hasClass("in")) {
-                $(this).find('i').removeClass("fa-minus").addClass("fa-plus");
+                $(this).find('i.fa-minus').removeClass("fa-minus").addClass("fa-plus");
             } else {
-                $(this).find('i').removeClass("fa-plus").addClass("fa-minus");
+                $(this).find('i.fa-plus').removeClass("fa-plus").addClass("fa-minus");
             }
         });
 
