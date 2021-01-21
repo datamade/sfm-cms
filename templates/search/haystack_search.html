@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="{% static "css/bootstrap-datepicker3.min.css" %}">
 {% endblock %}
 {% block content %}
-{{ page.has_previous }}
 <div class="row">
     <form class="form">
         <div class="col-xs-12 col-sm-8 pull-right">
@@ -40,17 +39,17 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <select id="entity-type" name="entity_type" class="form-control" multiple="multiple">
-                            <option value="Person" {% if 'Person' in entity_types %}selected=true{% endif %}>{% trans "Personnel" %}</option>
-                            <option value="Organization" {% if 'Organization' in entity_types %}selected=true{% endif %}>{% trans "Units" %}</option>
-                            <option value="Violation" {% if 'Violation' in entity_types %}selected=true{% endif %}>{% trans "Incidents" %}</option>
+                        <select id="entity-type" name="entity_type" class="form-control input-lg">
+                            <option value="Person" {% if entity_type == 'Person' %}selected=true{% endif %}>{% trans "Personnel" %}</option>
+                            <option value="Organization" {% if entity_type == 'Organization' %}selected=true{% endif %}>{% trans "Units" %}</option>
+                            <option value="Violation" {% if entity_type == 'Violation' %}selected=true{% endif %}>{% trans "Incidents" %}</option>
                             {% if request.user.is_staff %}
-                                <option value="Source" {% if 'Source' in entity_types %}selected=true{% endif %}>{% trans "Sources" %}</option>
+                                <option value="Source" {% if entity_type == 'Source' %}selected=true{% endif %}>{% trans "Sources" %}</option>
                             {% endif %}
                         </select>
                     </div>
                         <a href="{% url 'search' %}{% if query %}?q={{ query }}{% endif %}" class="btn btn-sm btn-default"
-                                 {% if not show_clear %}style="display:none;"{% endif %}>
+                                 {% if not request.GET.selected_facets %}style="display:none;"{% endif %}>
                             <i class="fa fa-fw fa-times"></i>{% trans "Clear all filters" %}
                         </a>
                 </div>
@@ -72,11 +71,7 @@
                         </h4>
                     </a>
                 </div>
-                <div class="panel-body
-                {% if start_date or end_date or 'country' in selected_facets %}
-                    panel-show
-                {% endif %}
-                collapse" id="general-filters">
+                <div class="panel-body panel-show collapse" id="general-filters">
                     <div class="form-group">
                         <strong style="padding-left:12px;">{% trans "Date" %}</strong>
                         <input type="text" class="form-control datepicker select2-input-buffer" id="id_start_date" name="start_date" placeholder="{% trans 'Start date' %}" value="{{ start_date }}" />
@@ -89,7 +84,7 @@
             </div>
 
             <!-- Organizations -->
-            {% if 'Organization' in entity_types %}
+            {% if entity_type == 'Organization' %}
                 <div class="panel panel-default">
                     <div class="panel-heading" data-toggle="collapse" data-target='#organization-filters'>
                         <a role="button" class="filter-heading">
@@ -106,7 +101,7 @@
                         </a>
                     </div>
                     <!-- Facets -->
-                    <div class="panel-body {% if show_filter.Organization %}panel-show{% endif %} collapse" id="organization-filters">
+                    <div class="panel-body panel-show collapse" id="organization-filters">
                         <!-- Classification -->
                         {% if facets.fields.classification %}
                             {% with facet_name='classification' facet_label=models.Organization|verbose_field_name:'classification' item_list=facets.fields.classification %}
@@ -262,11 +257,11 @@
         $(".filter-value").click(function() {
             var addtl_filter = $(this).attr('data');
             if (existing_q) {
-                window.location.assign(base_url + '/search/haystack/?' + existing_q +
+                window.location.assign(base_url + '/search/?' + existing_q +
                                        '&selected_facets=' +
                                        encodeURIComponent(addtl_filter));
             } else {
-                window.location.assign(base_url + '/search/haystack/?selected_facets=' +
+                window.location.assign(base_url + '/search/?selected_facets=' +
                                        encodeURIComponent(addtl_filter));
             }
         });
@@ -310,9 +305,6 @@
 
         // Init select2 boxes
         $('#location-filter').select2(osm_opts);
-        $('#entity-type').select2({
-            minimumResultsForSearch: Infinity
-        });
         $('#radius').select2({
             minimumResultsForSearch: Infinity
         });

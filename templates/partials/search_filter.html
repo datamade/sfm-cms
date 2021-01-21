@@ -3,11 +3,11 @@
         <a role="button" class="filter-heading">
             <p class="panel-title">
                 <strong>{{facet_label}}</strong>
-                <i class="fa fa-fw {% if facet_name in selected_facets %}fa-minus {% else %} fa-plus {% endif %} pull-right"></i>
+                <i class="fa fa-fw {% if facet_name|add:'_exact' in selected_facets %}fa-minus {% else %} fa-plus {% endif %} pull-right"></i>
             </p>
         </a>
     </div>
-    <div class="panel-body {% if facet_name in selected_facets %}panel-show{% endif %} collapse" id="filter-{{facet_name}}">
+    <div class="panel-body {% if facet_name|add:'_exact' in selected_facets %}panel-show{% endif %} collapse" id="filter-{{facet_name}}">
         <ul class="search-facet-list">
             {% for name, count in item_list %}
                 {% if count and count > 0 %}

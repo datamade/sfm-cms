@@ -17,14 +17,14 @@
     <!-- Page numbers -->
     {% if paginator.num_pages >= 10 and page.number >= 9 %}
     <!-- First page + ellipses -->
-    <li><a href="?{{ q_filters }}&amp;{{ page_type }}_page=1">1</a></li>
+    <li><a href="?{{ q_filters }}&amp;page=1">1</a></li>
     <li class="disabled"><a href="#">&#8230;</a></li>
     {% endif %}
 
     {% for num in paginator.page_range %}
         {% if not forloop.last and page.number|absubtract:num < 5 %}
             <li{% if num == page.number %} class="active"{% endif %}>
-                <a href="?{{ q_filters }}&amp;{{ page_type }}_page={{ num }}">
+                <a href="?{{ q_filters }}&amp;page={{ num }}">
                     {{ num }}
                 </a>
             </li>
@@ -40,7 +40,7 @@
 
     <!-- Last page -->
     <li{% if paginator.num_pages == page.number %} class="active"{% endif %}>
-        <a href="?{{ q_filters }}&amp;{{ page_type }}_page={{ paginator.num_pages }}">
+        <a href="?{{ q_filters }}&amp;page={{ paginator.num_pages }}">
             {{ paginator.num_pages }}
         </a>
     </li>
@@ -59,7 +59,7 @@
 
 <!-- Results per page -->
 <!-- TODO: Fix this -->
-{% if hit_count > 5 %}
+{% if paginator.count > 5 %}
 <div class="row">
     <div class="col-sm-12">
         <p>
@@ -68,8 +68,10 @@
                 {% for result_count in results_per_page %}
                     {% if hit_count >= result_count %}
                         {% if not forloop.first %}|{% endif %}
-                        <a href="?{{ q_filters }}&amp;{{ page_type }}_rows={{ result_count }}">
-                            {% if page.result_count == result_count %}
+                        <a href="?{{ q_filters }}&amp;rows={{ result_count }}">
+                            {% if result_count == request.GET.rows|add:"0" %}
+                                <strong>{{ result_count }}</strong>
+                            {% elif not request.GET.rows and result_count == 25 %}
                                 <strong>{{ result_count }}</strong>
                             {% else %}
                                 {{ result_count }}

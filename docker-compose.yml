@@ -4,7 +4,6 @@ services:
   app:
     image: sfm-cms
     container_name: sfm-cms
-    restart: always
     build: .
     # Allow container to be attached to, e.g., to access the pdb shell
     stdin_open: true
@@ -17,6 +16,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      solr:
+        condition: service_started
     volumes:
       # Mount the development directory as a volume into the container, so
       # Docker automatically recognizes your changes.

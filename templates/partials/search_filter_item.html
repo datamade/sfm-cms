@@ -1,29 +1,30 @@
 {% load facets %}
-<li class="small">
+{% with facet_name=facet_name|add:"_exact" %}
+  <li class="small">
+      <!-- Format the display value of date facets slightly differently -->
+      <a role="button" class="filter-value" data="{{facet_name}}:{{name}}" data-toggle="tooltip" data-placement="auto" title="{% if facet_is_date %} {{ name|slice:":4" }} {% else %} {{ name|title }} {% endif %}">
 
-    <!-- Format the display value of date facets slightly differently -->
-    <a role="button" class="filter-value" data="{{facet_name}}_exact:{{name}}" data-toggle="tooltip" data-placement="auto" title="{% if facet_is_date %} {{ name|slice:":4" }} {% else %} {{ name|title }} {% endif %}">
+          <!-- We want selected facets to be bold -->
+          {% if name in selected_facet_values|get_item:facet_name %}<strong>{% endif %}
+              <!-- Format facets -->
+              {% if facet_is_date %}
+                  {{ name|slice:":4" }}
+              {% elif facet_is_violation %}
+                  {{ name|violation|title }}
+              {% else %}
+                  {{ name | title | short_title }}
+              {% endif %}
 
-        <!-- We want selected facets to be bold -->
-        {% if name in selected_list %}<strong>{% endif %}
-            <!-- Format facets -->
-            {% if facet_is_date %}
-                {{ name|slice:":4" }}
-            {% elif facet_is_violation %}
-                {{ name|violation|title }}
-            {% else %}
-                {{ name | title | short_title }}
-            {% endif %}
+          {% if name in selected_facet_values|get_item:facet_name %}</strong>{% endif %}
+      </a>
 
-        {% if name in selected_list %}</strong>{% endif %}
-    </a>
+      <!-- Only selected facets should have a "remove" button -->
+    	{% if name in selected_facet_values|get_item:facet_name %}
+        	<a role="button" class="remove-filter-value" data="{{facet_name}}:{{name}}">
+        	   <i class="fa fa-times"></i>
+        	</a>
+    	{% endif %}
 
-    <!-- Only selected facets should have a "remove" button -->
-  	{% if name in selected_list %}
-      	<a role="button" class="remove-filter-value" data="{{facet_name}}_exact:{{name}}">
-      	   <i class="fa fa-times"></i>
-      	</a>
-  	{% endif %}
-
-    <span class="badge badge-facet pull-right">{{ count }}</span>
-</li>
+      <span class="badge badge-facet pull-right">{{ count }}</span>
+  </li>
+{% endwith %}

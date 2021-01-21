@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import dateformat
 from haystack import indexes
 
+from sfm_pc.templatetags.countries import country_name
+
 
 class BaseEntity(indexes.SearchIndex):
 
@@ -20,7 +22,7 @@ class BaseEntity(indexes.SearchIndex):
 class SearchEntity(BaseEntity):
 
     location = indexes.LocationField()
-    country = indexes.MultiValueField()
+    country = indexes.MultiValueField(faceted=True)
     division_id = indexes.MultiValueField()
     start_date = indexes.DateTimeField(faceted=True)
     end_date = indexes.DateTimeField(faceted=True)
@@ -129,11 +131,17 @@ class Organization(SearchEntity, indexes.Indexable):
         self.prepared_data = super().prepare(object)
 
         self.prepared_data['content'] = self._prepare_content(self.prepared_data)
+        self.prepared_data['country'] = self._prepare_country(self.prepared_data)
 
         return self.prepared_data
 
-    def prepare_country(self, object):
-        ...
+    def _prepare_country(self, prepared_data):
+        countries = set()
+
+        for division in prepared_data['division_id']:
+            countries.update([country_name(division)])
+
+        return list(countries)
 
     def prepare_published(self, object):
         parents = object.parent_organization.all()

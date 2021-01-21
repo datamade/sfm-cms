@@ -25,8 +25,8 @@
                             </div>
                             <div class="col-xs-12">
                                 <div class="entities btn-group" data-toggle="buttons">
-                                    <label class="btn btn-default">
-                                        <input type="checkbox" autocomplete="off" name='entity_type' value='Person' />
+                                    <label class="btn btn-default active">
+                                        <input type="checkbox" autocomplete="off" name='entity_type' value='Person' checked />
                                         <i class="fa fa-fw fa-user"></i> {% trans "Personnel" %}
                                     </label>
                                     <label class="btn btn-default">
@@ -43,10 +43,6 @@
                                         <i class="fa fa-fw fa-paperclip"></i> {% trans "Sources" %}
                                     </label>
                                     {% endif %}
-                                    <label class="btn btn-default active">
-                                        <input type="checkbox" name="" value="" checked>
-                                        <i class="fa fa-fw fa-thumbs-up"></i> {% trans "Everything" %}
-                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +62,7 @@
                                 <select name="selected_facets" id="country-select" style="height:36px">
                                     <option value="">{% trans "Select a country" %}</option>
                                     {% for country in countries %}
-                                        <option value="country_ss_fct_exact:{{ country}}">{{ country }}</option>
+                                        <option value="country_exact:{{ country }}">{{ country }}</option>
                                     {% endfor %}
                                 </select>
                             </div>

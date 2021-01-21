@@ -35,3 +35,7 @@ def violation(text_blob):
 
     else:
         return text_blob
+
+@register.filter
+def get_item(dict, item):
+    return dict[item]

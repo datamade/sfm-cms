@@ -7,7 +7,9 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import never_cache
 
-from haystack.generic_views import FacetedSearchView
+from haystack.forms import FacetedSearchForm
+from haystack.generic_views import SearchMixin, FacetedSearchView
+from haystack.query import SearchQuerySet, SQ
 
 import pysolr
 
@@ -20,11 +22,27 @@ from violation.models import Violation
 from sfm_pc.utils import get_osm_by_id, format_facets
 
 
+class WWICSearchForm(FacetedSearchForm):
+
+    def no_query_found(self):
+        return self.searchqueryset.load_all()
+
+
 class HaystackSearchView(FacetedSearchView):
 
-    template_name = 'search/haystack_search.html'
-    facet_fields = ['classification', 'membership', 'parent_name', 'adminlevel1', 'country']
     context_object_name = 'results'
+
+    facet_fields = [
+        'classification',
+        'membership',
+        'parent_name',
+        'adminlevel1',
+        'country'
+    ]
+
+    form_class = WWICSearchForm
+    load_all = True
+    template_name = 'search/haystack_search.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -40,16 +58,77 @@ class HaystackSearchView(FacetedSearchView):
 
         context.update({
             'user_query': self.request.GET.get('q'),
-            'entity_types': self.request.GET.getlist('entity_type') or ['Organization', 'Person', 'Violation'],
+            'entity_type': self.request.GET.get('entity_type', 'Organization'),
             'location': self.request.GET.get('osm_id'),
             'radius': self.request.GET.get('radius'),
             'start_date': self.request.GET.get('start_date', ''),
             'end_date': self.request.GET.get('end_date', ''),
             'suggested_terms': self.queryset.spelling_suggestion(),  # omit query
-            'q_filters': self.request.GET.urlencode(),  # omit page args
+            'q_filters': self.get_search_string(),
+            'results_per_page': [5, 10, 15, 20, 25, 50],
         })
 
+        context.update(self.get_facet_context())
+
         return context
+
+    def get_paginate_by(self, queryset):
+        return self.request.GET.get('rows', 25)
+
+    def get_queryset(self):
+        '''
+        Fully override the get_queryset() method in order to pass additional
+        parameters (mincount) to the facet() call.
+        '''
+        sqs = SearchQuerySet()
+
+        for field in self.facet_fields:
+            sqs = sqs.facet(field, mincount=1)
+
+        entity_type = self.request.GET.get('entity_type', 'Organization')
+        sort = self.request.GET.get('sort', None)
+
+        search_filter = SQ(entity_type=entity_type)
+
+        for bound, filter_kwarg in (
+            ('start_date', 'start_date__gte'),
+            ('end_date', 'end_date__lte')
+        ):
+            if self.request.GET.get(bound, None):
+                formatted_date = parse_solr_date(self.request.GET[bound])
+                search_filter &= SQ(**{filter_kwarg: formatted_date})
+
+        sqs = sqs.filter(search_filter)
+
+        if sort:
+            sqs = sqs.order_by(sort)
+
+        return sqs
+
+    def get_search_string(self):
+        params = self.request.GET.copy()
+
+        for param in ('page', 'rows'):
+            params.pop(param, None)
+
+        return params.urlencode()
+
+    def get_facet_context(self):
+        selected_facets, selected_facet_values = [], {}
+
+        for facet in self.request.GET.getlist('selected_facets'):
+            facet, *value = facet.split(':')
+            selected_facets.append(facet)
+
+            if facet not in selected_facet_values:
+                selected_facet_values[facet] = []
+
+            selected_facet_values[facet].append(':'.join(value))
+
+        return {
+            'selected_facets': selected_facets,
+            'selected_facet_values': selected_facet_values,
+        }
 
 
 # Model-specific search parameters

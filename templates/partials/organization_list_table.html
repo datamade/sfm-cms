@@ -14,47 +14,47 @@
                 <th>
                     {{ models.Organization|verbose_field_name:"name" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='Organization_sort' sort_asc='organization_name_s_asc' sort_desc='organization_name_s_desc' selected_sort=sorts.Organization %}
+                        {% with sort_param='sort' sort_asc='name' sort_desc='-name' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
                 </th>
                 <th>
                     {% trans "Parents" %}
-                    {% if sortable == 'True' %}
-                        {% with sort_param='Organization_sort' sort_asc='organization_parent_count_i_asc' sort_desc='organization_parent_count_i_desc' selected_sort=sorts.Organization %}
+                    <!--{% if sortable == 'True' %}
+                        {% with sort_param='sort' sort_asc='' sort_desc='' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
-                    {% endif %}
+                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.Organization|verbose_field_name:"classification" }}
-                    {% if sortable == 'True' %}
-                        {% with sort_param='Organization_sort' sort_asc='organization_classification_count_i_asc' sort_desc='organization_classification_count_i_desc' selected_sort=sorts.Organization %}
+                    <!--{% if sortable == 'True' %}
+                        {% with sort_param='sort' sort_asc='classification' sort_desc='-classification' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
-                    {% endif %}
+                    {% endif %}-->
                 </th>
                 <th>
                     {% trans "Last site" %}
-                    {% if sortable == 'True' %}
-                        {% with sort_param='Organization_sort' sort_asc='organization_site_count_i_asc' sort_desc='organization_site_count_i_desc' selected_sort=sorts.Organization %}
+                    <!--{% if sortable == 'True' %}
+                        {% with sort_param='sort' sort_asc='' sort_desc='' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
-                    {% endif %}
+                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.Organization|verbose_field_name:"division_id" }}
-                    {% if sortable == 'True' %}
-                        {% with sort_param='Organization_sort' sort_asc='organization_country_count_i_asc' sort_desc='organization_country_count_i_desc' selected_sort=sorts.Organization %}
+                    <!--{% if sortable == 'True' %}
+                        {% with sort_param='sort' sort_asc='' sort_desc='' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
-                    {% endif %}
+                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.Organization|verbose_field_name:"firstciteddate" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='Organization_sort' sort_asc='start_date_dt_asc' sort_desc='start_date_dt_desc' selected_sort=sorts.Organization %}
+                        {% with sort_param='sort' sort_asc='start_date' sort_desc='-start_date' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
@@ -62,7 +62,7 @@
                 <th>
                     {{ models.Organization|verbose_field_name:"lastciteddate" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='Organization_sort' sort_asc='end_date_dt_asc' sort_desc='end_date_dt_desc' selected_sort=sorts.Organization %}
+                        {% with sort_param='sort' sort_asc='end_date' sort_desc='-end_date' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
