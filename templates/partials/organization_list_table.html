@@ -14,7 +14,7 @@
                 <th>
                     {{ models.Organization|verbose_field_name:"name" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='name' sort_desc='-name' %}
+                        {% with sort_asc='name' sort_desc='-name' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
@@ -22,7 +22,7 @@
                 <th>
                     {% trans "Parents" %}
                     <!--{% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='' sort_desc='' %}
+                        {% with sort_asc='' sort_desc='' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}-->
@@ -30,7 +30,7 @@
                 <th>
                     {{ models.Organization|verbose_field_name:"classification" }}
                     <!--{% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='classification' sort_desc='-classification' %}
+                        {% with sort_asc='classification' sort_desc='-classification' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}-->
@@ -38,7 +38,7 @@
                 <th>
                     {% trans "Last site" %}
                     <!--{% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='' sort_desc='' %}
+                        {% with sort_asc='' sort_desc='' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}-->
@@ -46,7 +46,7 @@
                 <th>
                     {{ models.Organization|verbose_field_name:"division_id" }}
                     <!--{% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='' sort_desc='' %}
+                        {% with sort_asc='' sort_desc='' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}-->
@@ -54,7 +54,7 @@
                 <th>
                     {{ models.Organization|verbose_field_name:"firstciteddate" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='start_date' sort_desc='-start_date' %}
+                        {% with sort_asc='start_date' sort_desc='-start_date' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
@@ -62,7 +62,7 @@
                 <th>
                     {{ models.Organization|verbose_field_name:"lastciteddate" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='end_date' sort_desc='-end_date' %}
+                        {% with sort_asc='end_date' sort_desc='-end_date' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}

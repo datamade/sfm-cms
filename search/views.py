@@ -37,7 +37,9 @@ class HaystackSearchView(FacetedSearchView):
         'membership',
         'parent_name',
         'adminlevel1',
-        'country'
+        'country',
+        'role',
+        'rank',
     ]
 
     form_class = WWICSearchForm
@@ -66,6 +68,7 @@ class HaystackSearchView(FacetedSearchView):
             'suggested_terms': self.queryset.spelling_suggestion(),  # omit query
             'q_filters': self.get_search_string(),
             'results_per_page': [5, 10, 15, 20, 25, 50],
+            'download_urls': self.get_download_urls(),
         })
 
         context.update(self.get_facet_context())
@@ -129,6 +132,23 @@ class HaystackSearchView(FacetedSearchView):
             'selected_facets': selected_facets,
             'selected_facet_values': selected_facet_values,
         }
+
+    def get_download_urls(self):
+        params = self.request.GET.urlencode()
+
+        download_url = reverse('download')
+
+        if params:
+            download_url += '?' + params + '&'
+        else:
+            download_url += '/?'
+
+        download_urls = {}
+
+        for etype in ('Person', 'Organization', 'Violation'):
+            download_urls[etype] = download_url + 'download_etype={0}'.format(etype)
+
+        return download_urls
 
 
 # Model-specific search parameters

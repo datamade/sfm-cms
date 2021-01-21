@@ -16,39 +16,39 @@
                 <th>
                     {{ models.Person|verbose_field_name:"name" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='Person_sort' sort_asc='person_name_s_asc' sort_desc='person_name_s_desc' selected_sort=sorts.Person %}
+                        {% with sort_asc='name' sort_desc='-name' %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
                 </th>
                 <th>
                     {{ models.Person|verbose_field_name:"aliases" }}
-                    {% if sortable == 'True' %}
-                        {% with sort_param='Person_sort' sort_asc='person_alias_count_i_asc' sort_desc='person_alias_count_i_desc' selected_sort=sorts.Person %}
+                    <!--{% if sortable == 'True' %}
+                        {% with sort_asc='person_alias_count_i_asc' sort_desc='person_alias_count_i_desc' selected_sort=sorts.Person %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
-                    {% endif %}
+                    {% endif %}-->
                 </th>
                 <th>
                     {% trans "Most Recent Rank" %}
-                    {% if sortable == 'True' %}
-                        {% with sort_param='Person_sort' sort_asc='person_most_recent_rank_s_asc' sort_desc='person_most_recent_rank_s_desc' selected_sort=sorts.Person %}
+                    <!--{% if sortable == 'True' %}
+                        {% with sort_asc='person_most_recent_rank_s_asc' sort_desc='person_most_recent_rank_s_desc' selected_sort=sorts.Person %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
-                    {% endif %}
+                    {% endif %}-->
                 </th>
                 <th>
                     {% trans "Most Recent Unit" %}
-                    {% if sortable == 'True' %}
-                        {% with sort_param='Person_sort' sort_asc='person_most_recent_unit_s_asc' sort_desc='person_most_recent_unit_s_desc' selected_sort=sorts.Person %}
+                    <!--{% if sortable == 'True' %}
+                        {% with sort_asc='person_most_recent_unit_s_asc' sort_desc='person_most_recent_unit_s_desc' selected_sort=sorts.Person %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
-                    {% endif %}
+                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.MembershipPerson|verbose_field_name:"firstciteddate" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='Person_sort' sort_asc='start_date_dt_asc' sort_desc='start_date_dt_desc' selected_sort=sorts.Person %}
+                        {% with sort_asc='start_date' sort_desc='-start_date' selected_sort=sorts.Person %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
@@ -56,7 +56,7 @@
                 <th>
                     {{ models.MembershipPerson|verbose_field_name:"lastciteddate" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='Person_sort' sort_asc='end_date_dt_asc' sort_desc='end_date_dt_desc' selected_sort=sorts.Person %}
+                        {% with sort_asc='end_date' sort_desc='-end_date' selected_sort=sorts.Person %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
@@ -66,7 +66,7 @@
         <tbody>
             {% for object in object_list %}
                 <!-- Returns the object based on the language -->
-                {% if object.name.get_value %}
+                {% if object.name %}
                     <tr>
                         {% if merge == 'True' %}
                             <td>
@@ -88,25 +88,25 @@
                         {% endif %}
                         <!-- Name -->
                         <td>
-                            <a href="{% url 'view-person' object.uuid %}">{{ object.name.get_value }}</a>
+                            <a href="{% url 'view-person' object.object.uuid %}">{{ object.name }}</a>
                         </td>
                         <!-- Aliases -->
                         <td>
-                            {% for alias in object.personalias_set.all %}
-                                {{ alias.value }}
+                            {% for alias in object.alias %}
+                                {{ alias }}
                                 {% if not forloop.last %}<br />{% endif %}
                             {% endfor %}
                         </td>
                         <!-- Most recent rank -->
                         <td>
-                            {% with membership=object.memberships.first %}
+                            {% with membership=object.object.memberships.first %}
                                 {{ membership.object_ref.rank.get_value|default:"" }}
                             {% endwith %}
                         </td>
                         <!-- Most recent unit -->
                         <td>
-                            {% if object.memberships %}
-                                {% with membership=object.memberships.first %}
+                            {% if object.object.memberships %}
+                                {% with membership=object.object.memberships.first %}
                                     {% with organization=membership.object_ref.organization.get_value %}
                                         {% if request.user.is_authenticated or organization.value.published %}
                                         <a href="{% url 'view-organization' organization.value.uuid %}">{{ organization.value.name.get_value }}</a>
@@ -118,11 +118,11 @@
                         </td>
                         <!-- First citation -->
                         <td>
-                            {% datetype object.first_cited 'start' %}
+                            {% datetype object.object.first_cited 'start' %}
                         </td>
                         <!-- Last citation -->
                         <td>
-                            {% datetype object.last_cited 'end' %}
+                            {% datetype object.object.last_cited 'end' %}
                         </td>
                     </tr>
                 {% endif %}

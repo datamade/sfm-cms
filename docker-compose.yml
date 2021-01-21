@@ -77,9 +77,6 @@ services:
       SOLR_LOG_LEVEL: ERROR
 
 volumes:
-
-
-volumes:
   # Declare your named volume for Postgres and Solr.
   sfm-cms-db-data:
   sfm-cms-solr-data:

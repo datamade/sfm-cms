@@ -141,6 +141,52 @@
                     </div>
                 </div>
             {% endif %}
+
+            {% if entity_type == 'Person' %}
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-target='#person-filters'>
+                        <a role="button" class="filter-heading">
+                            <h4 class="panel-title">
+                                {% comment %}Translators: Please preserve the "strong" and "i" tags, which display an icon. Use the single quote around 'fa fa-w fa-user'. {% endcomment %}
+                                {% trans "Filters for <strong><i class='fa fa-fw fa-user'></i>Personnel</strong>" %}
+                                <i class="fa fa-fw
+                                {% if show_filter.Person %}
+                                    fa-minus
+                                {% else %}
+                                    fa-plus
+                                {% endif %}
+                                pull-right"></i>
+                            </h4>
+                        </a>
+                    </div>
+                    <div class="panel-body panel-show collapse" id="person-filters">
+                        <!-- Role -->
+                        {% if facets.fields.role %}
+                            {% with facet_name='role' facet_label=models.MembershipPerson|verbose_field_name:"role" item_list=facets.fields.role %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- Rank -->
+                        {% if facets.fields.rank %}
+                            {% with facet_name='rank' facet_label=models.MembershipPerson|verbose_field_name:"rank" item_list=facets.fields.rank %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- First cited -->
+                        {% if facets.fields.start_date_year %}
+                            {% with facet_name='start_date_year' facet_label=models.MembershipPerson|verbose_field_name:"firstciteddate" selected_list=facets.fields.start_date_year %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- Last cited -->
+                        {% if facets.fields.end_date_year %}
+                            {% with facet_name='end_date_year' facet_label=models.MembershipPerson|verbose_field_name:"lastciteddate" item_list=facets.fields.end_date_year %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </form>
     <div class="col-xs-12 col-sm-8 pull-right">
@@ -164,7 +210,7 @@
 
     {% if results %}
         {% with objects=results hit_count=paginator.count %}
-            {% include 'partials/organization_search_results.html' %}
+            {% include 'partials/'|add:entity_type|add:'_search_results.html'|lower %}
         {% endwith %}
     {% else %}
         <br />

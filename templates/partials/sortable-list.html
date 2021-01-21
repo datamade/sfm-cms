@@ -1,11 +1,11 @@
 {% load tablesort %}
 <div class="sort-container">
     <a class="small sort-link{% if request.GET.sort == sort_desc %} active{% endif %}"
-        href="?{% simple_query_transform request sort_param sort_desc %}">
+        href="?{% simple_query_transform request 'sort' sort_desc %}">
         <i class="sort-desc fa fa-caret-up"></i>
     </a>
     <a class="small sort-link{% if request.GET.sort == sort_asc %} active{% endif %}"
-        href="?{% simple_query_transform request sort_param sort_asc %}">
+        href="?{% simple_query_transform request 'sort' sort_asc %}">
         <i class="sort-asc fa fa-caret-down"></i>
     </a>
 </div>

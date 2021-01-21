@@ -1,101 +1,10 @@
-from django.db import models
-from django.utils import dateformat
 from haystack import indexes
 
+from search.base_search_indexes import SearchEntity
 from sfm_pc.templatetags.countries import country_name
 
 
-class BaseEntity(indexes.SearchIndex):
-
-    entity_id = indexes.CharField()
-    entity_type = indexes.CharField()
-    content = indexes.CharField(document=True, use_template=False)
-    published = indexes.BooleanField()
-
-    def index_queryset(self, using=None):
-        return self.get_model().objects.all()
-
-    def prepare_entity_type(self, object):
-        return self.get_model().__name__
-
-
-class SearchEntity(BaseEntity):
-
-    location = indexes.LocationField()
-    country = indexes.MultiValueField(faceted=True)
-    division_id = indexes.MultiValueField()
-    start_date = indexes.DateTimeField(faceted=True)
-    end_date = indexes.DateTimeField(faceted=True)
-
-    def prepare_location(self, object):
-        return None
-
-    def prepare_entity_id(self, object):
-        return object.uuid
-
-    def _prepare_content(self, prepared_data):
-        content = []
-
-        for field in self.CONTENT_FIELDS:
-            field_value = prepared_data[field]
-
-            if not field_value:
-                continue
-
-            if any(isinstance(field_value, cls) for cls in (str, models.Model)):
-                field_value = [field_value]
-
-            content.extend(field_value)
-
-        return '; '.join(content)
-
-    def _format_date(self, date):
-        '''
-        Format an ApproximateDateField for use in the Solr index.
-        '''
-        if date:
-            # For now, we assign fuzzy dates bogus values for month/day if
-            # they don't exist, but we should explore to see if Solr has better
-            # ways of handling fuzzy dates
-            date = dateformat.format(date.value, 'Y-m-d')
-            date = date.replace('-00', '-01')
-            date += 'T00:00:00Z'
-
-        return date
-
-
 class Organization(SearchEntity, indexes.Indexable):
-
-    '''
-    {
-        'id': org_id,
-        'entity_type': 'Organization',
-        'content': content,  # name, aliases, classifications, headquarters, parent names, countries, exact location names, areas
-        'location': '',  # disabled until we implement map search
-        'published_b': organization.published,
-        'country_ss': countries,
-        'division_id_ss': division_ids,
-        'start_date_dt': first_cited,
-        'end_date_dt': last_cited,
-        'open_ended_s': open_ended,
-        'organization_name_s': name,
-        'organization_parent_name_ss': parent_names,
-        'organization_parent_count_i': parent_count,
-        'organization_membership_ss': memberships,
-        'organization_classification_ss': classes,
-        'organization_classification_count_i': class_count,
-        'organization_alias_ss': aliases,
-        'organization_headquarters_s': hq,
-        'organization_exact_location_ss': exactloc_names,
-        'organization_site_count_i': last_site_exists,
-        'organization_country_count_i': country_count,
-        'organization_area_ss': areas,
-        'organization_start_date_dt': first_cited,
-        'organization_end_date_dt': first_cited,
-        'organization_adminlevel1_ss': list(admin_l1_names),
-        'text': content
-    }
-    '''
 
     CONTENT_FIELDS = (
         'name',

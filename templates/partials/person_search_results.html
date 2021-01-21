@@ -11,6 +11,6 @@
     {% include 'partials/person_list_table.html' %}
 {% endwith %}
 
-{% with page=pages.Person page_type='Person' %}
+{% with page=page_obj page_type='Person' %}
     {% include 'partials/pagination.html' %}
 {% endwith %}
