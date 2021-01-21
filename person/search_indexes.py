@@ -4,7 +4,7 @@ from search.base_search_indexes import SearchEntity
 from sfm_pc.templatetags.countries import country_name
 
 
-class Organization(SearchEntity, indexes.Indexable):
+class PersonIndex(SearchEntity, indexes.Indexable):
 
     '''
     {
