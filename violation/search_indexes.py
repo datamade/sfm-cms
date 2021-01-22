@@ -42,11 +42,18 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
     }
     '''
 
+    CONTENT_FIELDS = (
+        'country',
+        'description',
+        'location_name',
+        'violation_type',
+    )
+
     description = indexes.CharField()
     end_date_year = indexes.CharField(faceted=True)
     first_allegation = indexes.DateTimeField()
-    last_update = indxes.DateTimeField()
-    location = indexes.CharField(faceted=True)
+    last_update = indexes.DateTimeField()
+    location_name = indexes.CharField(faceted=True)
     perpetrator = indexes.MultiValueField()
     perpetrator_classification = indexes.MultiValueField(faceted=True)
     start_date_year = indexes.CharField(faceted=True)
@@ -61,8 +68,7 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
     def prepare(self, object):
         self.prepared_data = super().prepare(object)
 
-        self.prepared_data['content'] = self._prepare_content(self.prepared_data)
-        self.prepared_data['country'] = self._prepare_country(self.prepared_data)
+        self.prepared_data['content'] = self._prepare_content(self.prepared_data, object)
 
         start_date_year, end_date_year = self._prepare_citation_years(self.prepared_data)
 
@@ -79,15 +85,37 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
             prepared_data['end_date'].split('-')[0],
         )
 
-    def _prepare_content(self, prepared_data):
-        '''
-        perp_names, perp_aliases, perp_org_names, perp_org_aliases,
-        perp_org_classes, vtypes, country, description, location_description,
-        location_name, osmname, admin_l1_name, admin_l2_name
-        '''
-        ...
+    def _prepare_content(self, prepared_data, object, **kwargs):
+        content = []
 
-    def _prepare_country(self, prepared_data):
+        for key in ('perpetrator', 'perpetrator_classification'):
+            if prepared_data[key]:
+                content.extend(prepared_data[key])
+
+        for perp in object.perpetrator.get_list():
+            aliases = perp.aliases.get_list()
+
+            if aliases:
+                content.extend(a.get_value().value for a in aliases)
+
+        perp_orgs = object.perpetratororganization.get_list()
+
+        if perp_orgs:
+            # Move from PerpetratorOrganization -> Organization
+            perp_orgs = list(perp.get_value().value for perp in perp_orgs)
+
+            for perp in perp_orgs:
+                content.append(perp.name.get_value().value)
+
+                org_aliases = perp.aliases.get_list()
+
+                if org_aliases:
+                    content.extend(a.get_value().value for a in org_aliases)
+
+        return super()._prepare_content(prepared_data,
+                                        initial_content=content)
+
+    def prepare_country(self, object):
         division_id = object.division_id.get_value()
 
         if division_id:
@@ -114,7 +142,7 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
     def prepare_last_update(self, object):
         return self._format_date(object.last_update.get_value())
 
-    def prepare_location(self, object):
+    def prepare_location_name(self, object):
         location_description = object.locationdescription.get_value()
 
         if location_description:

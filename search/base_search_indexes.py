@@ -31,8 +31,8 @@ class SearchEntity(BaseEntity):
     def prepare_entity_id(self, object):
         return object.uuid
 
-    def _prepare_content(self, prepared_data):
-        content = []
+    def _prepare_content(self, prepared_data, initial_content=[]):
+        content = initial_content
 
         for field in self.CONTENT_FIELDS:
             field_value = prepared_data[field]
