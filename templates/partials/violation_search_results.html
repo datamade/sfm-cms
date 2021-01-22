@@ -11,6 +11,6 @@
     {% include 'partials/violation_list_table.html' %}
 {% endwith %}
 
-{% with page=pages.Violation page_type='Violation' %}
+{% with page=page_obj %}
     {% include 'partials/pagination.html' %}
 {% endwith %}

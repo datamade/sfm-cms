@@ -224,6 +224,10 @@ def download_zip(request):
     if request.GET.get('entity_id'):
         entity_ids = [request.GET.get('entity_id')]
     else:
+        '''
+        TODO: Replace this with pysolr call to get all results of the
+        given entity type.
+        '''
         context = get_search_context(request, all_results=True)
 
         entities = context['results'][entity_type]

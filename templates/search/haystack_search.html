@@ -48,7 +48,7 @@
                             {% endif %}
                         </select>
                     </div>
-                        <a href="{% url 'search' %}{% if query %}?q={{ query }}{% endif %}" class="btn btn-sm btn-default"
+                        <a href="{% url 'search' %}?entity_type={{ entity_type }}{% if query %}&amp;q={{ query }}{% endif %}" class="btn btn-sm btn-default"
                                  {% if not request.GET.selected_facets %}style="display:none;"{% endif %}>
                             <i class="fa fa-fw fa-times"></i>{% trans "Clear all filters" %}
                         </a>
@@ -163,6 +163,53 @@
                         <!-- Last cited -->
                         {% if facets.fields.end_date_year %}
                             {% with facet_name='end_date_year' facet_label=models.MembershipPerson|verbose_field_name:"lastciteddate" item_list=facets.fields.end_date_year %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Violations -->
+            {% if entity_type == 'Violation' %}
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-target='#violation-filters'>
+                        <a role="button" class="filter-heading">
+                            <h4 class="panel-title">
+                                {% trans "Filters for <strong><i class='fa fa-fw fa-exclamation-triangle'></i>Incidents</strong>" %}
+                                <i class="fa fa-fw fa-minus pull-right"></i>
+                            </h4>
+                        </a>
+                    </div>
+                    <!-- Facets -->
+                    <div class="panel-body panel-show collapse" id="violation-filters">
+                        <!-- Violation type -->
+                        {% if facets.fields.violation_type %}
+                            {% with facet_name='violation_type' facet_label=models.Violation|verbose_field_name:"types" item_list=facets.fields.violation_type %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- Perpetrator classification -->
+                        {% if facets.fields.perpetrator_classification %}
+                            {% with facet_name='perpetrator_classification' facet_label=models.Violation|verbose_field_name:"perpetratorclassification" item_list=facets.fields.perpetrator_classification %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- Location description -->
+                        {% if facets.fields.location_name %}
+                            {% with facet_name='location_name' facet_label=models.Violation|verbose_field_name:"location" item_list=facets.fields.location_name %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- Start date -->
+                        {% if facets.fields.start_date_year %}
+                            {% with facet_name='start_date_year' facet_label=models.Violation|verbose_field_name:"startdate" item_list=facets.fields.start_date_year %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- End date -->
+                        {% if facets.fields.end_date_year %}
+                            {% with facet_name='end_date_year' facet_label=models.Violation|verbose_field_name:"enddate" item_list=facets.fields.end_date_year %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}

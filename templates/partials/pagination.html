@@ -4,11 +4,10 @@
 {% if page.has_previous or page.has_next %}
 <nav aria-label="{% trans 'Search results navigation' %}">
   <ul class="pagination">
-
     <! -- Previous button -->
     {% if page.has_previous %}
     <li>
-        <a href="?{{ q_filters }}&amp;{{ page_type  }}_page={{ page.previous_page_number }}" aria-label="Previous">
+        <a href="?{{ q_filters }}&amp;page={{ page.previous_page_number }}{% if request.GET.rows %}&amp;rows={{ request.GET.rows }}{% endif %}" aria-label="Previous">
         <span aria-hidden="true">&laquo; {% trans "Previous" %}</span>
       </a>
     </li>
@@ -17,14 +16,14 @@
     <!-- Page numbers -->
     {% if paginator.num_pages >= 10 and page.number >= 9 %}
     <!-- First page + ellipses -->
-    <li><a href="?{{ q_filters }}&amp;page=1">1</a></li>
+    <li><a href="?{{ q_filters }}&amp;page=1{% if request.GET.rows %}&amp;rows={{ request.GET.rows }}{% endif %}">1</a></li>
     <li class="disabled"><a href="#">&#8230;</a></li>
     {% endif %}
 
     {% for num in paginator.page_range %}
         {% if not forloop.last and page.number|absubtract:num < 5 %}
             <li{% if num == page.number %} class="active"{% endif %}>
-                <a href="?{{ q_filters }}&amp;page={{ num }}">
+                <a href="?{{ q_filters }}&amp;page={{ num }}{% if request.GET.rows %}&amp;rows={{ request.GET.rows }}{% endif %}">
                     {{ num }}
                 </a>
             </li>
@@ -40,7 +39,7 @@
 
     <!-- Last page -->
     <li{% if paginator.num_pages == page.number %} class="active"{% endif %}>
-        <a href="?{{ q_filters }}&amp;page={{ paginator.num_pages }}">
+        <a href="?{{ q_filters }}&amp;page={{ paginator.num_pages }}{% if request.GET.rows %}&amp;rows={{ request.GET.rows }}{% endif %}">
             {{ paginator.num_pages }}
         </a>
     </li>
@@ -48,7 +47,7 @@
     <!-- Next button -->
     {% if page.has_next %}
     <li>
-        <a href="?{{ q_filters }}&amp;page={{ page.next_page_number }}" aria-label="Next">
+        <a href="?{{ q_filters }}&amp;page={{ page.next_page_number }}{% if request.GET.rows %}&amp;rows={{ request.GET.rows }}{% endif %}" aria-label="Next">
         <span aria-hidden="true">{% trans "Next" %} &raquo;</span>
       </a>
     </li>
