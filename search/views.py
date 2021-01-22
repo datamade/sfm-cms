@@ -41,6 +41,7 @@ class HaystackSearchView(FacetedSearchView):
         'membership',
         'parent_name',
         'perpetrator_classification',
+        'publication',
         'rank',
         'role',
         'start_date_year',

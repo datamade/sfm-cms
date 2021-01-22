@@ -54,11 +54,11 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
     first_allegation = indexes.DateTimeField()
     last_update = indexes.DateTimeField()
     location_name = indexes.CharField(faceted=True)
-    perpetrator = indexes.MultiValueField()
-    perpetrator_classification = indexes.MultiValueField(faceted=True)
+    perpetrators = indexes.MultiValueField()
+    perpetrator_classifications = indexes.MultiValueField(faceted=True)
     start_date_year = indexes.CharField(faceted=True)
     status = indexes.CharField()
-    violation_type = indexes.MultiValueField(faceted=True)
+    violation_types = indexes.MultiValueField(faceted=True)
 
     def get_model(self):
         from violation.models import Violation

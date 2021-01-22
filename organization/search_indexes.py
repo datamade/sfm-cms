@@ -50,14 +50,14 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
 
     open_ended = indexes.CharField()
     name = indexes.CharField()
-    parent_name = indexes.MultiValueField(faceted=True)
-    membership = indexes.MultiValueField(faceted=True)
-    classification = indexes.MultiValueField(faceted=True)
-    alias = indexes.MultiValueField()
+    parent_names = indexes.MultiValueField(faceted=True)
+    memberships = indexes.MultiValueField(faceted=True)
+    classifications = indexes.MultiValueField(faceted=True)
+    aliases = indexes.MultiValueField()
     headquarters = indexes.CharField()
-    exact_location = indexes.MultiValueField()
-    area = indexes.MultiValueField()
-    adminlevel1 = indexes.MultiValueField(faceted=True)
+    exact_locations = indexes.MultiValueField()
+    areas = indexes.MultiValueField()
+    adminlevel1s = indexes.MultiValueField(faceted=True)
 
     def get_model(self):
         # For some reason, Haystack doesn't want to discover the index if we
@@ -316,23 +316,5 @@ Commmander
     'published_b': published,
     'entity_type': 'Commander',
     'content': 'Commander',
-}
-
---------------
-
-Source
-
-{
-    'id': source.uuid,
-    'entity_type': 'Source',
-    'content': content,
-    'source_url_t': source.source_url,
-    'source_title_t': source.title,
-    'start_date_t': source.get_published_date(),
-    'end_date_t': source.get_published_date(),
-    'publication_s': source.publication,
-    'country_s': source.publication_country,
-    'country_ss': source.publication_country,
-    'text': content
 }
 '''

@@ -44,11 +44,11 @@ class PersonIndex(SearchEntity, indexes.Indexable):
         'role',
     )
 
-    alias = indexes.MultiValueField()
+    aliases = indexes.MultiValueField()
     name = indexes.CharField()
-    rank = indexes.MultiValueField(faceted=True)
-    role = indexes.MultiValueField(faceted=True)
-    title = indexes.MultiValueField()
+    ranks = indexes.MultiValueField(faceted=True)
+    roles = indexes.MultiValueField(faceted=True)
+    titles = indexes.MultiValueField()
     start_date_year = indexes.CharField(faceted=True)
     end_date_year = indexes.CharField(faceted=True)
 
