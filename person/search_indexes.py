@@ -37,11 +37,11 @@ class PersonIndex(SearchEntity, indexes.Indexable):
     '''
 
     CONTENT_FIELDS = (
-        'alias',
-        'country',
+        'aliases',
+        'countries',
         'name',
-        'rank',
-        'role',
+        'ranks',
+        'roles',
     )
 
     aliases = indexes.MultiValueField()
@@ -61,7 +61,7 @@ class PersonIndex(SearchEntity, indexes.Indexable):
         self.prepared_data = super().prepare(object)
 
         self.prepared_data['content'] = self._prepare_content(self.prepared_data)
-        self.prepared_data['country'] = self._prepare_country(self.prepared_data)
+        self.prepared_data['countries'] = self._prepare_countries(self.prepared_data)
 
         start_date_year, end_date_year = self._prepare_citation_years(self.prepared_data)
 
@@ -78,7 +78,7 @@ class PersonIndex(SearchEntity, indexes.Indexable):
             prepared_data['end_date'].split('-')[0],
         )
 
-    def _prepare_country(self, prepared_data):
+    def _prepare_countries(self, prepared_data):
         countries = set()
 
         for division in prepared_data['division_id']:
@@ -86,10 +86,10 @@ class PersonIndex(SearchEntity, indexes.Indexable):
 
         return list(countries)
 
-    def prepare_alias(self, object):
+    def prepare_aliases(self, object):
         return [als.get_value().value for als in object.aliases.get_list()]
 
-    def prepare_division_id(self, object):
+    def prepare_division_ids(self, object):
         division_ids = set()
 
         # Start by getting the division ID recorded for the person
@@ -167,7 +167,7 @@ class PersonIndex(SearchEntity, indexes.Indexable):
         if first_cited:
             return self._format_date(first_cited)
 
-    def prepare_rank(self, object):
+    def prepare_ranks(self, object):
         ranks = set()
 
         memberships = [mem.object_ref for mem in object.memberships]
@@ -180,7 +180,7 @@ class PersonIndex(SearchEntity, indexes.Indexable):
 
         return list(ranks)
 
-    def prepare_role(self, object):
+    def prepare_roles(self, object):
         roles = set()
 
         memberships = [mem.object_ref for mem in object.memberships]
@@ -193,7 +193,7 @@ class PersonIndex(SearchEntity, indexes.Indexable):
 
         return list(roles)
 
-    def prepare_title(self, object):
+    def prepare_titles(self, object):
         titles = set()
 
         memberships = [mem.object_ref for mem in object.memberships]

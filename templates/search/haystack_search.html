@@ -71,7 +71,7 @@
                         <input type="text" class="form-control datepicker select2-input-buffer" id="id_start_date" name="start_date" placeholder="{% trans 'Start date' %}" value="{{ start_date }}" />
                         <input type="text" class="form-control datepicker select2-input-buffer" id="id_end_date" name="end_date" placeholder="{% trans 'End date' %}" value="{{ end_date }}" />
                     </div>
-                    {% with facet_name='country' facet_label=_('Country') item_list=facets.fields.country %}
+                    {% with facet_name='countries' facet_label=_('Country') item_list=facets.fields.countries %}
                         {% include 'partials/search_filter.html' %}
                     {% endwith %}
                 </div>
@@ -91,26 +91,26 @@
                     <!-- Facets -->
                     <div class="panel-body panel-show collapse" id="organization-filters">
                         <!-- Classification -->
-                        {% if facets.fields.classification %}
-                            {% with facet_name='classification' facet_label=models.Organization|verbose_field_name:'classification' item_list=facets.fields.classification %}
+                        {% if facets.fields.classifications %}
+                            {% with facet_name='classifications' facet_label=models.Organization|verbose_field_name:'classification' item_list=facets.fields.classifications %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
                         <!-- Memberships -->
-                        {% if facets.fields.membership %}
-                            {% with facet_name='membership' facet_label=_('Membership') item_list=facets.fields.membership %}
+                        {% if facets.fields.memberships %}
+                            {% with facet_name='memberships' facet_label=_('Membership') item_list=facets.fields.memberships %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
                         <!-- Parents -->
-                        {% if facets.fields.parent_name %}
-                            {% with facet_name='parent_name' facet_label=_('Parents') item_list=facets.fields.parent_name %}
+                        {% if facets.fields.parent_names %}
+                            {% with facet_name='parent_names' facet_label=_('Parents') item_list=facets.fields.parent_names %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
                         <!-- Admin level 1 -->
-                        {% if facets.fields.adminlevel1 %}
-                            {% with facet_name='adminlevel1' facet_label=models.Emplacement|verbose_field_name:'site' item_list=facets.fields.adminlevel1 %}
+                        {% if facets.fields.adminlevel1s %}
+                            {% with facet_name='adminlevel1s' facet_label=models.Emplacement|verbose_field_name:'site' item_list=facets.fields.adminlevel1s %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
@@ -143,14 +143,14 @@
                     </div>
                     <div class="panel-body panel-show collapse" id="person-filters">
                         <!-- Role -->
-                        {% if facets.fields.role %}
-                            {% with facet_name='role' facet_label=models.MembershipPerson|verbose_field_name:"role" item_list=facets.fields.role %}
+                        {% if facets.fields.roles %}
+                            {% with facet_name='roles' facet_label=models.MembershipPerson|verbose_field_name:"role" item_list=facets.fields.roles %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
                         <!-- Rank -->
-                        {% if facets.fields.rank %}
-                            {% with facet_name='rank' facet_label=models.MembershipPerson|verbose_field_name:"rank" item_list=facets.fields.rank %}
+                        {% if facets.fields.ranks %}
+                            {% with facet_name='ranks' facet_label=models.MembershipPerson|verbose_field_name:"rank" item_list=facets.fields.ranks %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
@@ -184,14 +184,14 @@
                     <!-- Facets -->
                     <div class="panel-body panel-show collapse" id="violation-filters">
                         <!-- Violation type -->
-                        {% if facets.fields.violation_type %}
-                            {% with facet_name='violation_type' facet_label=models.Violation|verbose_field_name:"types" item_list=facets.fields.violation_type %}
+                        {% if facets.fields.violation_types %}
+                            {% with facet_name='violation_types' facet_label=models.Violation|verbose_field_name:"types" item_list=facets.fields.violation_types %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
                         <!-- Perpetrator classification -->
-                        {% if facets.fields.perpetrator_classification %}
-                            {% with facet_name='perpetrator_classification' facet_label=models.Violation|verbose_field_name:"perpetratorclassification" item_list=facets.fields.perpetrator_classification %}
+                        {% if facets.fields.perpetrator_classifications %}
+                            {% with facet_name='perpetrator_classifications' facet_label=models.Violation|verbose_field_name:"perpetratorclassification" item_list=facets.fields.perpetrator_classifications %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}

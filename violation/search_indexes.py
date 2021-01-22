@@ -43,10 +43,10 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
     '''
 
     CONTENT_FIELDS = (
-        'country',
+        'countries',
         'description',
         'location_name',
-        'violation_type',
+        'violation_types',
     )
 
     description = indexes.CharField()
@@ -115,7 +115,7 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
         return super()._prepare_content(prepared_data,
                                         initial_content=content)
 
-    def prepare_country(self, object):
+    def prepare_countries(self, object):
         division_id = object.division_id.get_value()
 
         if division_id:
@@ -127,7 +127,7 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
         if description:
             return description.value
 
-    def prepare_division_id(self, object):
+    def prepare_division_ids(self, object):
         division_id = object.division_id.get_value()
 
         if division_id:
@@ -148,7 +148,7 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
         if location_description:
             return location_description.value
 
-    def prepare_perpetrator(self, object):
+    def prepare_perpetrators(self, object):
         perps = object.perpetrator.get_list()
 
         if perps:
@@ -160,7 +160,7 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
 
             return perp_names
 
-    def prepare_perpetrator_classification(self, object):
+    def prepare_perpetrator_classifications(self, object):
         pcs = object.violationperpetratorclassification_set.all()
 
         if pcs:
@@ -178,7 +178,7 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
         if status:
             return status.value
 
-    def prepare_violation_type(self, object):
+    def prepare_violation_types(self, object):
         vtypes = object.types.get_list()
 
         if vtypes:

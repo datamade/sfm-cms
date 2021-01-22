@@ -21,7 +21,7 @@ class SearchEntity(BaseEntity):
 
     location = indexes.LocationField()
     countries = indexes.MultiValueField(faceted=True)
-    division_id = indexes.MultiValueField()
+    division_ids = indexes.MultiValueField()
     start_date = indexes.DateTimeField(faceted=True)
     end_date = indexes.DateTimeField(faceted=True)
 

@@ -39,13 +39,13 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
 
     CONTENT_FIELDS = (
         'name',
-        'alias',
-        'classification',
+        'aliases',
+        'classifications',
         'headquarters',
-        'parent_name',
-        'country',
-        'exact_location',
-        'area',
+        'parent_names',
+        'countries',
+        'exact_locations',
+        'areas',
     )
 
     open_ended = indexes.CharField()
@@ -71,14 +71,14 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
         self.prepared_data = super().prepare(object)
 
         self.prepared_data['content'] = self._prepare_content(self.prepared_data)
-        self.prepared_data['country'] = self._prepare_country(self.prepared_data)
+        self.prepared_data['countries'] = self._prepare_countries(self.prepared_data)
 
         return self.prepared_data
 
-    def _prepare_country(self, prepared_data):
+    def _prepare_countries(self, prepared_data):
         countries = set()
 
-        for division in prepared_data['division_id']:
+        for division in prepared_data['division_ids']:
             countries.update([country_name(division)])
 
         return list(countries)
@@ -88,7 +88,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
 
         return all([p.value.published for p in parents])
 
-    def prepare_division_id(self, object):
+    def prepare_division_ids(self, object):
         division_ids = set()
 
         # Start by getting the division ID recorded for this org
@@ -127,7 +127,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
     def prepare_name(self, object):
         return object.name.get_value().value
 
-    def prepare_parent_name(self, object):
+    def prepare_parent_names(self, object):
         parent_names = []
 
         for parent in object.parent_organization.all():
@@ -141,7 +141,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
 
         return parent_names
 
-    def prepare_membership(self, object):
+    def prepare_memberships(self, object):
         memberships = []
 
         for membership in object.membershiporganizationmember_set.all():
@@ -154,10 +154,10 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
 
         return memberships
 
-    def prepare_classification(self, object):
+    def prepare_classifications(self, object):
         return [cls.get_value().value for cls in object.classification.get_list()]
 
-    def prepare_alias(self, object):
+    def prepare_aliases(self, object):
         return [als.get_value().value for als in object.aliases.get_list()]
 
     def prepare_headquarters(self, object):
@@ -166,7 +166,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
         if hq:
             return hq.value
 
-    def prepare_exact_location(self, object):
+    def prepare_exact_locations(self, object):
         exactloc_names = set()
 
         for emp in object.emplacementorganization_set.all():
@@ -180,7 +180,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
 
         return list(exactloc_names)
 
-    def prepare_area(self, object):
+    def prepare_areas(self, object):
         areas = set()
 
         for assoc in object.associationorganization_set.all():
@@ -192,7 +192,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
 
         return list(areas)
 
-    def prepare_adminlevel1(self, object):
+    def prepare_adminlevel1s(self, object):
         admin_l1_names = set()
 
         for emp in object.emplacementorganization_set.all():
@@ -205,75 +205,6 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
         return list(admin_l1_names)
 
 '''
-Person
-
-{
-    'id': person_id,
-    'entity_type': 'Person',
-    'content': content,  # name, aliases, roles, ranks, countries
-    'location': '',  # disabled until we implement map search
-    'published_b': person.published,
-    'country_ss': countries,
-    'division_id_ss': division_ids,
-    'person_title_ss': titles,
-    'person_name_s': name,
-    'person_alias_ss': aliases,
-    'person_alias_count_i': alias_count,
-    'person_role_ss': roles,
-    'person_rank_ss': ranks,
-    'person_most_recent_rank_s': most_recent_rank,
-    'person_most_recent_unit_s': most_recent_unit,
-    'person_title_ss': titles,
-    'person_current_rank_s': latest_rank,
-    'person_current_role_s': latest_role,
-    'person_current_title_s': latest_title,
-    'person_first_cited_dt': first_cited,
-    'person_last_cited_dt': last_cited,
-    'start_date_dt': first_cited,
-    'end_date_dt': last_cited,
-    'text': content
-}
-
--------------
-
-Violation (Incident)
-
-{
-    'id': viol_id,
-    'entity_type': 'Violation',
-    'content': content,
-    'location': '',
-    'published_b': violation.published,
-    'country_ss': country,
-    'division_id_ss': division_id,
-    'start_date_dt': start_date,
-    'end_date_dt': end_date,
-    'violation_type_ss': vtypes,
-    'violation_type_count_i': vtype_count,
-    'violation_description_t': description,
-    'violation_start_date_dt': start_date,
-    'violation_end_date_dt': end_date,
-    'violation_first_allegation_dt': first_allegation,
-    'violation_last_update_dt': last_update,
-    'violation_status_s': status,
-    'violation_location_description_s': location_description,
-    'violation_location_name_s': location_name,
-    'violation_osmname_s': osmname,
-    'violation_adminlevel1_s': admin_l1_name,
-    'violation_adminlevel2_s': admin_l2_name,
-    'perpetrator_ss': perps,
-    'perpetrator_count_i': perp_count,
-    'perpetrator_alias_ss': perp_aliases,
-    'perpetrator_organization_ss': perp_orgs,
-    'perpetrator_organization_count_i': perp_org_count,
-    'perpetrator_organization_alias_ss': perp_org_aliases,
-    'perpetrator_classification_ss': perp_org_classes,
-    'perpetrator_classification_count_i': perp_org_class_count,
-    'text': content
-}
-
---------------
-
 BEGIN: Org chart entities
 https://github.com/security-force-monitor/sfm-cms/pull/416
 
