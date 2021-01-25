@@ -81,105 +81,105 @@
     <field name="django_ct" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="django_id" type="string" indexed="true" stored="true" multiValued="false"/>
     
-    <field name="classifications_exact" type="string" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="content" type="text_en" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="start_date" type="date" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="location" type="location" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="name" type="text_en" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="headquarters" type="text_en" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="adminlevel1s" type="text_en" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="entity_type" type="text_en" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="aliases" type="text_en" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="adminlevel1s_exact" type="string" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="parent_names_exact" type="string" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="entity_id" type="text_en" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="exact_locations" type="text_en" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="memberships_exact" type="string" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="division_id" type="text_en" indexed="true" stored="true" multiValued="true" />
-    
     <field name="end_date_exact" type="date" indexed="true" stored="true" multiValued="false" />
     
-    <field name="memberships" type="text_en" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="countries" type="text_en" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="areas" type="text_en" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="classifications" type="text_en" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="published" type="boolean" indexed="true" stored="true" multiValued="false" />
+    <field name="countries_exact" type="string" indexed="true" stored="true" multiValued="true" />
     
     <field name="parent_names" type="text_en" indexed="true" stored="true" multiValued="true" />
     
     <field name="start_date_exact" type="date" indexed="true" stored="true" multiValued="false" />
     
-    <field name="end_date" type="date" indexed="true" stored="true" multiValued="false" />
+    <field name="classifications" type="text_en" indexed="true" stored="true" multiValued="true" />
     
-    <field name="countries_exact" type="string" indexed="true" stored="true" multiValued="true" />
+    <field name="published" type="boolean" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="entity_id" type="text_en" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="adminlevel1s" type="text_en" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="memberships_exact" type="string" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="parent_names_exact" type="string" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="name" type="text_en" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="entity_type" type="text_en" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="memberships" type="text_en" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="adminlevel1s_exact" type="string" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="areas" type="text_en" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="classifications_exact" type="string" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="content" type="text_en" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="exact_locations" type="text_en" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="aliases" type="text_en" indexed="true" stored="true" multiValued="true" />
     
     <field name="open_ended" type="text_en" indexed="true" stored="true" multiValued="false" />
     
-    <field name="end_date_year" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="headquarters" type="text_en" indexed="true" stored="true" multiValued="false" />
     
-    <field name="titles" type="text_en" indexed="true" stored="true" multiValued="true" />
+    <field name="location" type="location" indexed="true" stored="true" multiValued="false" />
     
-    <field name="roles_exact" type="string" indexed="true" stored="true" multiValued="true" />
+    <field name="division_ids" type="text_en" indexed="true" stored="true" multiValued="true" />
     
-    <field name="start_date_year_exact" type="string" indexed="true" stored="true" multiValued="false" />
+    <field name="end_date" type="date" indexed="true" stored="true" multiValued="false" />
     
-    <field name="roles" type="text_en" indexed="true" stored="true" multiValued="true" />
+    <field name="start_date" type="date" indexed="true" stored="true" multiValued="false" />
     
-    <field name="start_date_year" type="text_en" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="ranks_exact" type="string" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="ranks" type="text_en" indexed="true" stored="true" multiValued="true" />
+    <field name="countries" type="text_en" indexed="true" stored="true" multiValued="true" />
     
     <field name="end_date_year_exact" type="string" indexed="true" stored="true" multiValued="false" />
     
-    <field name="title" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="roles_exact" type="string" indexed="true" stored="true" multiValued="true" />
     
-    <field name="publication" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="end_date_year" type="text_en" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="ranks_exact" type="string" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="roles" type="text_en" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="ranks" type="text_en" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="start_date_year" type="text_en" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="titles" type="text_en" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="start_date_year_exact" type="string" indexed="true" stored="true" multiValued="false" />
     
     <field name="url" type="text_en" indexed="true" stored="true" multiValued="false" />
     
+    <field name="publication" type="text_en" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="title" type="text_en" indexed="true" stored="true" multiValued="false" />
+    
     <field name="publication_exact" type="string" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="status" type="text_en" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="location_name_exact" type="string" indexed="true" stored="true" multiValued="false" />
-    
-    <field name="description" type="text_en" indexed="true" stored="true" multiValued="false" />
     
     <field name="first_allegation" type="date" indexed="true" stored="true" multiValued="false" />
     
-    <field name="violation_types_exact" type="string" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="location_name" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="perpetrator_classifications_exact" type="string" indexed="true" stored="true" multiValued="true" />
     
     <field name="perpetrators" type="text_en" indexed="true" stored="true" multiValued="true" />
-    
-    <field name="last_update" type="date" indexed="true" stored="true" multiValued="false" />
     
     <field name="violation_types" type="text_en" indexed="true" stored="true" multiValued="true" />
     
     <field name="perpetrator_classifications" type="text_en" indexed="true" stored="true" multiValued="true" />
     
-    <field name="perpetrator_classifications_exact" type="string" indexed="true" stored="true" multiValued="true" />
+    <field name="status" type="text_en" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="description" type="text_en" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="last_update" type="date" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="violation_types_exact" type="string" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="location_name_exact" type="string" indexed="true" stored="true" multiValued="false" />
+    
+    <field name="location_name" type="text_en" indexed="true" stored="true" multiValued="false" />
     
     <uniqueKey>id</uniqueKey>
 
@@ -512,7 +512,7 @@
          finally applies Porter's stemming.  The query time analyzer
          also applies synonyms from synonyms.txt. -->
     <dynamicField name="*_txt_en" type="text_en"  indexed="true"  stored="true"/>
-    <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100">
+    <fieldType name="text_en" class="solr.TextField" positionIncrementGap="100" sortMissingLast="true">
         <analyzer type="index">
             <tokenizer class="solr.StandardTokenizerFactory"/>
             <!-- in this example, we will only use synonyms at query time

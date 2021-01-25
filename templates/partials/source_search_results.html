@@ -11,6 +11,6 @@
     {% include 'partials/source_list_table.html' %}
 {% endwith %}
 
-{% with page=pages.Source page_type='Source' %}
+{% with page=page_obj page_type='Source' %}
     {% include 'partials/pagination.html' %}
 {% endwith %}

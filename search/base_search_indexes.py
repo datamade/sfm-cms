@@ -55,7 +55,11 @@ class SearchEntity(BaseEntity):
             # For now, we assign fuzzy dates bogus values for month/day if
             # they don't exist, but we should explore to see if Solr has better
             # ways of handling fuzzy dates
-            date = dateformat.format(date.value, 'Y-m-d')
+            try:
+                date = dateformat.format(date.value, 'Y-m-d')
+            except AttributeError:
+                date = dateformat.format(date, 'Y-m-d')
+
             date = date.replace('-00', '-01')
             date += 'T00:00:00Z'
 

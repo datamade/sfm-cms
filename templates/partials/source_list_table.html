@@ -11,7 +11,7 @@
                 <th>
                     {{ models.Source|verbose_field_name:"title" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='Source_sort' sort_asc='source_title_t_asc' sort_desc='source_title_t_desc' selected_sort=sorts.Source %}
+                        {% with sort_param='sort' sort_asc='title' sort_desc='-title' selected_sort=request.GET.sort %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
@@ -19,7 +19,7 @@
                 <th>
                     {{ models.Source|verbose_field_name:"published_date" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='Source_sort' sort_asc='start_date_dt_asc' sort_desc='start_date_dt_desc' selected_sort=sorts.Source %}
+                        {% with sort_param='sort' sort_asc='start_date' sort_desc='-start_date' selected_sort=request.GET.sort %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
@@ -27,18 +27,18 @@
                 <th>
                     {{ models.Source|verbose_field_name:"publication" }}
                     {% if sortable == 'True' %}
-                        {% with sort_param='Source_sort' sort_asc='publication_s_asc' sort_desc='publication_s_desc' selected_sort=sorts.Source %}
+                        {% with sort_param='sort' sort_asc='publication' sort_desc='-publication' selected_sort=request.GET.sort %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
                     {% endif %}
                 </th>
                 <th>
                     {{ models.Source|verbose_field_name:"publication_country" }}
-                    {% if sortable == 'True' %}
-                        {% with sort_param='Source_sort' sort_asc='country_s_asc' sort_desc='country_s_desc' selected_sort=sorts.Source %}
+                    <!--{% if sortable == 'True' %}
+                        {% with sort_param='sort' sort_asc='country_s_asc' sort_desc='country_s_desc' selected_sort=request.GET.sort %}
                             {% include 'partials/sortable-list.html' %}
                         {% endwith %}
-                    {% endif %}
+                    {% endif %}-->
                 </th>
             </tr>
         </thead>
@@ -46,18 +46,18 @@
             {% for object in object_list %}
                 <tr>
                     <td>
-                        <a href="{% url 'view-source' object.uuid %}">
+                        <a href="{% url 'view-source' object.entity_id %}">
                             {{ object.title|default_if_none:"Source" }}
                         </a>
                     </td>
                     <td>
-                        {{ object.published_on|default_if_none:"" }}
+                        {{ object.start_date|default_if_none:"" }}
                     </td>
                     <td>
                         {{ object.publication|default_if_none:"" }}
                     </td>
                     <td>
-                        {{ object.publication_country|default_if_none:"" }}
+                        {{ object.countries.0|default_if_none:"" }}
                     </td>
                 </tr>
             {% endfor %}

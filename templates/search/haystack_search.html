@@ -216,6 +216,28 @@
                     </div>
                 </div>
             {% endif %}
+
+            {% if request.user.is_staff and entity_type == 'Source' %}
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-toggle="collapse" data-target='#source-filters'>
+                        <a role="button" class="filter-heading">
+                            <h4 class="panel-title">
+                                {% trans "Filters for <strong><i class='fa fa-fw fa-paperclip'></i>Sources</strong>" %}
+                                <i class="fa fa-fw fa-minus pull-right"></i>
+                            </h4>
+                        </a>
+                    </div>
+                    <!-- Facets -->
+                    <div class="panel-body panel-show collapse" id="source-filters">
+                        <!-- Publication name -->
+                        {% if facets.fields.publication %}
+                            {% with facet_name='publication' facet_label=models.Source|verbose_field_name:"publication" item_list=facets.fields.publication %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </form>
     <div class="col-xs-12 col-sm-8 pull-right">

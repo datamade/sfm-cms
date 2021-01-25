@@ -33,19 +33,19 @@ class HaystackSearchView(FacetedSearchView):
     context_object_name = 'results'
 
     facet_fields = [
-        'adminlevel1',
-        'classification',
-        'country',
+        'adminlevel1s',
+        'classifications',
+        'countries',
         'end_date_year',
         'location_name',
-        'membership',
-        'parent_name',
-        'perpetrator_classification',
+        'memberships',
+        'parent_names',
+        'perpetrator_classifications',
         'publication',
-        'rank',
-        'role',
+        'ranks',
+        'roles',
         'start_date_year',
-        'violation_type',
+        'violation_types',
     ]
 
     form_class = WWICSearchForm

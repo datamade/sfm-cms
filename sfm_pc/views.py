@@ -57,11 +57,11 @@ class Dashboard(TemplateView):
         # Generate list of countries to use in the country select filter
         facet_search = solr.search('entity_type:Organization', **{
             'facet': 'on',
-            'facet.field': 'country_exact',
+            'facet.field': 'countries_exact',
             'rows': '0'
         })
         facets = format_facets(facet_search.facets)
-        country_counts = facets['facet_fields']['country_exact']['counts']
+        country_counts = facets['facet_fields']['countries_exact']['counts']
         context['countries'] = sorted(
             [country for country, count in country_counts if count > 0]
         )
