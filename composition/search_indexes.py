@@ -39,6 +39,7 @@ class CompositionIndex(BaseEntity, indexes.Indexable):
     child_name = indexes.CharField()
     child_pk = indexes.IntegerField()
     # Is there an easy way to do DateRangeField in Haystack?
+    # Potential path forward: https://stackoverflow.com/a/58562821/7142170
     # date_range = indexes.DateField()
 
 class CommanderIndex(BaseEntity, indexes.Indexable):
