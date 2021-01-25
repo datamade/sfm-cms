@@ -16,14 +16,12 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils import timezone
 from django.http import StreamingHttpResponse
 from django.template import loader
-
 from reversion.models import Revision
-
 from countries_plus.models import Country
+import pysolr
 
 from organization.models import Organization
 from source.models import Source, AccessPoint
-
 from sfm_pc.utils import get_org_hierarchy_by_id, Downloader, VersionsMixin, format_facets
 from sfm_pc.forms import DownloadForm, ChangeLogForm
 from sfm_pc.downloads import download_classes

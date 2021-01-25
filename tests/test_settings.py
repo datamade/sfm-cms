@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'django.contrib.humanize',
+    'haystack',
     'django_date_extensions',
     'languages_plus',
     'countries_plus',
@@ -227,3 +228,15 @@ IMPORTER_USER = {
     'last_name': 'Orter',
     'is_staff': False,
 }
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://solr:8983/solr/sfm',
+        'SILENTLY_FAIL': False,
+        'BATCH_SIZE': 100,
+        'INCLUDE_SPELLING': True,
+    },
+}
+
+HAYSTACK_DOCUMENT_FIELD = 'content'

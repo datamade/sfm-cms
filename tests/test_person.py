@@ -95,7 +95,7 @@ def test_edit_person(setUp, people, new_access_points, fake_signal):
 
 
 @pytest.mark.django_db
-def test_delete_person(setUp, people, searcher_mock, mocker):
+def test_delete_person(setUp, people):
     person = people[0]
     url = reverse_lazy('delete-person', args=[person.uuid])
     response = setUp.post(url)
@@ -104,9 +104,6 @@ def test_delete_person(setUp, people, searcher_mock, mocker):
 
     with pytest.raises(Person.DoesNotExist):
         Person.objects.get(uuid=person.uuid)
-
-    assert searcher_mock.call_count == 1
-    searcher_mock.assert_has_calls([mocker.call(id=person.uuid)])
 
 
 @pytest.mark.django_db

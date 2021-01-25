@@ -99,7 +99,7 @@ def test_edit_organization(save_and_continue,
 
 
 @pytest.mark.django_db
-def test_delete_organization(setUp, organizations, searcher_mock, mocker):
+def test_delete_organization(setUp, organizations):
     org = organizations[0]
     url = reverse_lazy('delete-organization', args=[org.uuid])
     response = setUp.post(url)
@@ -109,9 +109,6 @@ def test_delete_organization(setUp, organizations, searcher_mock, mocker):
 
     with pytest.raises(Organization.DoesNotExist):
         Organization.objects.get(uuid=org.uuid)
-
-    assert searcher_mock.call_count == 1
-    searcher_mock.assert_has_calls([mocker.call(id=org.uuid)])
 
 
 @pytest.mark.django_db

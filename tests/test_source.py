@@ -186,7 +186,7 @@ def expected_access_points(setUp, sources):
 
 
 @pytest.mark.django_db
-def test_delete_source(setUp, sources, searcher_mock, mocker):
+def test_delete_source(setUp, sources):
     source = sources[0]
     url = reverse_lazy('delete-source', args=[source.uuid])
     response = setUp.post(url)
@@ -195,9 +195,6 @@ def test_delete_source(setUp, sources, searcher_mock, mocker):
 
     with pytest.raises(Source.DoesNotExist):
         Source.objects.get(uuid=source.uuid)
-
-    assert searcher_mock.call_count == 1
-    searcher_mock.assert_has_calls([mocker.call(id=source.uuid)])
 
 
 @pytest.mark.django_db

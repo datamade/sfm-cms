@@ -58,7 +58,10 @@ class SearchEntity(BaseEntity):
             try:
                 date = dateformat.format(date.value, 'Y-m-d')
             except AttributeError:
-                date = dateformat.format(date, 'Y-m-d')
+                try:
+                    date = dateformat.format(date, 'Y-m-d')
+                except AttributeError:
+                    pass
 
             date = date.replace('-00', '-01')
             date += 'T00:00:00Z'

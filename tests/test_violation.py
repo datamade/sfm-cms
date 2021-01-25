@@ -149,7 +149,7 @@ def test_edit_violation(setUp,
 
 
 @pytest.mark.django_db
-def test_delete_violation(setUp, violation, searcher_mock, mocker):
+def test_delete_violation(setUp, violation):
     url = reverse_lazy('delete-violation', args=[violation.uuid])
     response = setUp.post(url)
 
@@ -157,9 +157,6 @@ def test_delete_violation(setUp, violation, searcher_mock, mocker):
 
     with pytest.raises(Violation.DoesNotExist):
         Violation.objects.get(uuid=violation.uuid)
-
-    assert searcher_mock.call_count == 1
-    searcher_mock.assert_has_calls([mocker.call(id=violation.uuid)])
 
 
 @pytest.mark.django_db
