@@ -44,8 +44,7 @@ class Command(BaseCommand):
             '--entity-types',
             dest='entity_types',
             help='Comma separated list of entity types to index',
-            # default="people,organizations,sources,violations"
-            default="people,organizations,violations,sources"
+            default="compositions,commanders"
         )
         parser.add_argument(
             '--id',
@@ -69,6 +68,9 @@ class Command(BaseCommand):
         doc_id = options.get('doc_id')
         recreate = options.get('recreate')
 
+        '''
+        TODO: How should recreate and update behave?
+        '''
         if recreate:
             self.stdout.write(self.style.SUCCESS('Dropping current search index...'))
             self.searcher.delete(q='*:*')
@@ -88,8 +90,8 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(success_message))
         self.stdout.write(self.style.SUCCESS(count))
 
-    def index_organizations(self, doc_id=None, update=False):
-        self.stdout.write(self.style.HTTP_NOT_MODIFIED('\n Indexing organizations ... '))
+    def index_compositions(self, doc_id=None, update=False):
+        self.stdout.write(self.style.HTTP_NOT_MODIFIED('\n Indexing compositions ... '))
 
         if doc_id:
             orgs = Organization.objects.filter(uuid=doc_id)
@@ -97,8 +99,8 @@ class Command(BaseCommand):
             orgs = Organization.objects.all()
 
         documents = []
-        for organization in orgs:
 
+        for organization in orgs:
             org_id = str(organization.uuid)
 
             # Skip this record if we're updating and it already exists
@@ -106,77 +108,11 @@ class Command(BaseCommand):
                 continue
 
             name = organization.name.get_value()
-            try:
-                content = [name.value]
-            except AttributeError:
-                continue
 
-            aliases = organization.aliases.get_list()
-            if aliases:
-                content.extend(al.get_value().value for al in aliases)
-
-            classes = organization.classification.get_list()
-            class_count = len(classes)
-            if classes:
-                content.extend(cl.get_value().value for cl in classes)
-
-            hq = organization.headquarters.get_value()
-            if hq:
-                content.extend([hq.value])
-
-            first_cited = self.format_date(organization.firstciteddate.get_value())
-            last_cited = self.format_date(organization.lastciteddate.get_value())
-            open_ended = organization.open_ended.get_value()
-
-            division_ids, countries = set(), set()
-
-            # Start by getting the division ID recorded for this org
-            org_division_id = organization.division_id.get_value()
-            if org_division_id:
-                division_ids.update([org_division_id.value])
-                org_country = country_name(org_division_id)
-                countries.update([org_country])
-
-            country_count = len(countries)
-
-            # Grab foreign key sets
-            emplacements = organization.emplacementorganization_set.all()
-
-            exactloc_names, admin_names, admin_l1_names = set(), set(), set()
-            for emp in emplacements:
-                emp = emp.object_ref
-                site = emp.site.get_value()
-
-                if site:
-                    exactloc_name = site.value.name
-                    emp_division_id = site.value.division_id
-                    exactloc_names.add(exactloc_name)
-
-                    if site.value.adminlevel1:
-                        admin_l1_names.add(site.value.adminlevel1.name)
-
-                    if emp_division_id:
-                        division_ids.update([emp_division_id])
-                        emp_country = country_name(emp_division_id)
-                        countries.update([emp_country])
-
-            last_site_exists = len(exactloc_names)
-
-            areas = set()
-            assocs = organization.associationorganization_set.all()
-            for assoc in assocs:
-                area = assoc.object_ref.area.get_value()
-                if area:
-                    area_name = area.value.name
-                    areas.update([area_name])
-
-            parent_names, parent_ids = [], []
             parents = organization.parent_organization.all()
-            parent_count = len(parents)
-
             published = all([p.value.published for p in parents])
 
-            if parent_count == 0:
+            if parents.count() == 0:
                 documents.append({
                     'id': 'composition-{}'.format(org_id),
                     'composition_parent_id_s': org_id,
@@ -238,57 +174,6 @@ class Command(BaseCommand):
                         'content': 'Composition',
                     })
 
-            memberships = []
-            mems = organization.membershiporganizationmember_set.all()
-            for membership in mems:
-                # Similar to parents, we have to traverse the directed graph
-                # in order to get the entities we want
-                org = membership.object_ref.organization.get_value().value
-                if org.name.get_value():
-                    memberships.append(org.name.get_value())
-
-            # Convert sets to lists, for indexing
-            division_ids, countries = list(division_ids), list(countries)
-            exactloc_names = list(exactloc_names)
-            areas = list(areas)
-
-            # Add some attributes to the global index
-            for attr in (parent_names, countries, exactloc_names, areas):
-                content.extend(attr)
-
-            content = '; '.join(content)
-
-            document = {
-                'id': org_id,
-                'entity_type': 'Organization',
-                'content': content,
-                'location': '',  # disabled until we implement map search
-                'published_b': organization.published,
-                'country_ss': countries,
-                'division_id_ss': division_ids,
-                'start_date_dt': first_cited,
-                'end_date_dt': last_cited,
-                'open_ended_s': open_ended,
-                'organization_name_s': name,
-                'organization_parent_name_ss': parent_names,
-                'organization_parent_count_i': parent_count,
-                'organization_membership_ss': memberships,
-                'organization_classification_ss': classes,
-                'organization_classification_count_i': class_count,
-                'organization_alias_ss': aliases,
-                'organization_headquarters_s': hq,
-                'organization_exact_location_ss': exactloc_names,
-                'organization_site_count_i': last_site_exists,
-                'organization_country_count_i': country_count,
-                'organization_area_ss': areas,
-                'organization_start_date_dt': first_cited,
-                'organization_end_date_dt': first_cited,
-                'organization_adminlevel1_ss': list(admin_l1_names),
-                'text': content
-            }
-
-            documents.append(document)
-
             if update:
                 self.updated_count += 1
             else:
@@ -296,8 +181,8 @@ class Command(BaseCommand):
 
         self.add_to_index(documents)
 
-    def index_people(self, doc_id=None, update=False):
-        self.stdout.write(self.style.HTTP_NOT_MODIFIED('\n Indexing people ... '))
+    def index_commanders(self, doc_id=None, update=False):
+        self.stdout.write(self.style.HTTP_NOT_MODIFIED('\n Indexing commanders ... '))
 
         if doc_id:
             people = Person.objects.filter(uuid=doc_id)
@@ -307,74 +192,28 @@ class Command(BaseCommand):
         documents = []
 
         for person in people:
-
             person_id = str(person.uuid)
+
             if update and self.check_index(person_id):
                 continue
 
             name = person.name.get_value()
-            content = [name.value]
-
-            aliases = person.aliases.get_list()
-            alias_count = 0
-            if aliases:
-                content.extend(al.get_value().value for al in aliases)
-                alias_count = len(aliases)
 
             affiliations = person.memberships
             memberships = [mem.object_ref for mem in affiliations]
-
-            division_ids, countries = set(), set()
-
-            # Start by getting the division ID recorded for the person
-            person_division_id = person.division_id.get_value()
-            if person_division_id:
-                division_ids.update([person_division_id.value])
-                person_country = country_name(person_division_id)
-                countries.update([person_country])
-
-            ranks, roles, titles = set(), set(), set()
-            latest_rank, latest_role, latest_title = None, None, None
-
-            first_cited = None
-            last_cited = None
-
-            # Get most recent information
-            if memberships:
-                latest_title = memberships[0].title.get_value()
-                latest_role = memberships[0].role.get_value()
-                most_recent_unit = memberships[0].organization.get_value()
-                most_recent_rank = memberships[0].rank.get_value()
-                latest_rank = most_recent_rank
-            else:
-                latest_title, latest_role, most_recent_unit, most_recent_rank, latest_rank = None, None, None, None, None
 
             for membership in memberships:
 
                 org = membership.organization.get_value()
 
                 if org:
-
                     org = org.value
 
-                    # Check to see if we can extend first/last cited dates
                     fcd = membership.firstciteddate.get_value()
-                    if fcd:
-                        if first_cited:
-                            if fcd.value < first_cited.value:
-                                first_cited = fcd
-                        else:
-                            first_cited = fcd
-
                     lcd = membership.lastciteddate.get_value()
-                    if lcd:
-                        if last_cited:
-                            if lcd.value > last_cited.value:
-                                last_cited = lcd
-                        else:
-                            last_cited = lcd
 
                     assignment_range = None
+
                     if fcd and lcd:
                         fcd = self.format_date(fcd).split('T')[0]
                         lcd = self.format_date(lcd).split('T')[0]
@@ -409,274 +248,8 @@ class Command(BaseCommand):
                             'entity_type': 'Commander',
                             'content': 'Commander',
                         }
+
                         documents.append(commander)
-
-                    elif role:
-                        roles.add(role.value.value)
-
-                    rank = membership.rank.get_value()
-                    if rank:
-                        ranks.add(rank.value.value)
-
-                    title = membership.title.get_value()
-                    if title:
-                        titles.add(title.value)
-
-
-                    # We also want to index the person based on the countries
-                    # their member units have operated in
-                    org_division_id = org.division_id.get_value()
-
-                    if org_division_id:
-                        division_ids.update([org_division_id.value])
-                        org_country = country_name(org_division_id)
-                        countries.update([org_country])
-
-            # Convert sets to lists, for indexing
-            division_ids, countries = list(division_ids), list(countries)
-            ranks, roles, titles = list(ranks), list(roles), list(titles)
-
-            # Add some attributes to the global index
-            for attr in (roles, ranks, titles, countries):
-                content.extend(attr)
-
-            content = '; '.join(content)
-
-            first_cited = self.format_date(first_cited)
-            last_cited = self.format_date(last_cited)
-
-            document = {
-                'id': person_id,
-                'entity_type': 'Person',
-                'content': content,
-                'location': '',  # disabled until we implement map search
-                'published_b': person.published,
-                'country_ss': countries,
-                'division_id_ss': division_ids,
-                'person_title_ss': titles,
-                'person_name_s': name,
-                'person_alias_ss': aliases,
-                'person_alias_count_i': alias_count,
-                'person_role_ss': roles,
-                'person_rank_ss': ranks,
-                'person_most_recent_rank_s': most_recent_rank,
-                'person_most_recent_unit_s': most_recent_unit,
-                'person_title_ss': titles,
-                'person_current_rank_s': latest_rank,
-                'person_current_role_s': latest_role,
-                'person_current_title_s': latest_title,
-                'person_first_cited_dt': first_cited,
-                'person_last_cited_dt': last_cited,
-                'start_date_dt': first_cited,
-                'end_date_dt': last_cited,
-                'text': content
-            }
-
-            documents.append(document)
-
-            if update:
-                self.updated_count += 1
-            else:
-                self.added_count += 1
-
-        self.add_to_index(documents)
-
-    def index_violations(self, doc_id=None, update=False):
-        self.stdout.write(self.style.HTTP_NOT_MODIFIED('\n Indexing violations ... '))
-
-        if doc_id:
-            violations = Violation.objects.filter(uuid=doc_id)
-        else:
-            violations = Violation.objects.all()
-
-        documents = []
-
-        for violation in violations:
-
-            viol_id = str(violation.uuid)
-
-            if update and self.check_index(viol_id):
-                continue
-
-            content = []
-
-            description = violation.description.get_value()
-            if description:
-                description = description.value
-
-            vtypes = violation.types.get_list()
-            vtype_count = 0
-            if vtypes:
-                vtypes = list(str(vt.get_value().value) for vt in vtypes)
-                vtype_count = len(vtypes)
-
-            perps = violation.perpetrator.get_list()
-            perp_names, perp_aliases = [], []
-            perp_count = 0
-            if perps:
-                # Move from PerpetratorPerson -> Person
-                perps = list(perp.get_value().value for perp in perps)
-                perp_count = len(perps)
-                for perp in perps:
-                    aliases = perp.aliases.get_list()
-                    if aliases:
-                        perp_aliases.extend(al.get_value().value
-                                            for al in aliases)
-
-                    perp_names.append(perp.name.get_value().value)
-
-            perp_orgs = violation.perpetratororganization.get_list()
-            perp_org_names, perp_org_aliases = [], []
-            perp_org_count = 0
-            if perp_orgs:
-                # Move from PerpetratorOrganization -> Organization
-                perp_orgs = list(perp.get_value().value for perp in perp_orgs)
-                perp_org_count = len(perp_orgs)
-                for perp in perp_orgs:
-
-                    org_aliases = perp.aliases.get_list()
-                    if org_aliases:
-                        perp_org_aliases.extend(al.get_value().value
-                                                for al in org_aliases)
-
-                    perp_org_names.append(perp.name.get_value().value)
-
-            perp_org_classes = list(cls.value for cls in
-                                    violation.violationperpetratorclassification_set.all())
-            perp_org_class_count = len(perp_org_classes)
-
-            division_id = violation.division_id.get_value()
-            country = []
-            if division_id:
-                country = [country_name(division_id)]
-            else:
-                division_id = []
-
-            location_description = violation.locationdescription.get_value()
-            if location_description:
-                location_description = location_description.value
-
-            location_name = violation.location_name.get_value()
-            if location_name:
-                location_name = location_name.value.name
-
-            osmname = violation.osmname.get_value()
-            if osmname:
-                osmname = osmname.value
-
-            admin_l1_name = violation.adminlevel1.get_value()
-            if admin_l1_name:
-                admin_l1_name = admin_l1_name.value.name
-
-            admin_l2_name = violation.adminlevel2.get_value()
-            if admin_l2_name:
-                admin_l2_name = admin_l2_name.value.name
-
-            start_date = self.format_date(violation.startdate.get_value())
-            end_date = self.format_date(violation.enddate.get_value())
-            first_allegation = self.format_date(violation.first_allegation.get_value())
-            last_update = self.format_date(violation.last_update.get_value())
-
-            status = violation.status.get_value()
-            if status:
-                status = status.value
-
-            global_index = [perp_names, perp_aliases, perp_org_names, perp_org_aliases,
-                            perp_org_classes, vtypes, country]
-
-            # We need to make solo attributes into lists to extend the `content`
-            # list; before doing that, check to see that each attribute actually
-            # exists
-            for single_attr in (description, location_description,
-                                location_name, osmname, admin_l1_name,
-                                admin_l2_name):
-                if single_attr:
-                    global_index.append([single_attr])
-
-            for attr in global_index:
-                content.extend(attr)
-
-            content = '; '.join([c for c in content if c])
-
-            document = {
-                'id': viol_id,
-                'entity_type': 'Violation',
-                'content': content,
-                'location': '',
-                'published_b': violation.published,
-                'country_ss': country,
-                'division_id_ss': division_id,
-                'start_date_dt': start_date,
-                'end_date_dt': end_date,
-                'violation_type_ss': vtypes,
-                'violation_type_count_i': vtype_count,
-                'violation_description_t': description,
-                'violation_start_date_dt': start_date,
-                'violation_end_date_dt': end_date,
-                'violation_first_allegation_dt': first_allegation,
-                'violation_last_update_dt': last_update,
-                'violation_status_s': status,
-                'violation_location_description_s': location_description,
-                'violation_location_name_s': location_name,
-                'violation_osmname_s': osmname,
-                'violation_adminlevel1_s': admin_l1_name,
-                'violation_adminlevel2_s': admin_l2_name,
-                'perpetrator_ss': perps,
-                'perpetrator_count_i': perp_count,
-                'perpetrator_alias_ss': perp_aliases,
-                'perpetrator_organization_ss': perp_orgs,
-                'perpetrator_organization_count_i': perp_org_count,
-                'perpetrator_organization_alias_ss': perp_org_aliases,
-                'perpetrator_classification_ss': perp_org_classes,
-                'perpetrator_classification_count_i': perp_org_class_count,
-                'text': content
-            }
-
-            documents.append(document)
-
-            if update:
-                self.updated_count += 1
-            else:
-                self.added_count += 1
-
-        self.add_to_index(documents)
-
-    def index_sources(self, doc_id=None, update=False):
-        self.stdout.write(self.style.HTTP_NOT_MODIFIED('\n Indexing sources ... '))
-
-        sources = Source.objects.all()
-
-        if doc_id:
-            sources = sources.filter(uuid=doc_id)
-
-        documents = []
-
-        for source in sources:
-
-            if update and self.check_index(source.uuid):
-                continue
-
-            content = source.title
-
-            if len(content) == 0:
-                # The import data script is missing one title - skip it for now
-                continue
-
-            document = {
-                'id': source.uuid,
-                'entity_type': 'Source',
-                'content': content,
-                'source_url_t': source.source_url,
-                'source_title_t': source.title,
-                'start_date_t': source.get_published_date(),
-                'end_date_t': source.get_published_date(),
-                'publication_s': source.publication,
-                'country_s': source.publication_country,
-                'country_ss': source.publication_country,
-                'text': content
-            }
-
-            documents.append(document)
 
             if update:
                 self.updated_count += 1

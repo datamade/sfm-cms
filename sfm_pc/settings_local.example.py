@@ -57,3 +57,6 @@ HAYSTACK_CONNECTIONS = {
 HAYSTACK_DOCUMENT_FIELD = 'content'
 
 HAYSTACK_INCLUDE_SPELLING = True
+
+# Update index on model change
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
