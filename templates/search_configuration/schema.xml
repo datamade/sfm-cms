@@ -76,271 +76,25 @@
         </analyzer>
     </fieldType>
 
-    <field name="id" type="string" indexed="true" stored="true" multiValued="false" required="true"/>
-    <field name="django_ct" type="string" indexed="true" stored="true" multiValued="false"/>
-    <field name="django_id" type="string" indexed="true" stored="true" multiValued="false"/>
+    <field name="{{ ID }}" type="string" indexed="true" stored="true" multiValued="false" required="true"/>
+    <field name="{{ DJANGO_CT }}" type="string" indexed="true" stored="true" multiValued="false"/>
+    <field name="{{ DJANGO_ID }}" type="string" indexed="true" stored="true" multiValued="false"/>
 
-    
-      
-        
-          <field name="areas" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        <field name="published" type="boolean" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        <field name="memberships_exact" type="string" indexed="true" stored="true" multiValued="true" />
-      
-    
-      
-        
-          <field name="entity_id" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        <field name="countries_exact" type="string" indexed="true" stored="true" multiValued="true" />
-      
-    
-      
-        
-          <field name="memberships" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        
-          <field name="content" type="liberal_string" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        
-          <field name="countries" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        
-          <field name="division_ids" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        <field name="start_date_exact" type="date" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        
-          <field name="parent_names" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        <field name="parent_names_exact" type="string" indexed="true" stored="true" multiValued="true" />
-      
-    
-      
-        
-          <field name="headquarters" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        
-          <field name="classifications" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        <field name="location" type="location" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        <field name="end_date_exact" type="date" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        <field name="start_date" type="date" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        <field name="adminlevel1s_exact" type="string" indexed="true" stored="true" multiValued="true" />
-      
-    
-      
-        <field name="classifications_exact" type="string" indexed="true" stored="true" multiValued="true" />
-      
-    
-      
-        
-          <field name="adminlevel1s" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        
-          <field name="aliases" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        
-          <field name="name" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        <field name="end_date" type="date" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        
-          <field name="entity_type" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        
-          <field name="open_ended" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        
-          <field name="exact_locations" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        <field name="ranks_exact" type="string" indexed="true" stored="true" multiValued="true" />
-      
-    
-      
-        <field name="roles_exact" type="string" indexed="true" stored="true" multiValued="true" />
-      
-    
-      
-        
-          <field name="start_date_year" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        
-          <field name="end_date_year" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        <field name="end_date_year_exact" type="string" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        
-          <field name="titles" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        
-          <field name="roles" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        
-          <field name="ranks" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        <field name="start_date_year_exact" type="string" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        
-          <field name="url" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        
-          <field name="publication" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        <field name="publication_exact" type="string" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        
-          <field name="title" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        <field name="first_allegation" type="date" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        
-          <field name="violation_types" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        
-          <field name="perpetrators" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        
-          <field name="description" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        
-          <field name="perpetrator_classifications" type="strings" indexed="true" stored="true" multiValued="true" />
-        
-      
-    
-      
-        <field name="location_name_exact" type="string" indexed="true" stored="true" multiValued="false" />
-      
-    
-      
-        <field name="perpetrator_classifications_exact" type="string" indexed="true" stored="true" multiValued="true" />
-      
-    
-      
-        
-          <field name="status" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        
-          <field name="location_name" type="strings" indexed="true" stored="true" multiValued="false" />
-        
-      
-    
-      
-        <field name="violation_types_exact" type="string" indexed="true" stored="true" multiValued="true" />
-      
-    
-      
-        <field name="last_update" type="date" indexed="true" stored="true" multiValued="false" />
-      
-    
+    {% for field in fields %}
+      {% if field.type == "text_en" %}
+        {% if field.field_name == "content" %}
+          <field name="{{ field.field_name }}" type="liberal_string" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
+        {% elif field.multivalued == "false" %}
+          <field name="{{ field.field_name }}" type="string" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
+        {% else %}
+          <field name="{{ field.field_name }}" type="strings" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
+        {% endif %}
+      {% else %}
+        <field name="{{ field.field_name }}" type="{{ field.type }}" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
+      {% endif %}
+    {% endfor %}
 
-    <uniqueKey>id</uniqueKey>
+    <uniqueKey>{{ ID }}</uniqueKey>
 
     <!--
     ######################## django-haystack specifics end ########################
@@ -351,6 +105,8 @@
     <field name="content_ar" type="text_ar" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="content_pt" type="text_pt" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="language" type="string"  indexed="true" stored="true" />
+
+    <field name="location" type="location_rpt"  indexed="true" stored="false" multiValued="true" />
     <field name="suggester" type="liberal_strings" indexed="true" stored="true" required="false" multiValued="true" />
 
     <!-- doc values are enabled by default for primitive types such as long so we don't index the version field  -->

@@ -109,6 +109,9 @@ class HaystackSearchView(FacetedSearchView):
 
         sqs = sqs.filter(search_filter)
 
+        if not self.request.user.is_authenticated:
+            sqs = sqs.filter(published=True)
+
         if sort:
             sqs = sqs.order_by(sort)
 

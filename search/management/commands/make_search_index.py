@@ -129,7 +129,6 @@ class Command(BaseCommand):
                 composition = parent.object_ref
                 parent = composition.parent.get_value().value
                 parent_name = parent.name.get_value().value
-                parent_names.append(parent_name)
 
                 start_date = self.format_date(composition.startdate.get_value())
                 end_date = self.format_date(composition.enddate.get_value())

@@ -51,6 +51,7 @@ HAYSTACK_CONNECTIONS = {
         'URL': 'http://solr:8983/solr/sfm_haystack',
         'SILENTLY_FAIL': False,
         'BATCH_SIZE': 100,
+        'INCLUDE_SPELLING': True,
     },
 }
 
