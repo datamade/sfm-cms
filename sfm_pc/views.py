@@ -24,13 +24,12 @@ from countries_plus.models import Country
 from organization.models import Organization
 from source.models import Source, AccessPoint
 
-
 from sfm_pc.utils import get_org_hierarchy_by_id, Downloader, VersionsMixin, format_facets
 from sfm_pc.forms import DownloadForm, ChangeLogForm
 from sfm_pc.downloads import download_classes
 
-from search.views import get_search_context, solr
 
+solr = pysolr.Solr(settings.SOLR_URL)
 
 class Dashboard(TemplateView):
     template_name = 'sfm/dashboard.html'
@@ -53,7 +52,6 @@ class Dashboard(TemplateView):
 
         self.request.session.modified = True
 
-        # TODO: Refactor to use Haystack
         # Generate list of countries to use in the country select filter
         facet_search = solr.search('entity_type:Organization', **{
             'facet': 'on',
@@ -224,14 +222,8 @@ def download_zip(request):
     if request.GET.get('entity_id'):
         entity_ids = [request.GET.get('entity_id')]
     else:
-        '''
-        TODO: Replace this with pysolr call to get all results of the
-        given entity type.
-        '''
-        context = get_search_context(request, all_results=True)
-
-        entities = context['results'][entity_type]
-        entity_ids = list(str(entity.uuid) for entity in entities)
+        entities = solr.search('entity_type:{}'.format(entity_type))
+        entity_ids = list(str(entity['entity_id']) for entity in entities)
 
     zipout = downloader.get_zip(entity_ids)
 
