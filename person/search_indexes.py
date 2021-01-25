@@ -73,15 +73,20 @@ class PersonIndex(SearchEntity, indexes.Indexable):
         return self.prepared_data
 
     def _prepare_citation_years(self, prepared_data):
-        return (
-            prepared_data['start_date'].split('-')[0],
-            prepared_data['end_date'].split('-')[0],
-        )
+        start_year, end_year = [None, None]
+
+        if prepared_data['start_date']:
+            start_year = prepared_data['start_date'].split('-')[0]
+
+        if prepared_data['end_date']:
+            end_year = prepared_data['end_date'].split('-')[0]
+
+        return (start_year, end_year)
 
     def _prepare_countries(self, prepared_data):
         countries = set()
 
-        for division in prepared_data['division_id']:
+        for division in prepared_data['division_ids']:
             countries.update([country_name(division)])
 
         return list(countries)

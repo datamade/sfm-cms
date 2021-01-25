@@ -88,7 +88,7 @@ class ViolationIndex(SearchEntity, indexes.Indexable):
     def _prepare_content(self, prepared_data, object, **kwargs):
         content = []
 
-        for key in ('perpetrator', 'perpetrator_classification'):
+        for key in ('perpetrators', 'perpetrator_classifications'):
             if prepared_data[key]:
                 content.extend(prepared_data[key])
 
