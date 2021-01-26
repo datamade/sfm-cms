@@ -29,17 +29,9 @@ class Command(BaseCommand):
 
         self.searcher = Searcher()
         self.updated_count = 0
-        self.added_count = 0
 
     def add_arguments(self, parser):
 
-        parser.add_argument(
-            '--update',
-            action='store_true',
-            dest='update',
-            default=False,
-            help="Add new items to an existing search index"
-        )
         parser.add_argument(
             '--entity-types',
             dest='entity_types',
@@ -57,40 +49,31 @@ class Command(BaseCommand):
             action='store_true',
             dest='recreate',
             default=False,
-            help="Delete all existing documents before creating the search index."
+            help="Delete all existing composition and commander documents before creating the search index."
         )
 
     def handle(self, *args, **options):
 
         # Get command line args
         entity_types = [e.strip() for e in options['entity_types'].split(',')]
-        update = options.get('update')
         doc_id = options.get('doc_id')
         recreate = options.get('recreate')
 
-        '''
-        TODO: How should recreate and update behave?
-        '''
         if recreate:
             self.stdout.write(self.style.SUCCESS('Dropping current search index...'))
-            self.searcher.delete(q='*:*')
+            self.searcher.delete(q='entity_type:Composition OR entity_type:Commander')
 
         for entity_type in entity_types:
 
-            getattr(self, 'index_{}'.format(entity_type))(update=update,
-                                                          doc_id=doc_id)
+            getattr(self, 'index_{}'.format(entity_type))(doc_id=doc_id)
 
-        if update:
-            success_message = 'Successfully updated global search index.'
-            count = '{count} new indexes added.'.format(count=self.updated_count)
-        else:
-            success_message = 'Successfully created global search index.'
-            count = '{count} new indexes added.'.format(count=self.added_count)
+        success_message = 'Successfully updated search index.'
+        count = '{count} documents updated.'.format(count=self.updated_count)
 
         self.stdout.write(self.style.SUCCESS(success_message))
         self.stdout.write(self.style.SUCCESS(count))
 
-    def index_compositions(self, doc_id=None, update=False):
+    def index_compositions(self, doc_id=None):
         self.stdout.write(self.style.HTTP_NOT_MODIFIED('\n Indexing compositions ... '))
 
         if doc_id:
@@ -102,10 +85,6 @@ class Command(BaseCommand):
 
         for organization in orgs:
             org_id = str(organization.uuid)
-
-            # Skip this record if we're updating and it already exists
-            if update and self.check_index(org_id):
-                continue
 
             name = organization.name.get_value()
 
@@ -179,14 +158,11 @@ class Command(BaseCommand):
                         'content': 'Composition',
                     })
 
-            if update:
-                self.updated_count += 1
-            else:
-                self.added_count += 1
+            self.updated_count += 1
 
         self.add_to_index(documents)
 
-    def index_commanders(self, doc_id=None, update=False):
+    def index_commanders(self, doc_id=None):
         self.stdout.write(self.style.HTTP_NOT_MODIFIED('\n Indexing commanders ... '))
 
         if doc_id:
@@ -198,9 +174,6 @@ class Command(BaseCommand):
 
         for person in people:
             person_id = str(person.uuid)
-
-            if update and self.check_index(person_id):
-                continue
 
             name = person.name.get_value()
 
@@ -256,26 +229,13 @@ class Command(BaseCommand):
 
                         documents.append(commander)
 
-            if update:
-                self.updated_count += 1
-            else:
-                self.added_count += 1
+            self.updated_count += 1
 
         self.add_to_index(documents)
 
     def add_to_index(self, documents):
 
         self.searcher.add(documents)
-
-    def check_index(self, doc_id):
-        '''
-        Check if a document with the id `doc_id` already exists in the index.
-
-        Returns boolean.
-        '''
-        results = self.searcher.search('id:"{doc_id}"'.format(doc_id=doc_id))
-
-        return len(results) > 0
 
     def format_date(self, approx_df):
         '''

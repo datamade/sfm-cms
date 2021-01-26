@@ -83,7 +83,8 @@ Build and start the Docker image for the Solr server:
 
 Open up another shell and create the search index:
 
-    docker-compose run --rm app ./manage.py make_search_index
+    docker-compose run --rm app ./manage.py update_index
+    docker-compose run --rm app ./manage.py update_composition_index
 
 Create an admin user:
 
@@ -257,7 +258,8 @@ since the importer will append to a logfile if one exists already.
 Finally, check to confirm that the search index update command works properly:
 
 ```
-docker-compose run --rm app ./manage.py make_search_index --recreate
+docker-compose run --rm app ./manage.py rebuild_index --noinput
+docker-compose run --rm app ./manage.py update_composition_index --recreate
 ```
 
 #### Importing data to a live site
@@ -276,7 +278,8 @@ sudo su <user>
 workon sfm
 cd ~/sfm-cms
 python manage.py import_google_doc --source_doc_id <source_doc_id> --doc_id <doc_id>
-python manage.py make_search_index --recreate
+python manage.py rebuild_index --noinput
+python manage.py update_composition_index --recreate
 ```
 
 #### Importing all data without disrupting servers
@@ -301,8 +304,8 @@ sudo su <user>
 workon sfm
 cd ~/sfm-importer
 make update_db
-python manage.py make_materialized_views --recreate
-python manage.py make_search_index --recreate
+python manage.py rebuild_index --noinput
+python manage.py update_composition_index --recreate
 ```
 
 Finally, switch the `sfm` and `importer` databases:

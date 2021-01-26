@@ -15,7 +15,7 @@ from composition.models import Composition
 
 
 def update_index(entity_type, object_id):
-    call_command('make_search_index',
+    call_command('make_composition_index',
                  '--id={}'.format(object_id),
                  '--entity-types={}'.format(entity_type))
 
