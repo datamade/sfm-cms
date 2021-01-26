@@ -18,7 +18,7 @@ from person.models import Person
 
 
 @pytest.mark.django_db
-def test_create_source(setUp, update_index_mock):
+def test_create_source(setUp):
 
     response = setUp.get(reverse_lazy('create-source'), follow=True)
     assert response.status_code == 200
@@ -35,7 +35,6 @@ def test_create_source(setUp, update_index_mock):
 
     response = setUp.post(reverse_lazy('create-source'), post_data, follow=True)
     assert response.status_code == 200
-    update_index_mock.assert_called_once_with('sources', post_data['uuid'])
 
     source = Source.objects.get(publication='Test Publication Title')
 
@@ -79,7 +78,7 @@ def test_create_accesspoint(setUp, sources):
 
 
 @pytest.mark.django_db
-def test_update_source(setUp, sources, update_index_mock):
+def test_update_source(setUp, sources):
     source = sources[0]
 
     response = setUp.get(reverse_lazy('update-source', kwargs={'pk': source.uuid}))
@@ -98,7 +97,6 @@ def test_update_source(setUp, sources, update_index_mock):
     response = setUp.post(reverse_lazy('update-source', kwargs={'pk': source.uuid}), post_data, follow=True)
 
     assert response.status_code == 200
-    update_index_mock.assert_called_once_with('sources', post_data['uuid'])
 
     source = Source.objects.get(uuid=source.uuid)
 
