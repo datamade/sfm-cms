@@ -34,11 +34,6 @@
                 </th>
                 <th>
                     {{ models.Source|verbose_field_name:"publication_country" }}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='country_s_asc' sort_desc='country_s_desc' selected_sort=request.GET.sort %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
             </tr>
         </thead>

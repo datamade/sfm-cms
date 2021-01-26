@@ -26,43 +26,18 @@
                 </th>
                 <th>
                     {{ models.Violation|verbose_field_name:"description" }}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='violation_description_t_asc' sort_desc='violation_description_t_desc' selected_sort=request.GET.sort %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.Violation|verbose_field_name:"types" }}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='violation_type_count_i_asc' sort_desc='violation_type_count_i_desc' selected_sort=request.GET.sort %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.Violation|verbose_field_name:"location" }}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='violation_location_name_s_asc' sort_desc='violation_location_name_s_desc' selected_sort=request.GET.sort %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.Violation|verbose_field_name:"perpetratororganization" }}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='perpetrator_organization_count_i_asc' sort_desc='perpetrator_organization_count_i_desc' selected_sort=request.GET.sort %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.Violation|verbose_field_name:"perpetratorclassification" }}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_param='sort' sort_asc='perpetrator_classification_count_i_asc' sort_desc='perpetrator_classification_count_i_desc' selected_sort=request.GET.sort %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
             </tr>
         </thead>
@@ -93,7 +68,7 @@
                     </td>
                     <!-- Violation type -->
                     <td>
-                        {% for violation_type in object.violation_type %}
+                        {% for violation_type in object.violation_types %}
                             {{ violation_type|violation|title }}{% if not forloop.last %},<br />{% endif %}
                         {% endfor %}
                     </td>
@@ -114,8 +89,8 @@
                     </td>
                     <!-- Perpetrator classification -->
                     <td>
-                        {% for classification in object.object.perpetratorclassification.get_list %}
-                            {{ classification.get_value.value }}
+                        {% for classification in object.perpetrator_classifications %}
+                            {{ classification }}
                             {% if not forloop.last %}<br />{% endif %}
                         {% endfor %}
                     </td>

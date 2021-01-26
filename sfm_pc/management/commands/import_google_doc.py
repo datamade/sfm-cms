@@ -33,6 +33,9 @@ import reversion
 
 from countries_plus.models import Country
 
+from haystack import connection_router, connections
+from haystack.signals import RealtimeSignalProcessor
+
 from source.models import Source, AccessPoint
 from organization.models import Organization, OrganizationAlias, \
     OrganizationClassification, OrganizationName, OrganizationRealStart
@@ -125,27 +128,22 @@ class Command(BaseCommand):
     def disconnectSignals(self):
         from django.db.models.signals import post_save
         from complex_fields.base_models import object_ref_saved
-        from haystack.signals import RealtimeSignalProcessor
         from sfm_pc.signals import update_membership_index, update_composition_index
 
-        object_ref_saved.disconnect(receiver=RealtimeSignalProcessor, sender=Organization)
-#        object_ref_saved.disconnect(receiver=update_person_index, sender=Person)
-#        object_ref_saved.disconnect(receiver=update_violation_index, sender=Violation)
         object_ref_saved.disconnect(receiver=update_membership_index, sender=MembershipPerson)
         object_ref_saved.disconnect(receiver=update_composition_index, sender=Composition)
-        #post_save.disconnect(receiver=update_source_index, sender=Source)
+
+        self.haystack_signal_processor.teardown()
 
     def connectSignals(self):
         from django.db.models.signals import post_save
         from complex_fields.base_models import object_ref_saved
         from sfm_pc.signals import update_membership_index, update_composition_index
 
-#        object_ref_saved.connect(receiver=update_organization_index, sender=Organization)
-#        object_ref_saved.connect(receiver=update_person_index, sender=Person)
-#        object_ref_saved.connect(receiver=update_violation_index, sender=Violation)
         object_ref_saved.connect(receiver=update_membership_index, sender=MembershipPerson)
         object_ref_saved.connect(receiver=update_composition_index, sender=Composition)
-        #post_save.connect(receiver=update_source_index, sender=Source)
+
+        self.haystack_signal_processor.setup()
 
     def handle(self, *args, **options):
 
@@ -169,6 +167,9 @@ class Command(BaseCommand):
         except IntegrityError:
             self.user = User.objects.get(username=importer_user['username'])
 
+
+        self.haystack_signal_processor = RealtimeSignalProcessor(connections,
+                                                                 connection_router)
         # Disconnect post save signals
         self.disconnectSignals()
 

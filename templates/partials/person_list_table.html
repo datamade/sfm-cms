@@ -23,27 +23,12 @@
                 </th>
                 <th>
                     {{ models.Person|verbose_field_name:"aliases" }}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_asc='person_alias_count_i_asc' sort_desc='person_alias_count_i_desc' selected_sort=sorts.Person %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {% trans "Most Recent Rank" %}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_asc='person_most_recent_rank_s_asc' sort_desc='person_most_recent_rank_s_desc' selected_sort=sorts.Person %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {% trans "Most Recent Unit" %}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_asc='person_most_recent_unit_s_asc' sort_desc='person_most_recent_unit_s_desc' selected_sort=sorts.Person %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.MembershipPerson|verbose_field_name:"firstciteddate" }}
@@ -81,18 +66,18 @@
                             <td>
                                 <div class="checkbox">
                                     <label>
-                                        <input type="radio" name="canonical_record" value="{{ object.id }}">
+                                        <input type="radio" name="canonical_record" value="{{ object.entity_id }}">
                                     </label>
                                 </div>
                             </td>
                         {% endif %}
                         <!-- Name -->
                         <td>
-                            <a href="{% url 'view-person' object.object.uuid %}">{{ object.name }}</a>
+                            <a href="{% url 'view-person' object.entity_id %}">{{ object.name }}</a>
                         </td>
                         <!-- Aliases -->
                         <td>
-                            {% for alias in object.alias %}
+                            {% for alias in object.aliases %}
                                 {{ alias }}
                                 {% if not forloop.last %}<br />{% endif %}
                             {% endfor %}

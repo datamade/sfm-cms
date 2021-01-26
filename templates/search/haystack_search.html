@@ -156,7 +156,7 @@
                         {% endif %}
                         <!-- First cited -->
                         {% if facets.fields.start_date_year %}
-                            {% with facet_name='start_date_year' facet_label=models.MembershipPerson|verbose_field_name:"firstciteddate" selected_list=facets.fields.start_date_year %}
+                            {% with facet_name='start_date_year' facet_label=models.MembershipPerson|verbose_field_name:"firstciteddate" item_list=facets.fields.start_date_year %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
