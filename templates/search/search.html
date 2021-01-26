@@ -39,17 +39,17 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <select id="entity-type" name="entity_type" class="form-control" multiple="multiple">
-                            <option value="Person" {% if 'Person' in entity_types %}selected=true{% endif %}>{% trans "Personnel" %}</option>
-                            <option value="Organization" {% if 'Organization' in entity_types %}selected=true{% endif %}>{% trans "Units" %}</option>
-                            <option value="Violation" {% if 'Violation' in entity_types %}selected=true{% endif %}>{% trans "Incidents" %}</option>
+                        <select id="entity-type" name="entity_type" class="form-control input-lg">
+                            <option value="Person" {% if entity_type == 'Person' %}selected=true{% endif %}>{% trans "Personnel" %}</option>
+                            <option value="Organization" {% if entity_type == 'Organization' %}selected=true{% endif %}>{% trans "Units" %}</option>
+                            <option value="Violation" {% if entity_type == 'Violation' %}selected=true{% endif %}>{% trans "Incidents" %}</option>
                             {% if request.user.is_staff %}
-                                <option value="Source" {% if 'Source' in entity_types %}selected=true{% endif %}>{% trans "Sources" %}</option>
+                                <option value="Source" {% if entity_type == 'Source' %}selected=true{% endif %}>{% trans "Sources" %}</option>
                             {% endif %}
                         </select>
                     </div>
-                        <a href="{% url 'search' %}{% if query %}?q={{ query }}{% endif %}" class="btn btn-sm btn-default"
-                                 {% if not show_clear %}style="display:none;"{% endif %}>
+                        <a href="{% url 'search' %}?entity_type={{ entity_type }}{% if query %}&amp;q={{ query }}{% endif %}" class="btn btn-sm btn-default"
+                                 {% if not request.GET.selected_facets %}style="display:none;"{% endif %}>
                             <i class="fa fa-fw fa-times"></i>{% trans "Clear all filters" %}
                         </a>
                 </div>
@@ -61,72 +61,68 @@
                     <a role="button" class="filter-heading">
                         <h4 class="panel-title">
                             <strong><i class="fa fa-fw fa-filter"></i>{% trans "General filters" %}</strong>
-                            <i class="fa fa-fw
-                            {% if start_date or end_date or 'country_ss_fct' in selected_facets %}
-                                fa-minus
-                            {% else %}
-                                fa-plus
-                            {% endif %}
-                            pull-right"></i>
+                            <i class="fa fa-fw fa-minus pull-right"></i>
                         </h4>
                     </a>
                 </div>
-                <div class="panel-body
-                {% if start_date or end_date or 'country_ss_fct' in selected_facets %}
-                    panel-show
-                {% endif %}
-                collapse" id="general-filters">
+                <div class="panel-body panel-show collapse" id="general-filters">
                     <div class="form-group">
                         <strong style="padding-left:12px;">{% trans "Date" %}</strong>
                         <input type="text" class="form-control datepicker select2-input-buffer" id="id_start_date" name="start_date" placeholder="{% trans 'Start date' %}" value="{{ start_date }}" />
                         <input type="text" class="form-control datepicker select2-input-buffer" id="id_end_date" name="end_date" placeholder="{% trans 'End date' %}" value="{{ end_date }}" />
                     </div>
-                    {% with facet_name='country_ss_fct' facet_label=_('Country') selected_list=selected_facets.country_ss_fct item_list=facets.All.facet_fields.country_ss_fct.counts %}
+                    {% with facet_name='countries' facet_label=_('Country') item_list=facets.fields.countries %}
                         {% include 'partials/search_filter.html' %}
                     {% endwith %}
                 </div>
             </div>
 
-            <!-- Persons -->
-            {% if 'Person' in entity_types and results.Person|length > 0 %}
+            <!-- Organizations -->
+            {% if entity_type == 'Organization' %}
                 <div class="panel panel-default">
-                    <div class="panel-heading" data-toggle="collapse" data-target='#person-filters'>
+                    <div class="panel-heading" data-toggle="collapse" data-target='#organization-filters'>
                         <a role="button" class="filter-heading">
                             <h4 class="panel-title">
-                                {% comment %}Translators: Please preserve the "strong" and "i" tags, which display an icon. Use the single quote around 'fa fa-w fa-user'. {% endcomment %}
-                                {% trans "Filters for <strong><i class='fa fa-fw fa-user'></i>Personnel</strong>" %}
-                                <i class="fa fa-fw
-                                {% if show_filter.Person %}
-                                    fa-minus
-                                {% else %}
-                                    fa-plus
-                                {% endif %}
-                                pull-right"></i>
+                                {% trans "Filters for <strong><i class='fa fa-fw fa-users'></i>Units</strong>" %}
+                                <i class="fa fa-fw fa-minus pull-right"></i>
                             </h4>
                         </a>
                     </div>
-                    <div class="panel-body {% if show_filter.Person %}panel-show{% endif %} collapse" id="person-filters">
-                        <!-- Role -->
-                        {% if facets.Person.facet_fields.person_current_role_s_fct.any %}
-                            {% with facet_name='person_current_role_s_fct' facet_label=models.MembershipPerson|verbose_field_name:"role" selected_list=selected_facets.person_current_role_s_fct item_list=facets.Person.facet_fields.person_current_role_s_fct.counts %}
+                    <!-- Facets -->
+                    <div class="panel-body panel-show collapse" id="organization-filters">
+                        <!-- Classification -->
+                        {% if facets.fields.classifications %}
+                            {% with facet_name='classifications' facet_label=models.Organization|verbose_field_name:'classification' item_list=facets.fields.classifications %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
-                        <!-- Rank -->
-                        {% if facets.Person.facet_fields.person_current_rank_s_fct.any %}
-                            {% with facet_name='person_current_rank_s_fct' facet_label=models.MembershipPerson|verbose_field_name:"rank" selected_list=selected_facets.person_current_rank_s_fct item_list=facets.Person.facet_fields.person_current_rank_s_fct.counts %}
+                        <!-- Memberships -->
+                        {% if facets.fields.memberships %}
+                            {% with facet_name='memberships' facet_label=_('Membership') item_list=facets.fields.memberships %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
-                        <!-- First cited -->
-                        {% if facets.Person.facet_ranges.person_first_cited_dt.any %}
-                            {% with facet_name='person_first_cited_dt' facet_label=models.MembershipPerson|verbose_field_name:"firstciteddate" selected_list=selected_facets.person_first_cited_dt item_list=facets.Person.facet_ranges.person_first_cited_dt.counts %}
+                        <!-- Parents -->
+                        {% if facets.fields.parent_names %}
+                            {% with facet_name='parent_names' facet_label=_('Parents') item_list=facets.fields.parent_names %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
-                        <!-- Last cited -->
-                        {% if facets.Person.facet_ranges.person_last_cited_dt.any %}
-                            {% with facet_name='person_last_cited_dt' facet_label=models.MembershipPerson|verbose_field_name:"lastciteddate" selected_list=selected_facets.person_last_cited_dt item_list=facets.Person.facet_ranges.person_last_cited_dt.counts %}
+                        <!-- Admin level 1 -->
+                        {% if facets.fields.adminlevel1s %}
+                            {% with facet_name='adminlevel1s' facet_label=models.Emplacement|verbose_field_name:'site' item_list=facets.fields.adminlevel1s %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- Start date -->
+                        {% if facets.fields.start_date %}
+                            {% with facet_name='start_date' facet_label=models.Organization|verbose_field_name:'firstciteddate' item_list=facets.fields.start_date %}
+                                {% include 'partials/search_filter.html' %}
+                            {% endwith %}
+                        {% endif %}
+                        <!-- End date -->
+                        {% if facets.fields.end_date %}
+                            {% with facet_name='end_date' facet_label=models.Organization|verbose_field_name:'lastciteddate' item_list=facets.fields.end_date %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
@@ -134,58 +130,39 @@
                 </div>
             {% endif %}
 
-            <!-- Organizations -->
-            {% if 'Organization' in entity_types and results.Organization|length > 0 %}
+            {% if entity_type == 'Person' %}
                 <div class="panel panel-default">
-                    <div class="panel-heading" data-toggle="collapse" data-target='#organization-filters'>
+                    <div class="panel-heading" data-toggle="collapse" data-target='#person-filters'>
                         <a role="button" class="filter-heading">
                             <h4 class="panel-title">
-                                {% trans "Filters for <strong><i class='fa fa-fw fa-users'></i>Units</strong>" %}
-                                <i class="fa fa-fw
-                                {% if show_filter.Organization %}
-                                    fa-minus
-                                {% else %}
-                                    fa-plus
-                                {% endif %}
-                                pull-right"></i>
+                                {% comment %}Translators: Please preserve the "strong" and "i" tags, which display an icon. Use the single quote around 'fa fa-w fa-user'. {% endcomment %}
+                                {% trans "Filters for <strong><i class='fa fa-fw fa-user'></i>Personnel</strong>" %}
+                                <i class="fa fa-fw fa-minus pull-right"></i>
                             </h4>
                         </a>
                     </div>
-                    <!-- Facets -->
-                    <div class="panel-body {% if show_filter.Organization %}panel-show{% endif %} collapse" id="organization-filters">
-                        <!-- Classification -->
-                        {% if facets.Organization.facet_fields.organization_classification_ss_fct.any %}
-                            {% with facet_name='organization_classification_ss_fct' facet_label=models.Organization|verbose_field_name:"classification" selected_list=selected_facets.organization_classification_ss_fct item_list=facets.Organization.facet_fields.organization_classification_ss_fct.counts %}
+                    <div class="panel-body panel-show collapse" id="person-filters">
+                        <!-- Role -->
+                        {% if facets.fields.roles %}
+                            {% with facet_name='roles' facet_label=models.MembershipPerson|verbose_field_name:"role" item_list=facets.fields.roles %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
-                        <!-- Memberships -->
-                        {% if facets.Organization.facet_fields.organization_membership_ss_fct.any %}
-                            {% with facet_name='organization_membership_ss_fct' facet_label=_('Membership') selected_list=selected_facets.organization_membership_ss_fct item_list=facets.Organization.facet_fields.organization_membership_ss_fct.counts %}
+                        <!-- Rank -->
+                        {% if facets.fields.ranks %}
+                            {% with facet_name='ranks' facet_label=models.MembershipPerson|verbose_field_name:"rank" item_list=facets.fields.ranks %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
-                        <!-- Parents -->
-                        {% if facets.Organization.facet_fields.organization_parent_name_ss_fct.any %}
-                            {% with facet_name='organization_parent_name_ss_fct' facet_label=_('Parents') selected_list=selected_facets.organization_parent_name_ss_fct item_list=facets.Organization.facet_fields.organization_parent_name_ss_fct.counts %}
+                        <!-- First cited -->
+                        {% if facets.fields.start_date_year %}
+                            {% with facet_name='start_date_year' facet_label=models.MembershipPerson|verbose_field_name:"firstciteddate" item_list=facets.fields.start_date_year %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
-                        <!-- Admin level 1 -->
-                        {% if facets.Organization.facet_fields.organization_adminlevel1_ss_fct.any %}
-                            {% with facet_name='organization_adminlevel1_ss_fct' facet_label=models.Emplacement|verbose_field_name:"site" selected_list=selected_facets.organization_adminlevel1_ss_fct item_list=facets.Organization.facet_fields.organization_adminlevel1_ss_fct.counts %}
-                                {% include 'partials/search_filter.html' %}
-                            {% endwith %}
-                        {% endif %}
-                        <!-- Start date -->
-                        {% if facets.Organization.facet_ranges.organization_start_date_dt.any %}
-                            {% with facet_name='organization_start_date_dt' facet_label=models.Organization|verbose_field_name:"firstciteddate" selected_list=selected_facets.organization_start_date_dt item_list=facets.Organization.facet_ranges.organization_start_date_dt.counts %}
-                                {% include 'partials/search_filter.html' %}
-                            {% endwith %}
-                        {% endif %}
-                        <!-- End date -->
-                        {% if facets.Organization.facet_ranges.organization_end_date_dt.any %}
-                            {% with facet_name='organization_end_date_dt' facet_label=models.Organization|verbose_field_name:"lastciteddate" selected_list=selected_facets.organization_end_date_dt item_list=facets.Organization.facet_ranges.organization_end_date_dt.counts %}
+                        <!-- Last cited -->
+                        {% if facets.fields.end_date_year %}
+                            {% with facet_name='end_date_year' facet_label=models.MembershipPerson|verbose_field_name:"lastciteddate" item_list=facets.fields.end_date_year %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
@@ -194,51 +171,45 @@
             {% endif %}
 
             <!-- Violations -->
-            {% if 'Violation' in entity_types and results.Violation|length > 0 %}
+            {% if entity_type == 'Violation' %}
                 <div class="panel panel-default">
                     <div class="panel-heading" data-toggle="collapse" data-target='#violation-filters'>
                         <a role="button" class="filter-heading">
                             <h4 class="panel-title">
                                 {% trans "Filters for <strong><i class='fa fa-fw fa-exclamation-triangle'></i>Incidents</strong>" %}
-                                <i class="fa fa-fw
-                                {% if show_filter.Violation %}
-                                    fa-minus
-                                {% else %}
-                                    fa-plus
-                                {% endif %}
-                                pull-right"></i>
+                                <i class="fa fa-fw fa-minus pull-right"></i>
                             </h4>
                         </a>
                     </div>
                     <!-- Facets -->
-                    <div class="panel-body {% if show_filter.Violation %}panel-show{% endif %} collapse" id="violation-filters">
+                    <div class="panel-body panel-show collapse" id="violation-filters">
                         <!-- Violation type -->
-                        {% if facets.Violation.facet_fields.violation_type_ss_fct.any %}
-                            {% with facet_name='violation_type_ss_fct' facet_label=models.Violation|verbose_field_name:"types" selected_list=selected_facets.violation_type_ss_fct item_list=facets.Violation.facet_fields.violation_type_ss_fct.counts %}
+                        {% if facets.fields.violation_types %}
+                            {% with facet_name='violation_types' facet_label=models.Violation|verbose_field_name:"types" item_list=facets.fields.violation_types %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
                         <!-- Perpetrator classification -->
-                        {% if facets.Violation.facet_fields.perpetrator_classification_ss_fct.any %}
-                            {% with facet_name='perpetrator_classification_ss_fct' facet_label=models.Violation|verbose_field_name:"perpetratorclassification" selected_list=selected_facets.perpetrator_classification_ss_fct item_list=facets.Violation.facet_fields.perpetrator_classification_ss_fct.counts %}
+                        {% if facets.fields.perpetrator_classifications %}
+                            {% with facet_name='perpetrator_classifications' facet_label=models.Violation|verbose_field_name:"perpetratorclassification" item_list=facets.fields.perpetrator_classifications %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
                         <!-- Location description -->
-                        {% if facets.Violation.facet_fields.violation_location_description_s_fct.any %}
-                            {% with facet_name='violation_location_description_s_fct' facet_label=models.Violation|verbose_field_name:"location" selected_list=selected_facets.violation_location_description_s_fct item_list=facets.Violation.facet_fields.violation_location_description_s_fct.counts %}
+                        {% if facets.fields.location_name %}
+                            {% with facet_name='location_name' facet_label=models.Violation|verbose_field_name:"location" item_list=facets.fields.location_name %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
                         <!-- Start date -->
-                        {% if facets.Violation.facet_ranges.violation_start_date_dt.any %}
-                            {% with facet_name='violation_start_date_dt' facet_label=models.Violation|verbose_field_name:"startdate" selected_list=selected_facets.violation_start_date_dt item_list=facets.Violation.facet_ranges.violation_start_date_dt.counts %}
+                        {% if facets.fields.start_date_year %}
+                            {% with facet_name='start_date_year' facet_label=models.Violation|verbose_field_name:"startdate" item_list=facets.fields.start_date_year %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
                         <!-- End date -->
-                        {% if facets.Violation.facet_ranges.violation_end_date_dt.any %}
-                            {% with facet_name='violation_end_date_dt' facet_label=models.Violation|verbose_field_name:"enddate" selected_list=selected_facets.violation_end_date_dt item_list=facets.Violation.facet_ranges.violation_end_date_dt.counts %}
+                        {% if facets.fields.end_date_year %}
+                            {% with facet_name='end_date_year' facet_label=models.Violation|verbose_field_name:"enddate" item_list=facets.fields.end_date_year %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
@@ -246,29 +217,21 @@
                 </div>
             {% endif %}
 
-            <!-- Sources -->
-
-            {% if request.user.is_staff and 'Source' in entity_types and results.Source|length > 0 %}
+            {% if request.user.is_staff and entity_type == 'Source' %}
                 <div class="panel panel-default">
                     <div class="panel-heading" data-toggle="collapse" data-target='#source-filters'>
                         <a role="button" class="filter-heading">
                             <h4 class="panel-title">
                                 {% trans "Filters for <strong><i class='fa fa-fw fa-paperclip'></i>Sources</strong>" %}
-                                <i class="fa fa-fw
-                                {% if show_filter.Search %}
-                                    fa-minus
-                                {% else %}
-                                    fa-plus
-                                {% endif %}
-                                pull-right"></i>
+                                <i class="fa fa-fw fa-minus pull-right"></i>
                             </h4>
                         </a>
                     </div>
                     <!-- Facets -->
-                    <div class="panel-body {% if show_filter.Source %}panel-show{% endif %} collapse" id="source-filters">
+                    <div class="panel-body panel-show collapse" id="source-filters">
                         <!-- Publication name -->
-                        {% if facets.Source.facet_fields.publication_s_fct.any %}
-                            {% with facet_name='publication_s_fct' facet_label=models.Source|verbose_field_name:"publication" selected_list=selected_facets.publication_s_fct item_list=facets.Source.facet_fields.publication_s_fct.counts %}
+                        {% if facets.fields.publication %}
+                            {% with facet_name='publication' facet_label=models.Source|verbose_field_name:"publication" item_list=facets.fields.publication %}
                                 {% include 'partials/search_filter.html' %}
                             {% endwith %}
                         {% endif %}
@@ -279,7 +242,7 @@
     </form>
     <div class="col-xs-12 col-sm-8 pull-right">
     {% if results %}
-    <h1>{{ hits.global|intcomma }} {% if hits.global == 1 %}{% trans "result found" %}{% else %}{% trans "results found" %}{% endif %} {% if query %}{% trans "for" %} &ldquo;{{ query }}&rdquo;{% endif %}</h1>
+    <h1>{{ paginator.count|intcomma }} {% if paginator.count == 1 %}{% trans "result found" %}{% else %}{% trans "results found" %}{% endif %} {% if query %}{% trans "for" %} &ldquo;{{ query }}&rdquo;{% endif %}</h1>
     {% else %}
         <h1>{% trans "No results found" %} {% if query %}{% trans "for" %} &ldquo;{{ query  }}&rdquo;{% endif %}</h1>
     {% endif %}
@@ -297,26 +260,9 @@
     {% endif %}
 
     {% if results %}
-        {% if 'Person' in results.keys %}
-            {% with objects=results.Person hit_count=hits.Person %}
-                {% include 'partials/person_search_results.html' %}
-            {% endwith %}
-        {% endif %}
-        {% if 'Organization' in results.keys %}
-            {% with objects=results.Organization hit_count=hits.Organization %}
-                {% include 'partials/organization_search_results.html' %}
-            {% endwith %}
-        {% endif %}
-        {% if 'Violation' in results.keys %}
-            {% with objects=results.Violation hit_count=hits.Violation %}
-                {% include 'partials/violation_search_results.html' %}
-            {% endwith %}
-        {% endif %}
-        {% if request.user.is_staff and 'Source' in results.keys %}
-            {% with objects=results.Source hit_count=hits.Source %}
-                {% include 'partials/source_search_results.html' %}
-            {% endwith %}
-        {% endif %}
+        {% with objects=results hit_count=paginator.count %}
+            {% include 'partials/'|add:entity_type|add:'_search_results.html'|lower %}
+        {% endwith %}
     {% else %}
         <br />
         <p>
@@ -375,9 +321,9 @@
         // Init dropdowns
         $('.filter-heading').on('click', function(e) {
             if ($(this).parent().siblings('.panel-body').hasClass("in")) {
-                $(this).find('i').removeClass("fa-minus").addClass("fa-plus");
+                $(this).find('i.fa-minus').removeClass("fa-minus").addClass("fa-plus");
             } else {
-                $(this).find('i').removeClass("fa-plus").addClass("fa-minus");
+                $(this).find('i.fa-plus').removeClass("fa-plus").addClass("fa-minus");
             }
         });
 
@@ -456,9 +402,6 @@
 
         // Init select2 boxes
         $('#location-filter').select2(osm_opts);
-        $('#entity-type').select2({
-            minimumResultsForSearch: Infinity
-        });
         $('#radius').select2({
             minimumResultsForSearch: Infinity
         });

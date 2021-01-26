@@ -50,7 +50,7 @@ class HaystackSearchView(FacetedSearchView):
 
     form_class = WWICSearchForm
     load_all = True
-    template_name = 'search/haystack_search.html'
+    template_name = 'search/search.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
