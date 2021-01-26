@@ -62,7 +62,7 @@
                                 <select name="selected_facets" id="country-select" style="height:36px">
                                     <option value="">{% trans "Select a country" %}</option>
                                     {% for country in countries %}
-                                        <option value="country_exact:{{ country }}">{{ country }}</option>
+                                        <option value="countries_exact:{{ country }}">{{ country }}</option>
                                     {% endfor %}
                                 </select>
                             </div>

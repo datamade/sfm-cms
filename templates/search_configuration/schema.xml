@@ -83,14 +83,14 @@
     {% for field in fields %}
       {% if field.type == "text_en" %}
         {% if field.field_name == "content" %}
-          <field name="{{ field.field_name }}" type="liberal_string" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
+    <field name="{{ field.field_name }}" type="liberal_string" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
         {% elif field.multivalued == "false" %}
-          <field name="{{ field.field_name }}" type="string" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
+    <field name="{{ field.field_name }}" type="string" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
         {% else %}
-          <field name="{{ field.field_name }}" type="strings" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
+    <field name="{{ field.field_name }}" type="strings" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
         {% endif %}
       {% else %}
-        <field name="{{ field.field_name }}" type="{{ field.type }}" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
+    <field name="{{ field.field_name }}" type="{{ field.type }}" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
       {% endif %}
     {% endfor %}
 
@@ -105,8 +105,6 @@
     <field name="content_ar" type="text_ar" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="content_pt" type="text_pt" indexed="true" stored="true" required="false" multiValued="false" />
     <field name="language" type="string"  indexed="true" stored="true" />
-
-    <field name="location" type="location_rpt"  indexed="true" stored="false" multiValued="true" />
     <field name="suggester" type="liberal_strings" indexed="true" stored="true" required="false" multiValued="true" />
 
     <!-- doc values are enabled by default for primitive types such as long so we don't index the version field  -->
@@ -184,6 +182,10 @@
     <copyField source="aliases" dest="suggester"/>
     <copyField source="division_ids" dest="suggester"/>
     <copyField source="countries" dest="suggester"/>
+
+    <!-- For org charts -->
+    <copyField source="*_s" dest="*_s_fct"/>
+    <copyField source="*_ss" dest="*_ss_fct"/>
 
     <!-- uncomment the following to ignore any fields that don't already match an existing
         field name or dynamic field, rather than reporting them as an error.

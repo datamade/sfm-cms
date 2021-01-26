@@ -21,35 +21,15 @@
                 </th>
                 <th>
                     {% trans "Parents" %}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_asc='' sort_desc='' %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.Organization|verbose_field_name:"classification" }}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_asc='classification' sort_desc='-classification' %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {% trans "Last site" %}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_asc='' sort_desc='' %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.Organization|verbose_field_name:"division_id" }}
-                    <!--{% if sortable == 'True' %}
-                        {% with sort_asc='' sort_desc='' %}
-                            {% include 'partials/sortable-list.html' %}
-                        {% endwith %}
-                    {% endif %}-->
                 </th>
                 <th>
                     {{ models.Organization|verbose_field_name:"firstciteddate" }}
@@ -71,78 +51,74 @@
         </thead>
         <tbody>
             {% for object in object_list %}
-                {% with object=object.object %}
-                    {% if object.name.get_value %}
-                        <tr>
-                            {% if merge == 'True' %}
-                                <td>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="organization_ids" data-entity_id="{{object.id}}">
-                                        </label>
-                                    </div>
-                                </td>
-                            {% endif %}
-                            {% if canonical == 'True' %}
-                                <td>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="radio" name="canonical_record" value="{{ object.id }}">
-                                        </label>
-                                    </div>
-                                </td>
-                            {% endif %}
-                            <!-- Name -->
+                {% if object.name %}
+                    <tr>
+                        {% if merge == 'True' %}
                             <td>
-                                <a href="{% url 'view-organization' object.uuid %}">{{ object.name.get_value }}</a>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" class="organization_ids" data-entity_id="{{object.id}}">
+                                    </label>
+                                </div>
                             </td>
-                            <!-- Parent -->
+                        {% endif %}
+                        {% if canonical == 'True' %}
                             <td>
-                                {% for comp in object.parent_organization.all %}
-                                    {% with parent=comp.object_ref.parent.get_value %}
-                                        {% if request.user.is_authenticated or parent.value.published %}
-                                            <a href="{% url 'view-organization' parent.value.uuid %}">{{ parent.value.name.get_value }}</a>
-                                        {% endif %}
-                                    {% endwith %}
-                                    {% if not forloop.last %}<br />{% endif %}
-                                {% endfor %}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="radio" name="canonical_record" value="{{ object.id }}">
+                                    </label>
+                                </div>
                             </td>
-                            <!-- Classification -->
-                            <td>
-                                {% for classification in object.classification.get_list %}
-                                    {% if classification.get_value %}
-                                        {{ classification.get_value.value }}
+                        {% endif %}
+                        <!-- Name -->
+                        <td>
+                            <a href="{% url 'view-organization' object.entity_id %}">{{ object.name }}</a>
+                        </td>
+                        <!-- Parent -->
+                        <td>
+                            {% for comp in object.object.parent_organization.all %}
+                                {% with parent=comp.object_ref.parent.get_value %}
+                                    {% if request.user.is_authenticated or parent.value.published %}
+                                        <a href="{% url 'view-organization' parent.value.uuid %}">{{ parent.value.name.get_value }}</a>
                                     {% endif %}
-                                    {% if not forloop.last %}<br />{% endif %}
-                                {% endfor %}
-                            </td>
-                            <!-- Site name -->
-                            <td>
-                                {% with emplacement=object.emplacementorganization_set.last %}
-                                    {% with site=emplacement.object_ref.emplacementsite_set.last %}
-                                        {% if site.value.id %}
-                                            <a target="_blank" href="https://www.openstreetmap.org/node/{{ site.value.id }}">{{ site }}</a>
-                                        {% else %}
-                                            <a target="_blank" href="https://www.openstreetmap.org/node/{{ site.value.adminlevel2 }}">{{ site }}</a>
-                                        {% endif %}
-                                    {% endwith %}
                                 {% endwith %}
-                            </td>
-                            <!-- Country -->
-                            <td>
-                                {{ object.division_id|country_name }}
-                            </td>
-                            <!-- First citation -->
-                            <td>
-                                {% datetype object.firstciteddate.get_value 'start' %}
-                            </td>
-                            <!-- Last citation -->
-                            <td>
-                                {% datetype object.lastciteddate.get_value 'end' %}
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endwith %}
+                                {% if not forloop.last %}<br />{% endif %}
+                            {% endfor %}
+                        </td>
+                        <!-- Classification -->
+                        <td>
+                            {% for classification in object.classifications %}
+                                {{ classification }}
+                                {% if not forloop.last %}<br />{% endif %}
+                            {% endfor %}
+                        </td>
+                        <!-- Site name -->
+                        <td>
+                            {% with emplacement=object.object.emplacementorganization_set.last %}
+                                {% with site=emplacement.object_ref.emplacementsite_set.last %}
+                                    {% if site.value.id %}
+                                        <a target="_blank" href="https://www.openstreetmap.org/node/{{ site.value.id }}">{{ site }}</a>
+                                    {% else %}
+                                        <a target="_blank" href="https://www.openstreetmap.org/node/{{ site.value.adminlevel2 }}">{{ site }}</a>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endwith %}
+                        </td>
+                        <!-- Country -->
+                        <td>
+                            {{ object.division_ids.0|country_name }}
+                        </td>
+                        <!-- First citation -->
+                        <td>
+                            {% datetype object.object.firstciteddate.get_value 'start' %}
+                        </td>
+                        <!-- Last citation -->
+                        <td>
+                            {% datetype object.object.lastciteddate.get_value 'end' %}
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>

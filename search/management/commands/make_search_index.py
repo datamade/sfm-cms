@@ -21,7 +21,7 @@ from source.models import Source
 from sfm_pc.templatetags.countries import country_name
 
 class Command(BaseCommand):
-    help = 'Add global search index'
+    help = 'Create Solr documents powering org charts'
 
     def __init__(self, *args, **kwargs):
 
@@ -127,7 +127,13 @@ class Command(BaseCommand):
                 # so we have to jump through some hoops to get the foreign
                 # key value
                 composition = parent.object_ref
-                parent = composition.parent.get_value().value
+
+                try:
+                    parent = composition.parent.get_value().value
+                except AttributeError:
+                    self.stdout.write('Skipping composition without parent: {}'.format(composition))
+                    continue
+
                 parent_name = parent.name.get_value().value
 
                 start_date = self.format_date(composition.startdate.get_value())

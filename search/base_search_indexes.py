@@ -25,6 +25,12 @@ class SearchEntity(BaseEntity):
     start_date = indexes.DateTimeField(faceted=True)
     end_date = indexes.DateTimeField(faceted=True)
 
+    def index_queryset(self, **kwargs):
+        return super().index_queryset(**kwargs).select_related()
+
+    def load_all_queryset(self):
+        return self.get_model().objects.all().select_related()
+
     def prepare_location(self, object):
         return None
 
