@@ -45,17 +45,14 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
         return self.prepared_data
 
     def _prepare_countries(self, prepared_data):
-        countries = set()
-
-        for division in prepared_data['division_ids']:
-            countries.update([country_name(division)])
+        countries = {country_name(division) for division in prepared_data['division_ids']}
 
         return list(countries)
 
     def prepare_published(self, object):
         parents = object.parent_organization.all()
 
-        return all([p.value.published for p in parents])
+        return all(p.value.published for p in parents)
 
     def prepare_division_ids(self, object):
         division_ids = set()
@@ -63,7 +60,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
         # Start by getting the division ID recorded for this org
         org_division_id = object.division_id.get_value()
         if org_division_id:
-            division_ids.update([org_division_id.value])
+            division_ids.add(org_division_id.value)
 
         # Grab foreign key sets
         emplacements = object.emplacementorganization_set.all()
@@ -77,7 +74,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
                 emp_division_id = site.value.division_id
 
                 if emp_division_id:
-                    division_ids.update([emp_division_id])
+                    division_ids.add(emp_division_id)
 
         return list(division_ids)
 
@@ -103,9 +100,8 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
             # `parent_organization` returns a list of CompositionChilds,
             # so we have to jump through some hoops to get the foreign
             # key value
-            composition = parent.object_ref
-            parent = composition.parent.get_value().value
-            parent_name = parent.name.get_value().value
+            parent_obj = parent.object_ref.parent.get_value().value
+            parent_name = parent_obj.name.get_value().value
             parent_names.append(parent_name)
 
         return parent_names
@@ -139,8 +135,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
         exactloc_names = set()
 
         for emp in object.emplacementorganization_set.all():
-            emp = emp.object_ref
-            site = emp.site.get_value()
+            site = emp.object_ref.site.get_value()
 
             if site:
                 exactloc_name = site.value.name
@@ -157,7 +152,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
 
             if area:
                 area_name = area.value.name
-                areas.update([area_name])
+                areas.add(area_name)
 
         return list(areas)
 
@@ -165,8 +160,7 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
         admin_l1_names = set()
 
         for emp in object.emplacementorganization_set.all():
-            emp = emp.object_ref
-            site = emp.site.get_value()
+            site = emp.object_ref.site.get_value()
 
             if site and site.value.adminlevel1:
                 admin_l1_names.add(site.value.adminlevel1.name)
