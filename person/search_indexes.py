@@ -54,10 +54,7 @@ class PersonIndex(SearchEntity, indexes.Indexable):
         return (start_year, end_year)
 
     def _prepare_countries(self, prepared_data):
-        countries = set()
-
-        for division in prepared_data['division_ids']:
-            countries.update([country_name(division)])
+        countries = {country_name(division) for division in prepared_data['division_ids']}
 
         return list(countries)
 
@@ -71,44 +68,36 @@ class PersonIndex(SearchEntity, indexes.Indexable):
         person_division_id = object.division_id.get_value()
 
         if person_division_id:
-            division_ids.update([person_division_id.value])
+            division_ids.add(person_division_id.value)
 
-        memberships = [mem.object_ref for mem in object.memberships]
-
-        for membership in memberships:
-            org = membership.organization.get_value()
+        for membership in object.memberships:
+            org = membership.object_ref.organization.get_value()
 
             if org:
-                org = org.value
-
                 # We also want to index the person based on the countries
                 # their member units have operated in
-                org_division_id = org.division_id.get_value()
+                org_division_id = org.value.division_id.get_value()
 
                 if org_division_id:
-                    division_ids.update([org_division_id.value])
+                    division_ids.add(org_division_id.value)
 
         return list(division_ids)
 
     def prepare_end_date(self, object):
         last_cited = None
 
-        memberships = [mem.object_ref for mem in object.memberships]
+        for membership in object.memberships:
+            org = membership.object_ref.organization.get_value()
 
-        if memberships:
-            for membership in memberships:
-                org = membership.organization.get_value()
+            if org:
+                lcd = membership.object_ref.lastciteddate.get_value()
 
-                if org:
-                    org = org.value
-                    lcd = membership.lastciteddate.get_value()
-
-                    if lcd:
-                        if last_cited:
-                            if lcd.value > last_cited.value:
-                                last_cited = lcd
-                        else:
+                if lcd:
+                    if last_cited:
+                        if lcd.value > last_cited.value:
                             last_cited = lcd
+                    else:
+                        last_cited = lcd
 
         if last_cited:
             return self._format_date(last_cited)
@@ -122,22 +111,18 @@ class PersonIndex(SearchEntity, indexes.Indexable):
     def prepare_start_date(self, object):
         first_cited = None
 
-        memberships = [mem.object_ref for mem in object.memberships]
+        for membership in object.memberships:
+            org = membership.object_ref.organization.get_value()
 
-        if memberships:
-            for membership in memberships:
-                org = membership.organization.get_value()
+            if org:
+                fcd = membership.object_ref.firstciteddate.get_value()
 
-                if org:
-                    org = org.value
-                    fcd = membership.firstciteddate.get_value()
-
-                    if fcd:
-                        if first_cited:
-                            if fcd.value < first_cited.value:
-                                first_cited = fcd
-                        else:
+                if fcd:
+                    if first_cited:
+                        if fcd.value < first_cited.value:
                             first_cited = fcd
+                    else:
+                        first_cited = fcd
 
         if first_cited:
             return self._format_date(first_cited)
