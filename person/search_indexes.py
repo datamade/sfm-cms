@@ -6,36 +6,6 @@ from sfm_pc.templatetags.countries import country_name
 
 class PersonIndex(SearchEntity, indexes.Indexable):
 
-    '''
-    {
-        'id': person_id,
-        'entity_type': 'Person',
-        'content': content,  # name, aliases, roles, ranks, countries
-        'location': '',  # disabled until we implement map search
-        'published_b': person.published,
-        'country_ss': countries,
-        'division_id_ss': division_ids,
-        'person_title_ss': titles,
-        'person_name_s': name,
-        'person_alias_ss': aliases,
-        'person_alias_count_i': alias_count,
-        'person_role_ss': roles,
-        'person_rank_ss': ranks,
-        'person_most_recent_rank_s': most_recent_rank,
-        'person_most_recent_unit_s': most_recent_unit,
-        'person_title_ss': titles,
-        'person_current_rank_s': latest_rank,
-        'person_current_role_s': latest_role,
-        'person_current_title_s': latest_title,
-        'person_first_cited_dt': first_cited,
-        'person_last_cited_dt': last_cited,
-        'start_date_dt': first_cited,
-        'end_date_dt': last_cited,
-        'text': content
-    }
-
-    '''
-
     CONTENT_FIELDS = (
         'aliases',
         'countries',

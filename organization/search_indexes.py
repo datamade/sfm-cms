@@ -6,37 +6,6 @@ from sfm_pc.templatetags.countries import country_name
 
 class OrganizationIndex(SearchEntity, indexes.Indexable):
 
-    '''
-    {
-        'id': org_id,
-        'entity_type': 'Organization',
-        'content': content,
-        'location': '',  # disabled until we implement map search
-        'published_b': organization.published,
-        'country_ss': countries,
-        'division_id_ss': division_ids,
-        'start_date_dt': first_cited,
-        'end_date_dt': last_cited,
-        'open_ended_s': open_ended,
-        'organization_name_s': name,
-        'organization_parent_name_ss': parent_names,
-        'organization_parent_count_i': parent_count,
-        'organization_membership_ss': memberships,
-        'organization_classification_ss': classes,
-        'organization_classification_count_i': class_count,
-        'organization_alias_ss': aliases,
-        'organization_headquarters_s': hq,
-        'organization_exact_location_ss': exactloc_names,
-        'organization_site_count_i': last_site_exists,
-        'organization_country_count_i': country_count,
-        'organization_area_ss': areas,
-        'organization_start_date_dt': first_cited,
-        'organization_end_date_dt': first_cited,
-        'organization_adminlevel1_ss': list(admin_l1_names),
-        'text': content
-    }
-    '''
-
     CONTENT_FIELDS = (
         'name',
         'aliases',

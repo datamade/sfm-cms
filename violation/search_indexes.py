@@ -6,42 +6,6 @@ from sfm_pc.templatetags.countries import country_name
 
 class ViolationIndex(SearchEntity, indexes.Indexable):
 
-    '''
-    {
-        'id': viol_id,
-        'entity_type': 'Violation',
-        'content': content,
-        'location': '',
-        'published_b': violation.published,
-        'country_ss': country,
-        'division_id_ss': division_id,
-        'start_date_dt': start_date,
-        'end_date_dt': end_date,
-        'violation_type_ss': vtypes,
-        'violation_type_count_i': vtype_count,
-        'violation_description_t': description,
-        'violation_start_date_dt': start_date,
-        'violation_end_date_dt': end_date,
-        'violation_first_allegation_dt': first_allegation,
-        'violation_last_update_dt': last_update,
-        'violation_status_s': status,
-        'violation_location_description_s': location_description,
-        'violation_location_name_s': location_name,
-        'violation_osmname_s': osmname,
-        'violation_adminlevel1_s': admin_l1_name,
-        'violation_adminlevel2_s': admin_l2_name,
-        'perpetrator_ss': perps,
-        'perpetrator_count_i': perp_count,
-        'perpetrator_alias_ss': perp_aliases,
-        'perpetrator_organization_ss': perp_orgs,
-        'perpetrator_organization_count_i': perp_org_count,
-        'perpetrator_organization_alias_ss': perp_org_aliases,
-        'perpetrator_classification_ss': perp_org_classes,
-        'perpetrator_classification_count_i': perp_org_class_count,
-        'text': content
-    }
-    '''
-
     CONTENT_FIELDS = (
         'countries',
         'description',
