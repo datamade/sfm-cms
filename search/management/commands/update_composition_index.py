@@ -89,7 +89,7 @@ class Command(BaseCommand):
             name = organization.name.get_value()
 
             parents = organization.parent_organization.all()
-            published = all([p.value.published for p in parents])
+            published = all(p.value.published for p in parents)
 
             if parents.count() == 0:
                 documents.append({
