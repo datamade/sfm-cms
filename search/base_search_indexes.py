@@ -28,6 +28,13 @@ class SearchEntity(BaseEntity):
     def index_queryset(self, **kwargs):
         return super().index_queryset(**kwargs).select_related()
 
+    def read_queryset(self, using=None):
+        '''
+        Select related objects to prevent extra database calls when rendering
+        the search results in the template.
+        '''
+        return self.get_model().objects.select_related()
+
     def prepare_location(self, object):
         return None
 
