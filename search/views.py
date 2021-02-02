@@ -9,6 +9,7 @@ from django.views.decorators.cache import never_cache
 
 from haystack.forms import FacetedSearchForm
 from haystack.generic_views import SearchMixin, FacetedSearchView
+from haystack.inputs import Raw
 from haystack.query import SearchQuerySet, SQ
 
 import pysolr
@@ -26,6 +27,23 @@ class WWICSearchForm(FacetedSearchForm):
 
     def no_query_found(self):
         return self.searchqueryset.load_all()
+
+    def search(self):
+        sqs = super().search()
+
+        illegal_chars = '''|&*/\!{[]}"'~-+()^:'''
+
+        cleaned_query = self.cleaned_data['q']
+
+        for char in illegal_chars:
+            cleaned_query = cleaned_query.replace(char, '')
+
+        if cleaned_query.strip() != '':
+            formatted_query = ' '.join(term + '~' for term in cleaned_query.strip().split())
+            print(formatted_query)
+            return sqs.filter(content=Raw(formatted_query))
+
+        return self.no_query_found()
 
 
 class HaystackSearchView(FacetedSearchView):
