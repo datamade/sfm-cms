@@ -41,8 +41,11 @@ class SearchEntity(BaseEntity):
     def prepare_entity_id(self, object):
         return object.uuid
 
-    def _prepare_content(self, prepared_data, initial_content=[]):
-        content = initial_content
+    def _prepare_content(self, prepared_data, initial_content=None):
+        content = []
+
+        if initial_content:
+            content.extend(initial_content)
 
         for field in self.CONTENT_FIELDS:
             field_value = prepared_data[field]
@@ -55,7 +58,7 @@ class SearchEntity(BaseEntity):
 
             content.extend(field_value)
 
-        return '; '.join(content)
+        return '; '.join(set(content))
 
     def _format_date(self, date):
         '''

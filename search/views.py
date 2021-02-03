@@ -1,18 +1,11 @@
-import urllib
-import math
 from datetime import datetime
 
-from django.shortcuts import render
-from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.views.decorators.cache import never_cache
 
 from haystack.forms import FacetedSearchForm
 from haystack.generic_views import SearchMixin, FacetedSearchView
 from haystack.inputs import Raw
 from haystack.query import SearchQuerySet, SQ
-
-import pysolr
 
 from source.models import Source
 from organization.models import Organization
@@ -20,10 +13,19 @@ from emplacement.models import Emplacement
 from person.models import Person
 from membershipperson.models import MembershipPerson
 from violation.models import Violation
-from sfm_pc.utils import get_osm_by_id, format_facets
 
 
 class WWICSearchForm(FacetedSearchForm):
+
+    def _make_fuzzy_query(self):
+        illegal_chars = '''|&*/\!{[]}"'~-+()^:'''
+
+        clean_q = self.cleaned_data['q'].strip()
+
+        for char in illegal_chars:
+            clean_q.replace(char, '')
+
+        return ' '.join(term + '~' for term in clean_q.split())
 
     def no_query_found(self):
         return self.searchqueryset.load_all()
@@ -31,17 +33,10 @@ class WWICSearchForm(FacetedSearchForm):
     def search(self):
         sqs = super().search()
 
-        illegal_chars = '''|&*/\!{[]}"'~-+()^:'''
+        fuzzy_query = self._make_fuzzy_query()
 
-        cleaned_query = self.cleaned_data['q']
-
-        for char in illegal_chars:
-            cleaned_query = cleaned_query.replace(char, '')
-
-        if cleaned_query.strip() != '':
-            formatted_query = ' '.join(term + '~' for term in cleaned_query.strip().split())
-            print(formatted_query)
-            return sqs.filter(content=Raw(formatted_query))
+        if fuzzy_query:
+            return sqs.filter(content=Raw(self._make_fuzzy_query()))
 
         return self.no_query_found()
 

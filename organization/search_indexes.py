@@ -39,8 +39,8 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
     def prepare(self, object):
         self.prepared_data = super().prepare(object)
 
-        self.prepared_data['content'] = self._prepare_content(self.prepared_data)
         self.prepared_data['countries'] = self._prepare_countries(self.prepared_data)
+        self.prepared_data['content'] = self._prepare_content(self.prepared_data)
 
         return self.prepared_data
 
@@ -100,9 +100,16 @@ class OrganizationIndex(SearchEntity, indexes.Indexable):
             # `parent_organization` returns a list of CompositionChilds,
             # so we have to jump through some hoops to get the foreign
             # key value
-            parent_obj = parent.object_ref.parent.get_value().value
-            parent_name = parent_obj.name.get_value().value
-            parent_names.append(parent_name)
+            try:
+                parent_obj = parent.object_ref.parent.get_value().value
+
+            except AttributeError:
+                # Parent object does not exist
+                continue
+
+            else:
+                parent_name = parent_obj.name.get_value().value
+                parent_names.append(parent_name)
 
         return parent_names
 
