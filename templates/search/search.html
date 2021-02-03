@@ -13,10 +13,9 @@
     <form class="form">
         <div class="col-xs-12 col-sm-8 pull-right">
             <div class="input-group main-search">
-
-                {% for facet, selections in selected_facets.items %}
-                    {% for s in selections %}
-                        <input name="selected_facets" type="hidden" class="form-control" value="{{facet}}_exact:{{s}}">
+                {% for facet, values in selected_facet_values.items %}
+                    {% for value in values %}
+                        <input name="selected_facets" type="hidden" class="form-control" value="{{ facet }}:{{ value }}">
                     {% endfor %}
                 {% endfor %}
 
