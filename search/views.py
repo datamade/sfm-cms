@@ -38,7 +38,7 @@ class WWICSearchForm(FacetedSearchForm):
         if fuzzy_query:
             return sqs.filter(content=Raw(self._make_fuzzy_query()))
 
-        return self.no_query_found()
+        return sqs
 
 
 class HaystackSearchView(FacetedSearchView):
