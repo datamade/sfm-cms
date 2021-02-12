@@ -304,10 +304,29 @@
         minimumInputLength: 2,
         allowClear: true
     };
+
+    var corpus = $('#entity-type').val();
+
     $(document).ready(function(){
         // Language code
         {% get_current_language as LANGUAGE_CODE %}
             var language = '{{ LANGUAGE_CODE }}'
+
+        $('form').submit(function(e) {
+            var corpusChanged = corpus !== $('entity-type').val();
+
+            if (corpusChanged) {
+                // Remove entity-specific facets
+                $('input[name="selected_facets"]').map(function(_, el) {
+                    var entitySpecific = el.value.indexOf('countries_exact') < 0;
+                    if (entitySpecific) {
+                        $(el).remove();
+                    }
+                });
+            }
+
+            return true
+        });
 
         // Autofocus input on older browsers
         if (!("autofocus" in document.createElement("input"))) {
