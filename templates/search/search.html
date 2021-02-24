@@ -337,12 +337,13 @@
         $('.panel-show').addClass('in');
 
         // Init dropdowns
-        $('.filter-heading').on('click', function(e) {
-            if ($(this).parent().siblings('.panel-body').hasClass("in")) {
-                $(this).find('i.fa-minus').removeClass("fa-minus").addClass("fa-plus");
+        $('.facet-toggle').on('click', function(e) {
+            var toggleIcon = $(this).find('i');
+            if (toggleIcon.hasClass('fa-plus')) {
+                $(this).text('See less').append(toggleIcon.removeClass('fa-plus').addClass('fa-minus'));
             } else {
-                $(this).find('i.fa-plus').removeClass("fa-plus").addClass("fa-minus");
-            }
+                $(this).text('See more...').append(toggleIcon.removeClass('fa-minus').addClass('fa-plus'));
+            };
         });
 
         // Init tooltips

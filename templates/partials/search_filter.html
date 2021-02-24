@@ -1,16 +1,48 @@
 <div class="panel panel-filter">
-    <div class="panel-heading" data-toggle="collapse" data-target="#filter-{{facet_name}}">
+    <div class="panel-heading">
         <a role="button" class="filter-heading">
             <p class="panel-title">
                 <strong>{{facet_label}}</strong>
-                <i class="fa fa-fw {% if facet_name|add:'_exact' in selected_facets %}fa-minus {% else %} fa-plus {% endif %} pull-right"></i>
             </p>
         </a>
     </div>
-    <div class="panel-body {% if facet_name|add:'_exact' in selected_facets %}panel-show{% endif %} collapse" id="filter-{{facet_name}}">
+    <div class="panel-body" id="filter-{{facet_name}}">
         <ul class="search-facet-list">
-            {% for name, count in item_list %}
-                {% if count and count > 0 %}
+            {% for name, count in item_list|slice:":5" %}
+                <!-- (default:"" helps handle Nones) -->
+                {% if facet_name|default:""|slice:"-4:" == "date" %}
+
+                    {% with facet_is_date=True %}
+                        {% include 'partials/search_filter_item.html' %}
+                    {% endwith %}
+
+                {% elif facet_label == "Violation type" %}
+
+                    {% with facet_is_violation=True %}
+                        {% include 'partials/search_filter_item.html' %}
+                    {% endwith %}
+
+                {% else %}
+                        {% include 'partials/search_filter_item.html' %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+        {% if item_list|length > 5 %}
+        <strong>
+            <a data-toggle="collapse" class="facet-toggle" href="#additional-facet-values-{{ facet_name }}" style="padding-top: 25px; padding-bottom: 25px;">
+                {% if facet_name|add:'_exact' in selected_facets %}
+                    See less
+                    <i class="fa fa-fw fa-minus pull-right"></i>
+                {% else %}
+                    See more...
+                    <i class="fa fa-fw fa-plus pull-right"></i>
+                {% endif %}
+            </a>
+        </strong>
+
+        <div id="additional-facet-values-{{ facet_name }}" class="collapse{% if facet_name|add:'_exact' in selected_facets %} in{% endif %}">
+            <ul class="search-facet-list">
+                {% for name, count in item_list|slice:"5:" %}
                     <!-- (default:"" helps handle Nones) -->
                     {% if facet_name|default:""|slice:"-4:" == "date" %}
 
@@ -27,8 +59,9 @@
                     {% else %}
                             {% include 'partials/search_filter_item.html' %}
                     {% endif %}
-                {% endif %}
-            {% endfor %}
-        </ul>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
 </div>
