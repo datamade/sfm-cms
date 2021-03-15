@@ -1,4 +1,3 @@
-from .areas import AreaDownload
 from .basic import BasicDownload
 from .memberships import MembershipOrganizationDownload
 from .parentage import ParentageDownload
@@ -8,7 +7,6 @@ from .sources import SourceDownload
 
 
 download_classes = {
-    'areas': AreaDownload,
     'basic': BasicDownload,
     'memberships': MembershipOrganizationDownload,
     'parentage': ParentageDownload,
