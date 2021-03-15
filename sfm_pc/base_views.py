@@ -13,6 +13,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
+from django.http import JsonResponse
 
 from reversion.views import RevisionMixin
 
@@ -38,6 +39,22 @@ class CacheMixin(object):
 
     def dispatch(self, *args, **kwargs):
         return cache_page(self.get_cache_timeout())(super(CacheMixin, self).dispatch)(*args, **kwargs)
+
+
+class JSONResponseMixin(object):
+    def render_to_json_response(self, context, **response_kwargs):
+        return JsonResponse(
+            self.get_data(context),
+            **response_kwargs
+        )
+
+    def get_data(self, context):
+        try:
+            del context['view']
+        except (KeyError, TypeError):
+            pass
+        # Make sure things are JSON serializable
+        return context
 
 
 class CreateUpdateMixin(object):

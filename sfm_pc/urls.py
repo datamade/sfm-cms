@@ -42,9 +42,6 @@ urlpatterns = i18n_patterns(
     # Authentication
     url(r'^logout/$', logout_then_login, {'login_url': reverse_lazy('login')}, name="logout"),
 
-    # API endpoints
-    url(r'^api/', include('api.urls')),
-
     # auth
     url('^', include('django.contrib.auth.urls')),
 

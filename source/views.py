@@ -24,8 +24,7 @@ from complex_fields.models import ComplexFieldContainer
 
 from countries_plus.models import Country
 
-from api.base_views import JSONResponseMixin
-from sfm_pc.base_views import BaseDeleteView
+from sfm_pc.base_views import BaseDeleteView, JSONResponseMixin
 from sfm_pc.utils import VersionsMixin, get_source_context
 from sfm_pc.templatetags.citations import get_citation_string
 
