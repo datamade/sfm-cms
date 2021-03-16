@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('source', '0023_auto_20180604_1610'),
-        ('geosite', '0001_initial'),
+        ('location', '0001_initial'),
         ('organization', '0001_initial'),
     ]
 
@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
                 ('confidence', models.CharField(default=1, max_length=1, choices=[('1', 'Low'), ('2', 'Medium'), ('3', 'High')])),
                 ('object_ref', models.ForeignKey(to='emplacement.Emplacement')),
                 ('sources', models.ManyToManyField(to='source.Source', related_name='emplacement_emplacementsite_related')),
-                ('value', models.ForeignKey(to='geosite.Geosite')),
+                ('value', models.ForeignKey(to='location.Location')),
             ],
             options={
                 'abstract': False,

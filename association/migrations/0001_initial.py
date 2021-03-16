@@ -9,7 +9,7 @@ import django_date_extensions.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('area', '0001_initial'),
+        ('location', '0001_initial'),
         ('organization', '0001_initial'),
     ]
 
@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ('confidence', models.CharField(default=1, max_length=1, choices=[('1', 'Low'), ('2', 'Medium'), ('3', 'High')])),
                 ('object_ref', models.ForeignKey(to='association.Association')),
                 ('sources', models.ManyToManyField(to='source.Source', related_name='association_associationarea_related')),
-                ('value', models.ForeignKey(to='area.Area')),
+                ('value', models.ForeignKey(to='location.Location')),
             ],
             options={
                 'abstract': False,

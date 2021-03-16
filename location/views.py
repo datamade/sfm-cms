@@ -19,10 +19,8 @@ from django.db.models import Q
 
 from countries_plus.models import Country
 
-from api.base_views import JSONResponseMixin
-
 from sfm_pc.templatetags.countries import country_name
-from sfm_pc.base_views import BaseDeleteView
+from sfm_pc.base_views import BaseDeleteView, JSONResponseMixin
 
 from .models import Location
 from .forms import LocationForm

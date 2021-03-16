@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('source', '0017_auto_20160826_2057'),
-        ('geosite', '0012_auto_20170907_1627'),
+        ('location', '0001_initial'),
         ('violation', '0011_violationfirstallegation_violationlastupdate_violationstatus'),
     ]
 
@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('confidence', models.CharField(choices=[('1', 'Low'), ('2', 'Medium'), ('3', 'High')], default=1, max_length=1)),
                 ('object_ref', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='violation.Violation')),
                 ('sources', models.ManyToManyField(related_name='violation_violationsite_related', to='source.Source')),
-                ('value', models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='geosite.Geosite')),
+                ('value', models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='location.Location')),
             ],
             options={
                 'abstract': False,

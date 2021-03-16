@@ -39,22 +39,7 @@ class Migration(migrations.Migration):
     database_operations = [
         migrations.RunSQL('DROP MATERIALIZED VIEW IF EXISTS association'),
         migrations.RunSQL('DROP MATERIALIZED VIEW IF EXISTS association_sources'),
-        migrations.RunSQL('ALTER TABLE association_associationarea DROP CONSTRAINT association_associationarea_value_id_9ed99f44_fk_area_area_id'),
-        migrations.RunSQL('''
-            UPDATE association_associationarea SET
-              value_id=s.value_id
-            FROM (
-              SELECT
-                ass_area.id AS area_id,
-                osm.value AS value_id
-              FROM association_associationarea AS ass_area
-              JOIN area_area AS area
-                ON ass_area.value_id = area.id
-              JOIN area_areaosmid AS osm
-                ON area.id = osm.object_ref_id
-            ) AS s
-            WHERE association_associationarea.id = s.area_id
-        '''),
+        migrations.RunSQL('ALTER TABLE association_associationarea DROP CONSTRAINT IF EXISTS association_associationarea_value_id_9ed99f44_fk_area_area_id'),
         migrations.RunPython(remake_views),
     ]
 

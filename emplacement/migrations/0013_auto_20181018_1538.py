@@ -33,30 +33,6 @@ class Migration(migrations.Migration):
         migrations.RunSQL('ALTER TABLE emplacement_emplacementsite DROP CONSTRAINT IF EXISTS emplacement_emplacement_value_id_59e5197e_fk_geosite_geosite_id'),
         migrations.RunSQL('ALTER TABLE emplacement_emplacementsite DROP CONSTRAINT IF EXISTS emplacement_emplacem_value_id_59e5197e_fk_geosite_g'),
         migrations.RunSQL('ALTER TABLE emplacement_emplacementsite ALTER COLUMN value_id TYPE bigint'),
-        migrations.RunSQL('''
-            UPDATE emplacement_emplacementsite SET
-              value_id=s.value_id
-            FROM (
-              SELECT
-                emp_site.id AS site_id,
-                osm.value AS value_id
-              FROM emplacement_emplacementsite AS emp_site
-              JOIN geosite_geosite AS site
-                ON emp_site.value_id = site.id
-              JOIN geosite_geositeadminid AS osm
-                ON site.id = osm.object_ref_id
-              UNION
-              SELECT
-                emp_site.id AS site_id,
-                osm.value AS value_id
-              FROM emplacement_emplacementsite AS emp_site
-              JOIN geosite_geosite AS site
-                ON emp_site.value_id = site.id
-              JOIN geosite_geositelocationid AS osm
-                ON site.id = osm.object_ref_id
-            ) AS s
-            WHERE emplacement_emplacementsite.id = s.site_id
-        '''),
         migrations.RunPython(remake_views),
     ]
     state_operations = [
