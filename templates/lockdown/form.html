@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div id="lockdown" class="col-md-8 col-md-offset-2 text-center">
+        <h2>Private instance</h2>
+
+        <p><strong>This instance of Who Was In Command is not available to the public.</strong> If you are an authorized user, log in using your username and password using the form below.</p>
+
+        {% if form %}
+        <form action="" method="post">{% csrf_token %}
+            {{ form.as_p }}
+            <p><input type="submit" value="Preview" /></p>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

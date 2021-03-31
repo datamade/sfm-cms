@@ -75,12 +75,16 @@ INSTALLED_APPS = (
     'search',
     'raven.contrib.django.raven_compat',
     'debug_toolbar',
+    'lockdown',
 )
 
 if SENTRY_DSN:
     RAVEN_CONFIG = {
         'dsn': SENTRY_DSN,
     }
+
+LOCKDOWN_ENABLED = True if os.getenv('WWIC_PRIVATE_INSTANCE', 'False') == 'True' else False
+LOCKDOWN_FORM = 'lockdown.forms.AuthForm'
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
@@ -93,6 +97,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'lockdown.middleware.LockdownMiddleware',
     'reversion.middleware.RevisionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
