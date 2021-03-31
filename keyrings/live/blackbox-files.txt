@@ -1,6 +1,5 @@
 configs/auth.json
 configs/client_secrets.json
-configs/credentials.json
 scripts/after_install.sh
 scripts/app_start.sh
 scripts/app_stop.sh
