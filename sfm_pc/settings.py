@@ -116,6 +116,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 'django.contrib.messages.context_processors.messages',
+                'sfm_pc.context_processors.enable_analytics',
             ],
         },
     },

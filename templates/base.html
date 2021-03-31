@@ -19,7 +19,11 @@
   <link rel="stylesheet" href="{% static 'css/flickity.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/custom.css' %}">
   <script src="{% static 'js/jquery-1.10.2.js' %}"></script>
+
+  {% if ENABLE_ANALYTICS %}
   <script src="{% static 'js/piwik_tracker.js' %}"></script>
+  {% endif %}
+
   {% block extra_head %}{% endblock %}
 </head>
 {% get_current_language_bidi as LANGUAGE_BIDI %}

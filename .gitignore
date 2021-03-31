@@ -30,5 +30,4 @@ fixtures/*.geojson
 /scripts/app_stop.sh
 /scripts/sfm-cron
 /scripts/backup.sh
-/static/js/piwik_tracker_production.js
 *.dump
