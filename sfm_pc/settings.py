@@ -29,7 +29,7 @@ except KeyError:
     raise Exception('DJANGO_SECRET_KEY and IMPORTER_USER_PASSWORD must be declared as environment variables')
 
 DEBUG = False if os.getenv('DJANGO_DEBUG', 'True') == 'False' else True
-ALLOWED_HOSTS = os.environ['DJANGO_ALLOWED_HOSTS'].split(',') if os.getenv('ALLOWED_HOSTS', None) else []
+ALLOWED_HOSTS = os.environ['DJANGO_ALLOWED_HOSTS'].split(',') if os.getenv('DJANGO_ALLOWED_HOSTS', None) else []
 DATABASE_URL = os.getenv('DATABASE_URL', 'postgis://postgres:postgres@postgres:5432/sfm')
 SOLR_URL = os.getenv('WEBSOLR_URL', 'http://solr:8983/solr/sfm')
 
