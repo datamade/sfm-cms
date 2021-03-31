@@ -29,10 +29,10 @@ Next, create a local `.env` file.
     cp .env.example .env
 
 The example `.env` file does not contain values for third-party integrations
-Google Maps and Sentry. If you're indoctrinated into the DataMade LastPass, you
-can find working values for these settings under `WWIC .env Secrets`. Otherwise,
-you'll need to create your own Google Maps key and/or Sentry DSN to enable these
-services in local development.
+with AWS, Google Maps, or Sentry. If you're indoctrinated into the DataMade
+LastPass, you can find working values for these settings under `WWIC .env Secrets`.
+Otherwise, you'll need to create your own AWS credentials, Google Maps key,
+and/or Sentry DSN to enable these services in local development.
 
 Finally, build the application:
 
@@ -80,14 +80,15 @@ entity data. (Read on for instructions!)
 
 The `import_google_docs` expects to find credentials for the Google
 Sheets and Google Drive APIs in `sfm_pc/management/commands/credentials.json`.
-If you are on the keyring for this project, run the following Blackbox command to
-decrypt and create the expected credentials file, before you run `import_google_docs`.
-(N.b., the data import service account lives under the `SFM - Data Import` project
-in the Google API Console.)
 
-    blackbox_cat configs/credentials.json.gpg > sfm_pc/management/commands/credentials.json
+If a file exists at that path, the script will use it. Otherwise, it will
+attempt to retrieve a remote copy of our API credentials from S3. Obviously,
+these credentials are not publicly accessible. `boto3` checks for the `AWS_*`
+environment variables to authenticate requests. If you're indoctrinated into
+the DataMade LastPass, you can find working values for these settings under
+`WWIC .env Secrets`. Simply paste them into your `.env` file.
 
-If you are not on the keyring, enable the Google Sheets and Google Drive APIs in
+If you are not on the team, enable the Google Sheets and Google Drive APIs in
 [the Google API Console](https://console.developers.google.com/apis/library), then
 create a service account to access them. [This blog post](https://www.twilio.com/blog/2017/02/an-easy-way-to-read-and-write-to-a-google-spreadsheet-in-python.html)
 provides a helpful walkthrough! Be sure to save your credentials in
@@ -208,16 +209,22 @@ Account](https://cloud.google.com/iam/docs/understanding-service-accounts)
 having access to the spreadsheet. This service account is managed under the
 `SFM - Data Import` project in the Google API Console.
 
-If you are indoctrinated into this project's keyring, decrypt the credentials
-for the service account like so:
+Working credentials for our service account live in S3. Obviously, these
+credentials are not publicly accessible. `boto3` checks for the `AWS_*`
+environment variables to authenticate requests. If you're indoctrinated into
+the DataMade LastPass, you can find working values for these settings under
+`WWIC .env Secrets`. Simply paste them into your `.env` file to automatically
+retrieve the credentials during import.
 
-```bash
-gpg -d configs/credentials.json.gpg > sfm_pc/management/commands/credentials.json
-```
+If you aren't in the DataMade LastPass, create your own service account,
+then copy the credentials to `sfm_pc/management/commands/credentials.json`,
+and the import will use the existing file rather than retrieving credentials
+from S3.
 
-Then, open `sfm_pc/management/commands/credentials.json` and make note of the
-`client_email` value. You will need to share the files to be imported with this
-email address. To grant the service account access to the documents, navigate to
+Next, you will need to share the files to be imported with the `client_email`
+email address in your credentials file. (For DataMade, it's
+`data-importer@sfm-data-import.iam.gserviceaccount.com`.)
+To grant the service account access to the documents, navigate to
 the `Share` button on each document and grant the `client_email` of the service
 account "Read" access. (You can also select multiple files, e.g., in the same
 Drive, and update the sharing settings in one go.)
