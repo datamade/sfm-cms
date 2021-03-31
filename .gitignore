@@ -25,9 +25,6 @@ fixtures/*.geojson
 /keyrings/live/pubring.gpg~
 /keyrings/live/pubring.kbx~
 /keyrings/live/secring.gpg
-/configs/auth.json
-/configs/client_secrets.json
-/configs/credentials.json
 /scripts/after_install.sh
 /scripts/app_start.sh
 /scripts/app_stop.sh
