@@ -1,18 +1,13 @@
-# Define addons that you need for  your project, such as Postgres, Redis, or Solr.
-# TODO: Add Solr
 setup:
   addons:
     - plan: heroku-postgresql:hobby-basic
     - plan: websolr:staging-20
-# Define your application's Docker containers.
 build:
   docker:
     web: Dockerfile
-# Define any scripts that you'd like to run every time the app deploys.
 release:
   command:
     - ./scripts/release.sh
   image: web
-# The command that runs your application. Replace 'app' with the name of your app.
 run:
-  web: gunicorn -t 180 --log-level debug app.wsgi:application
+  web: gunicorn -t 180 --log-level debug sfm_pc.wsgi:application
