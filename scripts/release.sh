@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-psql ${DATABASE_URL} -tAX -c "CREATE EXENSION IF NOT EXISTS postgis"
+psql ${DATABASE_URL} -tAX -c "CREATE EXTENSION IF NOT EXISTS postgis"
 
 python manage.py migrate --noinput
 python manage.py update_countries_plus
