@@ -3,4 +3,3 @@ scripts/app_start.sh
 scripts/app_stop.sh
 scripts/backup.sh
 scripts/sfm-cron
-static/js/piwik_tracker_production.js
