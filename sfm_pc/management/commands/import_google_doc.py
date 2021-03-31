@@ -5,6 +5,7 @@ from datetime import datetime
 import csv
 
 import httplib2
+import boto3
 
 from oauth2client.service_account import ServiceAccountCredentials
 from apiclient.discovery import build
@@ -107,6 +108,9 @@ class Command(BaseCommand):
 
         this_dir = os.path.dirname(__file__)
         secrets_path = os.path.join(this_dir, credentials_file)
+
+        client = boto3.resource('s3')
+        client.Object('wwic-secrets', 'credentials.json').download_file(secrets_path)
 
         credentials = ServiceAccountCredentials.from_json_keyfile_name(secrets_path,
                                                                        scopes)

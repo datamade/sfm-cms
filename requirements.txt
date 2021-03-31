@@ -13,6 +13,7 @@ django-extra-views==0.7.1
 django-rosetta==0.7.13
 django-queryset-csv==1.1.0
 whitenoise==5.2.0
+boto3==1.16.63
 
 git+https://github.com/security-force-monitor/complex_fields.git
 
