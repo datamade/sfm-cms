@@ -73,7 +73,7 @@
                         {% endif %}
                         <!-- Name -->
                         <td>
-                            <a href="{% url 'view-person' object.entity_id %}">{{ object.name }}</a>
+                            <a href="{% url 'view-person' object.entity_id %}">{{ object.object.name }}</a>
                         </td>
                         <!-- Aliases -->
                         <td>

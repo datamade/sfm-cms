@@ -1,4 +1,4 @@
-{% load facets %}
+{% load facets i18n %}
 {% with facet_name=facet_name|add:"_exact" %}
   <li class="small">
       <!-- Format the display value of date facets slightly differently -->
@@ -7,11 +7,17 @@
           {% if name in selected_facet_values|get_item:facet_name %}<strong>{% endif %}
               <!-- Format facets -->
               {% if facet_is_date %}
-                  {{ name|slice:":4" }}
+                  {% with facet_string=name|slice:":4" %}
+                    {% trans facet_string %}
+                  {% endwith %}
               {% elif facet_is_violation %}
-                  {{ name|violation|title }}
+                  {% with facet_string=name|violation|title %}
+                    {% trans facet_string %}
+                  {% endwith %}
               {% else %}
-                  {{ name | title | short_title }}
+                  {% with facet_string=name|title|short_title %}
+                    {% trans facet_string %}
+                  {% endwith %}
               {% endif %}
 
           {% if name in selected_facet_values|get_item:facet_name %}</strong>{% endif %}

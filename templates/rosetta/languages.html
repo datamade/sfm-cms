@@ -1,0 +1,25 @@
+{% extends 'rosetta/languages.html' %}
+
+{% load i18n %}
+
+{% block main %}
+    {{ block.super }}
+    <p>
+        <hr />
+    </p><br />
+    <div class="module">
+        <h2>{% trans "Database Values" %}</h2>
+        <table cellspacing="0">
+            <thead>
+                <tr>
+                    <th>{% trans "Model"%}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="row1">
+                    <td><a href="/admin/person/personname/">PersonName</a>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -58,6 +58,7 @@ from .settings_local import DATABASE_URL, GOOGLE_MAPS_KEY, \
 
 INSTALLED_APPS = (
     'django.contrib.sites',
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -91,7 +92,7 @@ INSTALLED_APPS = (
     'emplacement',
     'violation',
     'location',
-    'search'
+    'search',
 )
 
 INSTALLED_APPS += EXTRA_APPS
@@ -170,8 +171,8 @@ FIXTURES_DIRS = (
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
 LANGUAGES = (
-    ('fr', _('French')),
     ('en', _('English')),
+    ('fr', _('French')),
     ('es', _('Spanish')),
     ('ar', _('Arabic'))
 )
