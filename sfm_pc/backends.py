@@ -31,8 +31,58 @@ def get_using(language, alias=DEFAULT_ALIAS):
 class MultilingualSolrSearchBackend(SolrSearchBackend):
 
     def update(self, index, iterable, commit=True, multilingual=True):
+        '''
+        ar is being updated twice
+
+        Indexing 13 persons
+          indexed 1 - 13 of 13 (worker PID: 1).
+        default_ar
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        Indexing 13 persons
+          indexed 1 - 13 of 13 (worker PID: 1).
+        default
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        en
+        default_ar
+        ar
+        ar
+        ar
+        ar
+        ar
+        ar
+        ar
+        ar
+        ar
+        ar
+        ar
+        ar
+        ar
+        '''
         if multilingual:
-            initial_language = translation.get_language()[:2]
+            initial_language = translation.get_language()[:2] if translation.get_language() else 'en'
             # retrieve unique backend name
             backends = []
             for language, __ in settings.LANGUAGES:
