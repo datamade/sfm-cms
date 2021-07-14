@@ -1,6 +1,3 @@
-import raven
-
-
 DATABASE_URL = 'postgis://postgres:postgres@postgres:5432/sfm'
 GOOGLE_MAPS_KEY = 'key here'
 

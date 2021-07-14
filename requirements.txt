@@ -24,6 +24,6 @@ sqlalchemy==1.1.3
 datefinder==0.6.0
 raven
 django-debug-toolbar<2.0
-pysolr==3.6.0
+git+https://github.com/django-haystack/pysolr.git@master
 pytest-django==3.5.1
 pytest-mock==1.10
