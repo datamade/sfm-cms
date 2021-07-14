@@ -73,7 +73,7 @@ services:
       dockerfile: Dockerfile-solr-jts
     container_name: sfm-solr
     volumes:
-      - ./solr_configs:/sfm_configs
+      - ./solr_configs:/opt/solr/server/solr/configsets/sfm_configs
       - sfm-cms-solr-data:/opt/solr/server/solr
     command: sh -c 'solr-foreground'
     ports:
