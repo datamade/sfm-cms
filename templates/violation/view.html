@@ -213,14 +213,16 @@
                     {% for organization in perpetrator_organizations %}
                         <tr>
                             <td class="cited">
-                                <a href="{% url 'view-organization' organization.value.uuid %}">
-                                    {{ organization }}
-                                </a>
+                                <bdi>
+                                    <a href="{% url 'view-organization' organization.value.uuid %}">
+                                        {{ organization }}
+                                    </a>
+                                </bdi>
                                 {% cite organization %}
                             </td>
                             <td class="cited">
                                 {% for alias in organization.value.aliases.get_list %}
-                                    {{ alias.get_value.value }}
+                                    <bdi>{{ alias.get_value.value }}</bdi>
                                     {% cite alias.get_value.value %}
                                     {% if not forloop.last %}
                                         <br/>

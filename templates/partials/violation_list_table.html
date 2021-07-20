@@ -80,9 +80,11 @@
                     <td>
                         {% for organization in object.object.violationperpetratororganization_set.all %}
                             {% if request.user.is_authenticated or organization.value.published %}
-                                <a href="{% url 'view-organization' organization.value.uuid %}">
-                                    {{ organization.value.name.get_value }}
-                                </a>
+                                <bdi>
+                                    <a href="{% url 'view-organization' organization.value.uuid %}">
+                                        {{ organization.value.name.get_value }}
+                                    </a>
+                                </bdi>
                             {% endif %}
                             {% if not forloop.last %}<br />{% endif %}
                         {% endfor %}

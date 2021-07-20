@@ -4,6 +4,7 @@
 {% load i18n %}
 {% load model_meta %}
 
+
 <div class="responsive-table">
     <table class="table table-striped table-condensed search-results-table">
         <thead>
@@ -73,14 +74,22 @@
                         {% endif %}
                         <!-- Name -->
                         <td>
-                            <a href="{% url 'view-organization' object.entity_id %}">{{ object.name }}</a>
+                            <bdi>
+                                <a href="{% url 'view-organization' object.entity_id %}">
+                                    {{ object.name }}
+                                </a>
+                            </bdi>
                         </td>
                         <!-- Parent -->
                         <td>
                             {% for comp in object.object.parent_organization.all %}
                                 {% with parent=comp.object_ref.parent.get_value %}
                                     {% if request.user.is_authenticated or parent.value.published %}
-                                        <a href="{% url 'view-organization' parent.value.uuid %}">{{ parent.value.name.get_value }}</a>
+                                        <bdi>
+                                            <a href="{% url 'view-organization' parent.value.uuid %}">
+                                                {{ parent.value.name.get_value }}
+                                            </a>
+                                        </bdi>
                                     {% endif %}
                                 {% endwith %}
                                 {% if not forloop.last %}<br />{% endif %}

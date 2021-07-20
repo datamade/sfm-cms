@@ -7,9 +7,7 @@ var Footnotes = {
         $('[data-toggle="popover"]').popover({
             placement: 'auto',
             html: true,
-            content: function(popover){
-
-            }
+            content: function(popover) {}
         });
 
         $('[data-toggle="tooltip"]').tooltip();

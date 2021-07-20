@@ -49,3 +49,6 @@ fixtures/*.geojson
 /configs/settings_local_numbersix.py
 /configs/sfm.conf.numbersix.nginx
 /configs/sfm.conf.numbersix.supervisor
+
+static/css/*.rtl.css
+fixtures/import_docket.ns.csv

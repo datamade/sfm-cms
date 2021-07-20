@@ -180,7 +180,36 @@ def command_chain(request, org_id='', when=None, parents=True):
     for composition in hierarchy_list:
         node_fmt = 'composition_{}_id_s_fct'
         for node in ['parent', 'child']:
-            label = '<b>{}</b>\n'.format(composition['composition_{}_name_s'.format(node)])
+            entity_name = composition['composition_{}_name_s'.format(node)]
+
+            # The following is a hack to isolate strings from page
+            # directionality, e.g., it displays Latin strings from left to
+            # right, even when a right-to-left locale such as Arabic is
+            # selected. This is particularly useful when strings contain weakly
+            # directional elements, such as numbers.
+            #
+            # We need to do this because org charts are rendered using the
+            # HTML canvas, which does not have broad direction support, and
+            # because the direction varies based on string and will not always
+            # match the page direction.
+            try:
+                # Try to encode the string using ISO 8859-15, which has full
+                # support for English, Spanish, and French, as well as a number
+                # of other modern Latin languages. See Coverage here:
+                # https://en.wikipedia.org/wiki/ISO/IEC_8859-15
+                entity_name.encode('ISO 8859-15')
+            except UnicodeEncodeError:
+                # If the string cannot be encoded, it contains non-Latin
+                # characters, which are strongly directional. Use it as is.
+                pass
+            else:
+                # If the string can be encoded, it is a Latin string. Prefix the
+                # string with the left-to-right override (LRO) character so it
+                # is displayed left to right. More:
+                # http://www.unicode-symbol.com/u/202D.html
+                entity_name = '\u202D{}\u202C'.format(entity_name)
+
+            label = '<b>{}</b>\n'.format(entity_name)
 
             if when:
                 commanders = []

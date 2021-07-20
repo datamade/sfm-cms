@@ -154,6 +154,49 @@ docker-compose run --rm app ./manage.py makemessages -l fr
 
 This command generates a `.po` file for each language. Rosetta facilitates the editing and compiling of these files. Go to `/rosetta/`, and view the snippets of code, requiring translation, organized by language. Then, translate some text, click "Save and translate next block," and Rosetta compiles the code into Django-friendly translations.
 
+### Translation file management in deployment
+
+While we keep translation files under version control, our deploy scripts
+preserve translation files between deployments. **That means that if you make
+changes to translated content, you need to integrate your change with the
+deployed translation file, then manually replace the file on the server.**
+
+First, retrieve the deployed translations from the server.
+
+```bash
+# Assuming you are in the sfm-cms directory
+mv -v locale local-bk  # Optionally back up your local translations
+scp -r ${USER}@${INSTANCE_DOMAIN}:/path/to/app/locale locale/
+```
+
+Then, update the message files to include your changes.
+
+```bash
+python manage.py makemessages
+```
+
+Review the generated changes, make any adjustments, and compile the messages.
+
+```bash
+python manage.py compilemessages
+```
+
+Add the revised message files to version control for use in further development.
+Finally, upload the updated translations to the server, move them to the correct
+place, and restart the app for the translations to appear onsite.
+
+```bash
+# On your machine
+scp -r locale/ ${USER}@${INSTANCE_DOMAIN}:/tmp
+ssh ${USER}@{INSTANCE_DOMAIN}
+
+# On the server
+sudo mv -v /path/to/app/locale /path/to/app/locale-bk  # Optionally back up deployed translations
+sudo mv -v /tmp/locale /path/to/app/
+sudo chown -R ${USER}.${GROUP} /path/to/app/locale
+sudo supervisorctl restart sfm:sfm-cms
+```
+
 ## Tests
 
 Run all tests from the root folder:

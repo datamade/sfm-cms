@@ -92,7 +92,7 @@
                 </ul>
 
                 <p>{% trans "WhoWasinCommand presents data from thousands of public sources to help human rights researchers, investigative journalists and anyone who wants security forces to be more accountable." %}</p>
-                <p><a href="{% url 'about' %}">{% trans "Learn more" %} <i class="fa fa-fw fa-arrow-right"></i></a>
+                <p><a href="{% url 'about' %}">{% trans "Learn more" %} <i class="fa fa-fw fa-arrow-right{% if LANGUAGE_BIDI %} fa-flip-horizontal{% endif %}"></i></a>
             </div>
         </div>
     </div>
@@ -105,7 +105,11 @@
     $('document').ready(function() {
         // Enable select2 for country selector dropdown and set its height equal
         // to the entity selector buttons
-        $('#country-select').select2({ width: '100%'});
+        $('#country-select').select2({
+            width: '100%',
+            dir: {% if LANGUAGE_BIDI %}'rtl'{% else %}'ltr'{% endif %}
+        });
+
         $('#select2-country-select-container').parent('span.select2-selection').css('height', '36px');
 
         // Autofocus input on older browsers

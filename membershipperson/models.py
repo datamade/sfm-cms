@@ -166,7 +166,7 @@ class MembershipPersonRole(ComplexField):
 class MembershipPersonTitle(ComplexField):
     object_ref = models.ForeignKey('MembershipPerson')
     value = models.TextField(default=None, blank=True, null=True)
-    field_name = _("Title")
+    field_name = _("Official Title")
     shortcode = 'p_pt'
     spreadsheet_field_name = 'person:posting_title'
 

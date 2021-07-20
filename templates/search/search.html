@@ -1,14 +1,16 @@
 {% extends "base.html" %}
-{% load i18n %}
-{% load static %}
-{% load humanize %}
-{% load help %}
-{% load model_meta %}
+{% load i18n static humanize help model_meta %}
+
 {% block extra_head %}
-  <link rel="stylesheet" href="{% static "css/select2.min.css" %}">
-  <link rel="stylesheet" href="{% static "css/bootstrap-datepicker3.min.css" %}">
+  {% if LANGUAGE_BIDI %}
+    <link rel="stylesheet" href="{% static "css/bootstrap-datepicker3.min.rtl.css" %}">
+  {% else %}
+    <link rel="stylesheet" href="{% static "css/bootstrap-datepicker3.min.css" %}">
+  {% endif %}
 {% endblock %}
+
 {% block content %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 <div class="row">
     <form class="form">
         <div class="col-xs-12 col-sm-8 pull-right">
@@ -38,7 +40,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <select id="entity-type" name="entity_type" class="form-control input-lg">
+                        <select id="entity-type" name="entity_type" class="form-control input-lg"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
                             <option value="Person" {% if entity_type == 'Person' %}selected=true{% endif %}>{% trans "Personnel" %}</option>
                             <option value="Organization" {% if entity_type == 'Organization' %}selected=true{% endif %}>{% trans "Units" %}</option>
                             <option value="Violation" {% if entity_type == 'Violation' %}selected=true{% endif %}>{% trans "Incidents" %}</option>
@@ -241,7 +243,27 @@
     </form>
     <div class="col-xs-12 col-sm-8 pull-right">
     {% if results %}
-    <h1>{{ paginator.count|intcomma }} {% if paginator.count == 1 %}{% trans "result found" %}{% else %}{% trans "results found" %}{% endif %} {% if query %}{% trans "for" %} &ldquo;{{ query }}&rdquo;{% endif %}</h1>
+        <h1>
+            {% if query %}
+                {% comment %}
+                    Translators: This translation appears on the search result page, where result_count is the number of results and query is the search term. Be sure to include the variables exactly as they are highlighted, %(variable)s, in your translation.
+                {% endcomment %}
+                {% blocktrans with display_count=paginator.count|intcomma count result_count=paginator.count trimmed %}
+                    {{ display_count }} result found for &ldquo;{{ query }}&rdquo;
+                    {% plural %}
+                    {{ display_count }} results found for &ldquo;{{ query }}&rdquo;
+                {% endblocktrans %}
+            {% else %}
+                {% comment %}
+                    Translators: This translation appears on the search result page, where result_count is the number of results. Be sure to include the variables exactly as they are highlighted, %(variable)s, in your translation.
+                {% endcomment %}
+                {% blocktrans with display_count=paginator.count|intcomma count result_count=paginator.count trimmed %}
+                    {{ display_count }} result found
+                    {% plural %}
+                    {{ display_count }} results found
+                {% endblocktrans %}
+            {% endif %}
+        </h1>
     {% else %}
         <h1>{% trans "No results found" %} {% if query %}{% trans "for" %} &ldquo;{{ query  }}&rdquo;{% endif %}</h1>
     {% endif %}
@@ -278,6 +300,7 @@
 <script src="{% static "js/bootstrap-datepicker.min.js" %}"></script>
 <script src="{% static "js/bootstrap-datepicker.es.js" %}"></script>
 <script src="{% static "js/bootstrap-datepicker.fr.js" %}"></script>
+<script src="{% static "js/bootstrap-datepicker.ar.js" %}"></script>
 <script type="text/javascript">
     var osm_opts = {
         ajax: {

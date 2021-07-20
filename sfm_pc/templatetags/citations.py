@@ -12,7 +12,7 @@ def get_citation_string(obj):
     source_citation = ''
     sources = obj.accesspoints.select_related('user').all()
     source_info = (
-        (_('Title'), 'title'),
+        (_('Publication Title'), 'title'),
         (_('Publication'), 'publication'),
         (_('Published on'), 'published_on'),
         (_('Source URL'), 'source_url'),

@@ -12,7 +12,7 @@ body {
 
 .pre-navbar {
     /* Ad bar that sits above the navbar */
-    text-align: right;
+    text-align: left;
     display: block;
     padding: 5px 20px;
     background-color: #becfd5;
@@ -65,7 +65,7 @@ body {
 
 .navbar-brand {
     margin-top: 5px;
-    margin-left: 15px !important; /* override bootstrap default */
+    margin-right: 15px !important; /* override bootstrap default */
     margin-bottom: 10px;
     font-size: 2em;
     color: white !important; /* override bootstrap default */
@@ -242,7 +242,7 @@ li {
 }
 
 .search-facet-list{
-    padding-left: 0;
+    padding-right: 0;
     list-style-type: none;
 }
 
@@ -279,7 +279,7 @@ li {
 
 .sort-container {
     display: inline-block;
-    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .sort-container a.active {
@@ -368,8 +368,8 @@ a.collapsed .show-less {
     min-width: 16px !important;
     top: -.75em;
     height: 16px !important;
-    padding-left: 4px;
     padding-right: 4px;
+    padding-left: 4px;
     font-size: 11px;
     font-weight: 600;
     border-radius: 1em;
@@ -477,12 +477,12 @@ a.collapsed .show-less {
 @media (max-width: 465px) {
     /* Responsive header styles for tiny screens */
     .navbar-brand {
-        margin-left: 5px !important; /* override bootstrap default */
+        margin-right: 5px !important; /* override bootstrap default */
         font-size: 1.5em;
     }
 
     .navbar-toggle {
-        margin-right: 0px;
+        margin-left: 0px;
     }
 
     .pre-navbar > p {
@@ -500,8 +500,8 @@ a.collapsed .show-less {
 @media (max-width: 324px) {
     .navbar-brand {
         font-size: 1.1em;
-        padding-right: 0;
-        margin-right: 0;
+        padding-left: 0;
+        margin-left: 0;
     }
 }
 
@@ -534,13 +534,13 @@ a.collapsed .show-less {
 @media (min-width: 768px) {
     .navbar-nav > li > span.select2 {
         margin-top: 5px;
-        margin-left: 5px;
+        margin-right: 5px;
     }
 }
 
 @media (max-width: 767px) {
     .navbar-nav > li > span.select2 {
-        margin-left: 15px;
+        margin-right: 15px;
     }
 }
 
@@ -551,17 +551,17 @@ body.rtl .btn-group {
 }
 
 body.rtl .input-group-btn:first-child>.btn {
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-  border-bottom-right-radius: 6px;
-  border-top-right-radius: 6px;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
 }
 
 body.rtl .input-group .form-control:last-child {
-  border-bottom-left-radius: 6px;
-  border-top-left-radius: 6px;
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
+  border-bottom-right-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
 }
 
 .popover {

@@ -46,6 +46,24 @@ jobs:
     - name: Test with pytest
       run: |
         pytest -sv
+
+  build:
+    needs: test
+    name: Compile RTL CSS
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies and generate CSS
+      run: |
+        npm install rtlcss
+        npm run rtl
+    - name: Commit generated CSS
+      uses: EndBug/add-and-commit@v7
+      with:
+        default_author: github_actions
+        add: 'static/css/*.rtl.css --force'
+        message: 'Update *.rtl.css'
+
   deploy:
     needs: test
     name: Deploy to AWS

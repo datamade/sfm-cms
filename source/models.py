@@ -43,7 +43,7 @@ class GetSpreadsheetFieldNameMixin:
 @reversion.register(follow=['accesspoint_set'])
 class Source(models.Model, GetSpreadsheetFieldNameMixin, VersionsMixin):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    title = source_fields.TextField(verbose_name=_("title"), spreadsheet_field_name='source:title')
+    title = source_fields.TextField(verbose_name=_("publication title"), spreadsheet_field_name='source:title')
     type = source_fields.CharField(max_length=1000, null=True, blank=True, spreadsheet_field_name='source:type')
     author = source_fields.CharField(max_length=1000, null=True, blank=True, spreadsheet_field_name='source:author')
     publication = source_fields.TextField(null=True, verbose_name=_("publisher"), spreadsheet_field_name='source:publication_name')

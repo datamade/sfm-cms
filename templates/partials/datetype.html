@@ -13,8 +13,8 @@
        data-trigger="focus"
        tabindex="0"
        aria-label="{% trans 'Real date label' %}">
-        {{ citation_date }}
+        {{ citation_date.value }}
     </a>
 {% else %}
-    {{ citation_date }}
+    {{ citation_date.value }}
 {% endif %}
